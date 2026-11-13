@@ -191,14 +191,19 @@ body.noting .mk{display:grid}
 .cvhead .dl:hover,.cvhead .dl:focus-visible{background:var(--ink);color:var(--sheet)}
 .cvhead > span:last-child{flex:none}
 .cvrows{display:flex;flex-direction:column}
-.cvrow{position:relative;display:grid;grid-template-columns:3.7rem 5.4rem minmax(0,1fr);gap:var(--s2);align-items:center;width:100%;text-align:left;cursor:pointer;
+/* every row reads the same way (用户 11-13: 对齐): who, on one short line; where; then advisor · project in small type. Top-aligned, so the
+   year, the sticker and the first line start together */
+.cvrow{position:relative;display:grid;grid-template-columns:3.7rem 5.4rem minmax(0,1fr);gap:var(--s2);align-items:start;width:100%;text-align:left;cursor:pointer;
   background:none;border:0;border-bottom:1px solid var(--grid-strong);padding:.7rem 0;min-height:5.2rem}
 .cvrow .yr{font:var(--f-meta)/1.35 var(--mono);letter-spacing:.02em;color:var(--pencil)}
 .cvrow .tx{display:block;min-width:0}
-.cvrow .end a{color:inherit;text-decoration:underline;text-decoration-color:var(--grid-strong);text-decoration-thickness:1px;text-underline-offset:3px}
-.cvrow .end a:hover{color:var(--water);text-decoration-color:var(--water)}
-.cvrow .end{display:block;font-size:var(--f-title);line-height:1.25;text-wrap:balance;text-decoration:underline;text-decoration-color:transparent;text-decoration-thickness:2px;text-underline-offset:4px;transition:text-decoration-color .2s}
-.cvrow .sub{display:block;font:var(--f-meta)/1.5 var(--mono);color:var(--pencil);padding-top:.25rem}
+.cvrow .where a{color:inherit;text-decoration:underline;text-decoration-color:var(--grid-strong);text-decoration-thickness:1px;text-underline-offset:3px}
+.cvrow .where a:hover{color:var(--water);text-decoration-color:var(--water)}
+.cvrow .end{display:block;width:fit-content;font-size:var(--f-title);line-height:1.25;text-wrap:balance;text-decoration:underline;text-decoration-color:transparent;text-decoration-thickness:2px;text-underline-offset:4px;transition:text-decoration-color .2s}
+.cvrow .yr{padding-top:.3rem}
+.cvrow .where{display:block;font-size:var(--f-small);line-height:1.35;padding-top:.1rem}
+.cvrow .sub{display:block;font:var(--f-meta)/1.5 var(--mono);color:var(--pencil);padding-top:.3rem}
+.cvrow .yr2,.cvrow .sub.only{display:none}   /* on a phone the year moves down into this line */
 .cvrow:hover .end,.cvrow:focus-visible .end,.cvrow.on .end,.cvrow.lit .end{text-decoration-color:var(--amber)}
 .cvrow .stk{justify-self:center;transition:transform .3s var(--ease)}
 .cvrow:hover .stk,.cvrow:focus-visible .stk,.cvrow.lit .stk{transform:rotate(0deg) scale(1.08)}
@@ -212,8 +217,6 @@ body.noting .mk{display:grid}
 .pkuhead .end{display:block;font-size:var(--f-title);line-height:1.2}
 .pkuhead .sub{display:block;font:var(--f-meta)/1.45 var(--mono);color:var(--pencil);padding-top:.1rem}
 .pku .cvrow:last-child{border-bottom:0}
-.cvrow.hang{margin-left:1.9rem;width:calc(100% - 1.9rem);grid-template-columns:3rem 5.4rem minmax(0,1fr)}
-.cvrow.hang::before{content:"";position:absolute;left:-1.2rem;top:-1px;width:.9rem;height:52%;border-left:1px dashed var(--pencil);border-bottom:1px dashed var(--pencil)}
 /* the stickers: each cut differently */
 .stk{display:grid;place-items:center;text-align:center;font-family:var(--mono);line-height:1.1;filter:drop-shadow(0 2px 2px rgba(27,42,65,.28))}
 .s-phd{width:5.2rem;padding:.42rem .25rem .38rem;background:var(--water);color:var(--sheet);border:2px solid var(--sheet);outline:1px solid var(--water);transform:rotate(-4deg)}
@@ -224,7 +227,7 @@ body.noting .mk{display:grid}
 .s-msc em{display:block;font-style:normal;font-size:.56rem;line-height:1.25;letter-spacing:.06em;color:var(--pencil);padding-top:.25rem}
 .s-bsc{width:4.5rem;height:4.5rem;border-radius:50%;background:var(--sheet);border:2px solid var(--ink);outline:1px solid var(--ink);outline-offset:-7px;transform:rotate(-5deg)}
 .s-bsc b{font-family:var(--serif);font-size:1.1rem;font-weight:400}
-.s-tyo{width:5.2rem;margin-top:-1.3rem;transform:rotate(4deg)}
+.s-tyo{width:5.2rem;margin-top:-.5rem;transform:rotate(4deg)}
 .s-tyo .strap{display:block;width:.7rem;height:1.6rem;margin:0 auto -.3rem;background:var(--water)}
 .s-tyo .card{display:block;background:var(--sheet);border:1px solid var(--ink);border-radius:.4rem;padding:.55rem .4rem .3rem;position:relative}
 .s-tyo .card::before{content:"";position:absolute;left:50%;top:3px;width:1.1rem;height:4px;margin-left:-.55rem;border-radius:2px;background:var(--pencil)}
@@ -269,11 +272,15 @@ body.noting .mk{display:grid}
 #view .held,.held .left,.held .right{pointer-events:none}
 .held .left > *,.held .right > *{pointer-events:auto}
 /* beside an open page the sheet is only a way to move around, so it is drawn compact */
-.held .cvrow{min-height:3.9rem;padding:.4rem 0}
+.held .cvrow{min-height:3.9rem;padding:.5rem 0;grid-template-columns:3.6rem 4.4rem minmax(0,1fr)}
+.held .cvrow .yr{white-space:nowrap}
+/* beside an open page each row is two short lines: who, at text size, and where, kept to one line */
+.held .cvrow .end{font-size:var(--f-text);text-wrap:nowrap;white-space:nowrap}
+.held .cvrow .where{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:.88rem}
 .held .cvrow .sub{display:none}
 .held .cvrow .stk{zoom:.82}
 .held .pkuhead{padding:.5rem 0 .45rem}.held .pkuhead .logo{width:2.3rem;height:2.3rem}
-.held .s-tyo{margin-top:-.6rem}
+.held .s-tyo{margin-top:-.3rem}
 .stuffgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1.6rem 1.25rem;align-items:start;max-width:25rem}
 .stuffgrid .small{cursor:pointer;opacity:.55;transition:opacity .2s,transform .3s var(--ease)}
 .stuffgrid .small.on,.stuffgrid .small:hover{opacity:1}
@@ -596,10 +603,11 @@ body::before{content:"";position:fixed;z-index:19;left:0;right:0;top:0;height:ca
   #tabs .tablist button{border-top:1px solid var(--ink);border-radius:.3rem;white-space:nowrap}
   .ending{min-height:2.44em}
   .cvsheet{padding:1rem .75rem .9rem}
-  .cvrow{grid-template-columns:2.9rem 5rem minmax(0,1fr);gap:.6rem}
-  .cvrow .stk{zoom:.88}
-  .cvrow.hang{margin-left:1.1rem;width:calc(100% - 1.1rem);grid-template-columns:2.2rem 5rem minmax(0,1fr)}
-  .cvrow.hang::before{left:-.8rem;width:.6rem}
+  .cvrow{grid-template-columns:4.4rem minmax(0,1fr);gap:.75rem}
+  .cvrow .stk{zoom:.8}
+  .cvrow > .yr{display:none}
+  .cvrow .yr2{display:inline}.cvrow .sub.only{display:block}
+  .cvrow .end{font-size:var(--f-text)}
   .pku{padding-left:.8rem}
   /* on a phone the CV sheet folds down to a strip of its five stickers, so the content comes first */
   .held .cvsheet{padding:12px 10px 10px;transform:none}
@@ -693,16 +701,16 @@ body::before{content:"";position:fixed;z-index:19;left:0;right:0;top:0;height:ca
 
   /* ---------- the academic rows on the CV sheet, newest first (facts from ~/Areas/Research/Profile, finalised 12 Nov 2026) ---------- */
   var ROWS={
-    phd:{yr:'Fall 2027',end:'a prospective PhD student in human–water interaction',
+    phd:{yr:'Fall 2027',end:'a prospective PhD student in human–water interaction',role:'a prospective PhD student',where:'in human–water interaction',
      stk:'<span class="stk s-phd"><b>PhD</b><i>BY AIR MAIL</i></span>',
      sub:''},
-    master:{yr:'2023–26',end:'a master’s graduate of GeoWater Lab, PKU',lab:['GeoWater Lab','https://geowaterpku.github.io/'],
+    master:{yr:'2023–26',end:'a master’s graduate of GeoWater Lab, PKU',role:'a master’s graduate',where:'GeoWater Lab',lab:['GeoWater Lab','https://geowaterpku.github.io/'],
      stk:'<span class="stk s-msc"><b>M.S.</b><em>CARTOGRAPHY<br>&amp; GIS</em></span>',sub:'Dr. Peirong Lin · FRAMES'},
-    utokyo:{yr:'2025–26',end:'a former exchange student at Global Hydrodynamics Lab, UTokyo',lab:['Global Hydrodynamics Lab','https://global-hydrodynamics.github.io/'],hang:true,
+    utokyo:{yr:'2025–26',end:'a former exchange student at Global Hydrodynamics Lab, UTokyo',role:'a former exchange student',where:'Global Hydrodynamics Lab, UTokyo',lab:['Global Hydrodynamics Lab','https://global-hydrodynamics.github.io/'],
      stk:'<span class="stk s-tyo"><span class="strap"></span><span class="card"><img src="assets/utokyo.svg" alt="The University of Tokyo"><em>EXCHANGE</em></span></span>',
      sub:'Dr. Dai Yamazaki'},
-    bachelor:{yr:'2019–23',end:'a bachelor’s graduate, in GIS and in psychology',
-     stk:'<span class="stk s-bsc"><b>B.S. ×2</b></span>',sub:'Honorary graduate · SHIFT'}
+    bachelor:{yr:'2019–23',end:'a bachelor’s graduate, in GIS and in psychology',role:'a bachelor’s graduate',where:'GIS and psychology',
+     stk:'<span class="stk s-bsc"><b>B.S. ×2</b></span>',sub:'Dr. Peirong Lin · SHIFT'}
   };
   var ACADEMIC=['phd','master','utokyo','bachelor'];
   var SMALL={
@@ -757,6 +765,7 @@ body::before{content:"";position:fixed;z-index:19;left:0;right:0;top:0;height:ca
       '<dl class="facts"><dt>Group</dt><dd><a href="https://geowaterpku.github.io/" target="_blank" rel="noopener">GeoWater Lab</a>, School of Earth and Space Sciences, Peking University</dd>'+
         '<dt>Advisor</dt><dd>Dr. Peirong Lin</dd>'+
         '<dt>Thesis</dt><dd>Global modeling of flood protection potential and archetypes of dam regulation</dd></dl>'+
+      '<dl class="facts"><dt>Looking back</dt><dd class="back">I feel lucky to have been with Dr. Lin through her early years at Peking University, and to have helped her build the lab and keep it running. The group is small, close, and full of talented people.</dd></dl>'+
       acts('In the GeoWater group, besides my own project',4,'geowater')+
       fold('Honors, 2024–2026','7','<ul class="plain"><li>Honorary Graduation, 2026.</li><li>China Optical Valley Scholarship, 2025.</li><li>Guanhao Overseas Exchange Scholarship, 2025.</li><li>Grand Prize (2025) and First Prize (2024), “Challenge Cup” research competition.</li><li>Merit Student, 2024 and 2025.</li><li>National Scholarship, 2024.</li></ul>')+
       '<div>'+jump('go','research','The papers from these years')+'</div>'}},
@@ -764,7 +773,8 @@ body::before{content:"";position:fixed;z-index:19;left:0;right:0;top:0;height:ca
       '<dl class="facts"><dt>Program</dt><dd>Exchange student, during the master’s at Peking University</dd>'+
         '<dt>When</dt><dd>October 2025 – March 2026</dd></dl>'+
       '<dl class="facts"><dt>Group</dt><dd><a href="https://global-hydrodynamics.github.io/" target="_blank" rel="noopener">Global Hydrodynamics Lab</a>, Institute of Industrial Science, The University of Tokyo</dd>'+
-        '<dt>Advisor</dt><dd>Dr. Dai Yamazaki</dd><dt class="todo">What I did</dt><dd class="todo">'+FILL+' '+FILL+BLANK+'</dd></dl>'+
+        '<dt>Advisor</dt><dd>Dr. Dai Yamazaki</dd></dl>'+
+      '<dl class="facts"><dt>Looking back</dt><dd class="back">Yamazaki Sensei is one of the smartest and coolest people I have met in academia. I had a great time there, in research and outside it, and I hope I left a few lively memories behind as well.</dd></dl>'+
       acts('In Tokyo',3,'utokyo')}},
     bachelor:{end:'a bachelor’s graduate of Peking University, in GIS and in psychology',body:function(){return ''+
       '<dl class="facts"><dt>Degree</dt><dd>B.S. in Geographical Information Science, School of Earth and Space Sciences</dd>'+
@@ -774,6 +784,7 @@ body::before{content:"";position:fixed;z-index:19;left:0;right:0;top:0;height:ca
       '<dl class="facts"><dt>Group</dt><dd><a href="https://geowaterpku.github.io/" target="_blank" rel="noopener">GeoWater Lab</a>, School of Earth and Space Sciences, Peking University</dd>'+
         '<dt>Advisor</dt><dd>Dr. Peirong Lin</dd>'+
         '<dt>Thesis</dt><dd>Mapping global 90-m geomorphic floodplains with improved spatial heterogeneity</dd></dl>'+
+      '<dl class="facts"><dt>Looking back</dt><dd class="back">My bachelor’s years were a very rich environment. The pandemic kept us in place, but it also gave me time to explore the Earth, space and beyond, and left me with a more holistic view of things.</dd></dl>'+
       acts('Outside the classroom',3,'bachelor')+
       fold('Honors, 2020–2023','5','<ul class="plain"><li>Honorary Graduation, 2023.</li><li>First Prize, “Challenge Cup” research competition, 2022 and 2023.</li><li>National Inspirational Scholarship, 2021 and 2022.</li><li>Merit Student, 2020, 2021 and 2022.</li><li>National Scholarship, 2020.</li></ul>')}}
   };
@@ -1379,9 +1390,9 @@ body::before{content:"";position:fixed;z-index:19;left:0;right:0;top:0;height:ca
   }
   function rowHTML(id){
     var r=ROWS[id];
-    var end=r.lab?r.end.replace(r.lab[0],'<a href="'+r.lab[1]+'" target="_blank" rel="noopener">'+r.lab[0]+'</a>'):r.end;
-    return '<div class="cvrow'+(r.hang?' hang':'')+'" role="button" tabindex="0" data-sheet="'+id+'" data-paper="'+id+'" aria-label="I am '+SHEETS[id].end+'">'+
-      '<span class="yr">'+r.yr+'</span>'+r.stk+'<span class="tx"><span class="end">'+end+'</span>'+(r.sub?'<span class="sub">'+r.sub+'</span>':'')+'</span></div>';
+    var where=r.lab?r.where.replace(r.lab[0],'<a href="'+r.lab[1]+'" target="_blank" rel="noopener">'+r.lab[0]+'</a>'):r.where;
+    return '<div class="cvrow" role="button" tabindex="0" data-sheet="'+id+'" data-paper="'+id+'" aria-label="I am '+SHEETS[id].end+'">'+
+      '<span class="yr">'+r.yr+'</span>'+r.stk+'<span class="tx"><span class="end">'+r.role+'</span><span class="where">'+where+'</span><span class="sub'+(r.sub?'':' only')+'"><span class="yr2">'+r.yr+(r.sub?' · ':'')+'</span>'+r.sub+'</span></span></div>';
   }
   function cvHTML(desk){
     return '<div class="cvsheet">'+(desk?mk(3):'')+'<span class="tape"></span>'+
