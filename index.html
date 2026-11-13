@@ -771,13 +771,13 @@ body::before{content:"";position:fixed;z-index:19;left:0;right:0;top:0;height:ca
   var SHEETS={
     phd:{end:'a prospective PhD student',body:function(){return ''+
       '<div class="letter"><p>Dear Professor '+FILL+',</p>'+
-        '<p>I am applying for PhD programmes starting in Fall 2027. So far I have mapped the world’s floodplains at 90 metres, and built a way to measure how cities, dams and climate share the work of regulating floods.'+TAG+'</p>'+
-        '<p class="todo">'+FILL+' '+FILL+BLANK+'</p><p>Kaihao Zheng<br><span class="mail">'+MAIL+'</span></p></div>'+
+        /* the letter, from the research interests in the CV (Profile research-interests V2: what, how, why); AI wrote it 11-13 */
+        '<p>I am applying for PhD programmes starting in Fall 2027, to keep working on human–water interaction. I want to understand the forces that drive human–water systems and the conditions under which their mechanisms hold. In flood management, that means hydroclimate, settlements and water infrastructure acting on each other. My way in is quantitative: frameworks that reduce a complex system to its key elements, so that many places can be compared and the mechanisms behind them taken apart.</p>'+
+        '<p>So far this has meant mapping the world’s floodplains at 90 metres, and measuring how cities, dams and climate share the work of regulating floods. What I hope it is good for is practical. Where people, money and resources are limited, comparisons like these help decision-makers see the trade-offs and find cost-effective options, and let what works in one place carry over to others in a similar state.</p><p>Kaihao Zheng<br><span class="mail">'+MAIL+'</span></p></div>'+
       '<div>'+jump('go','research','What I work on, and the papers')+'</div>'}},
     master:{end:'a master’s graduate of the GeoWater Lab, Peking University',body:function(){return ''+
-      '<dl class="facts"><dt>Degree</dt><dd>M.S. in Cartography and Geographical Information System</dd>'+
-        '<dt>When</dt><dd>September 2023 – June 2026</dd>'+
-        '<dt>GPA</dt><dd>3.71 / 4.0</dd></dl>'+
+      '<dl class="facts"><dt>Degree</dt><dd>M.S. in Cartography and Geographical Information System (GPA 3.71/4.0)</dd>'+
+        '<dt>When</dt><dd>September 2023 – June 2026</dd></dl>'+
       '<dl class="facts"><dt>Group</dt><dd><a href="https://geowaterpku.github.io/" target="_blank" rel="noopener">GeoWater Lab</a>, School of Earth and Space Sciences, Peking University</dd>'+
         '<dt>Advisor</dt><dd>Dr. Peirong Lin</dd>'+
         '<dt>Thesis</dt><dd>Global modeling of flood protection potential and archetypes of dam regulation</dd></dl>'+
@@ -791,10 +791,9 @@ body::before{content:"";position:fixed;z-index:19;left:0;right:0;top:0;height:ca
         '<dt>Advisor</dt><dd>Dr. Dai Yamazaki</dd></dl>'+
       '<div class="recall">'+'<aside class="lookback"><span class="tape"></span><span class="k">Looking back</span><p>Yamazaki Sensei is one of the smartest and coolest people I have met in academia. I had a great time there, in research and outside it, and I hope I left a few lively memories behind as well.</p></aside>'+acts('In Tokyo',3,'utokyo')+'</div>'}},
     bachelor:{end:'a bachelor’s graduate of Peking University, in GIS and in psychology',body:function(){return ''+
-      '<dl class="facts"><dt>Degree</dt><dd>B.S. in Geographical Information Science, School of Earth and Space Sciences</dd>'+
+      '<dl class="facts"><dt>Degree</dt><dd>B.S. in Geographical Information Science (GPA 3.76/4.0, rank 2/27)</dd>'+
         '<dt>Double degree</dt><dd>B.S. in Psychology, School of Psychological and Cognitive Sciences</dd>'+
-        '<dt>When</dt><dd>September 2019 – July 2023 (psychology from September 2020)</dd>'+
-        '<dt>Rank</dt><dd>2 of 27 in the major (first three years)</dd></dl>'+
+        '<dt>When</dt><dd>September 2019 – July 2023 (psychology from September 2020)</dd></dl>'+
       '<dl class="facts"><dt>Group</dt><dd><a href="https://geowaterpku.github.io/" target="_blank" rel="noopener">GeoWater Lab</a>, School of Earth and Space Sciences, Peking University</dd>'+
         '<dt>Advisor</dt><dd>Dr. Peirong Lin</dd>'+
         '<dt>Thesis</dt><dd>Mapping global 90-m geomorphic floodplains with improved spatial heterogeneity</dd></dl>'+
