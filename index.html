@@ -337,6 +337,7 @@ body.noting .mk{display:grid}
 .pubs .then{display:block;margin-top:var(--s3);padding-top:var(--s3);border-top:1px solid var(--pencil)}
 .pubs .ou{display:block;font-size:var(--f-small);line-height:1.5;color:var(--pencil);padding-top:.2rem}
 .pubs .ou.last{padding-top:var(--s2)}   /* one line for the whole project, under both papers */
+.morelab span{color:var(--pencil)}   /* the way on from the letter (用户 11-13) */
 .plain{margin:0;padding-left:1.1em;max-width:40em}.plain li + li{margin-top:3px}
 .jump{display:inline;background:none;border:0;padding:0;cursor:pointer;text-align:left;font-size:var(--f-text);line-height:1.4;
   text-decoration:underline;text-decoration-color:var(--amber);text-decoration-thickness:1.5px;text-underline-offset:5px}
@@ -775,8 +776,8 @@ body::before{content:"";position:fixed;z-index:19;left:0;right:0;top:0;height:ca
       '<div class="letter"><p>Dear Professor,</p>'+
         /* the letter: why, then specifically what, then what for, then the way to the work (用户 11-13 gave the order and the middle sentence) */
         '<p>I am applying for PhD programmes starting in Fall 2027, to keep working on human–water interaction. Specifically, I am interested in developing and applying quantitative methods that reduce complex human–earth interactions to their key elements, so that places can be compared and the mechanisms behind them can be taken apart. I hope to provide scientific insights, data and frameworks for decision-makers who have to find cost-effective solutions with limited people, money and resources, and for carrying what works in one place over to others in a similar state.</p>'+
-        '<p>Now, to see what I have done so far, please click on the link below.</p><p>Kaihao Zheng<br><span class="mail">'+MAIL+'</span></p></div>'+
-      '<div>'+jump('go','research','What I work on, and the papers')+'</div>'}},
+        '<p>Kaihao Zheng<br><span class="mail">'+MAIL+'</span></p></div>'+
+      '<div class="morelab"><span>More about research:</span> '+jump('go','research','What I work on, and the papers')+'</div>'}},
     master:{end:'a master’s graduate of the GeoWater Lab, Peking University',body:function(){return ''+
       '<dl class="facts"><dt>Degree</dt><dd>M.S. in Cartography and Geographical Information System (GPA 3.71/4.0)</dd>'+
         '<dt>When</dt><dd>September 2023 – June 2026</dd></dl>'+
@@ -1490,7 +1491,7 @@ body::before{content:"";position:fixed;z-index:19;left:0;right:0;top:0;height:ca
   }
   function researchHTML(){
     var WWH=[['What','Forces and elements within human–water dynamics','I want to understand the forces that drive human–water systems and the conditions under which their mechanisms hold. In flood management, for example, the key elements include hydroclimate, the human footprint and settlements, and water infrastructure.'],
-      ['How','Quantitative methods for large-scale comparison','I am keen on building and using frameworks that reduce complex systems to their key elements and support large-scale comparison across places. Comparing many places in this way helps dissect the mechanisms behind them.'],
+      ['How','Quantitative methods for large-scale comparison','I am keen on building and using frameworks that reduce complex interactions to their key elements and support large-scale comparison across places. Comparing many places in this way helps dissect the mechanisms behind them.'],
       ['Why','Cost-effective action for policy support and knowledge transfer','When people, money and resources are limited, such frameworks help decision-makers see trade-offs and synergies and find cost-effective solutions. They also allow knowledge to transfer between places that are in a similar state of human–water interaction.']];
     return '<section id="research" class="sec">'+secHead('research','')+
       '<div class="interests"><div class="ihead"><h3>Research interests</h3></div><ol class="wwh">'+WWH.map(function(w){
