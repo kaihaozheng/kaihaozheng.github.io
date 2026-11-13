@@ -64,6 +64,8 @@ body.dome #globe{z-index:3}
 #unroll{position:fixed;inset:0;width:100%;height:100%;z-index:30;pointer-events:none;transition:opacity .3s}
 .wrap{position:relative;pointer-events:none;max-width:99rem;margin:0 auto;padding-block:3rem 4.5rem;
   padding-left:max(var(--gut),env(safe-area-inset-left,0px));padding-right:max(var(--gut),env(safe-area-inset-right,0px))}
+/* on a narrow screen the globe always hangs along the bottom (用户 11-13): the page ends with room enough to scroll its last lines above it */
+@media (max-width:1179px){.wrap{padding-bottom:calc(4.5rem + 26vh)}}
 .intro,.cvsheet,.pass,.tray,.rcard,.sec > *{pointer-events:auto}
 /* every piece sits above the globe, except the boarding pass on a wide screen, which goes behind it */
 #view > section > *{position:relative;z-index:2}
@@ -1623,7 +1625,6 @@ body::before{content:"";position:fixed;z-index:19;left:0;right:0;top:0;height:ca
   function shy(){
     var on=false,g=GLOBE.target(),vh=window.innerHeight,rg=document.createRange();
     if(g&&wide()&&!S.trav&&S.sec==='research')on=true;   /* nothing in the research part is pinned to the globe, and its wide sheet would leave only a sliver showing */
-    else if(g&&!wide()&&!S.trav&&S.sec!=='door'&&window.scrollY>60)on=true;   /* on a narrow screen the dome lies on top of the page: it is the opening picture and the way in to the trip at the end; while you read, it steps away */
     else if(g&&wide()&&!S.trav&&S.sec!=='about'){
       var els=view.querySelectorAll(SHYSEL);
       for(var i=0;i<els.length&&!on;i++){
