@@ -664,7 +664,7 @@ body::before{content:"";position:fixed;z-index:19;left:0;right:0;top:0;height:ca
 <nav id="tabs" aria-label="Contents"><button type="button" class="tabtoggle" data-tabs>Contents</button><div class="tablist"><button type="button" data-go="about" aria-current="true">About me</button><button type="button" data-go="education">Educational experiences</button><button type="button" data-go="research">Research</button><button type="button" data-go="travels">Travels</button></div><button type="button" id="notesbtn" aria-pressed="false">批注</button></nav>
 
 <script src="assets/vendor/d3.min.js"></script>
-<script src="assets/core.js"></script>
+<script src="assets/core.js?v=1lea1nw"></script>
 <script>
 (function(){
   'use strict';
@@ -772,10 +772,10 @@ body::before{content:"";position:fixed;z-index:19;left:0;right:0;top:0;height:ca
   function jump(kind,id,txt){return '<button type="button" class="jump" data-'+kind+'="'+id+'">'+txt+' →</button>'}
   var SHEETS={
     phd:{end:'a prospective PhD student',body:function(){return ''+
-      '<div class="letter"><p>Dear Professor '+FILL+',</p>'+
-        /* the letter, from the research interests in the CV (Profile research-interests V2: what, how, why); AI wrote it 11-13 */
-        '<p>I am applying for PhD programmes starting in Fall 2027, to keep working on human–water interaction. I want to understand the forces that drive human–water systems and the conditions under which their mechanisms hold. In flood management, that means hydroclimate, settlements and water infrastructure acting on each other. My way in is quantitative: frameworks that reduce a complex system to its key elements, so that many places can be compared and the mechanisms behind them taken apart.</p>'+
-        '<p>So far this has meant mapping the world’s floodplains at 90 metres, and measuring how cities, dams and climate share the work of regulating floods. What I hope it is good for is practical. Where people, money and resources are limited, comparisons like these help decision-makers see the trade-offs and find cost-effective options, and let what works in one place carry over to others in a similar state.</p><p>Kaihao Zheng<br><span class="mail">'+MAIL+'</span></p></div>'+
+      '<div class="letter"><p>Dear Professor,</p>'+
+        /* the letter: why, then specifically what, then what for, then the way to the work (用户 11-13 gave the order and the middle sentence) */
+        '<p>I am applying for PhD programmes starting in Fall 2027, to keep working on human–water interaction. Specifically, I am interested in developing and applying quantitative methods that reduce complex human–earth interactions to their key elements, so that places can be compared and the mechanisms behind them can be taken apart. I hope to provide scientific insights, data and frameworks for decision-makers who have to find cost-effective solutions with limited people, money and resources, and for carrying what works in one place over to others in a similar state.</p>'+
+        '<p>Now, to see what I have done so far, please click on the link below.</p><p>Kaihao Zheng<br><span class="mail">'+MAIL+'</span></p></div>'+
       '<div>'+jump('go','research','What I work on, and the papers')+'</div>'}},
     master:{end:'a master’s graduate of the GeoWater Lab, Peking University',body:function(){return ''+
       '<dl class="facts"><dt>Degree</dt><dd>M.S. in Cartography and Geographical Information System (GPA 3.71/4.0)</dd>'+
@@ -1289,7 +1289,7 @@ body::before{content:"";position:fixed;z-index:19;left:0;right:0;top:0;height:ca
     function setMode(){sizeA();if(!T.k||T===d3.zoomIdentity)fitBox(VIEWS.world,true)}
     function detail(){ /* the 1:50m coastline comes in a moment later, and only for this page */
       if(GEOD||window.DETAIL){if(!GEOD&&window.DETAIL){GEOD=geoOf(window.DETAIL);PB=paths(BASE,GEOD,15)}return}
-      var sc=document.createElement('script');sc.src='assets/detail.js';sc.onload=function(){GEOD=geoOf(window.DETAIL);PB=paths(BASE,GEOD,15);if(live)drawA()};document.head.appendChild(sc);
+      var sc=document.createElement('script');sc.src='assets/detail.js?v=oyrzq5';sc.onload=function(){GEOD=geoOf(window.DETAIL);PB=paths(BASE,GEOD,15);if(live)drawA()};document.head.appendChild(sc);
     }
     function span(a,e){var x=day(STAYS[a][1]),y=STAYS[e][2]?day(STAYS[e][2]):'now';return x.replace(/ \d{4}$/,'')+' – '+y.replace(/ \d{4}$/,'')}
     function fromTo(g){var a=nameOf(STAYS[g.a][0]),e=nameOf(STAYS[g.e][0]);return a===e?a+' and back':a+' → '+e}
@@ -1338,7 +1338,7 @@ body::before{content:"";position:fixed;z-index:19;left:0;right:0;top:0;height:ca
     return {init:init,target:target,detail:detail,segment:segment,select:function(i){select(i,true)},close:function(){sel=-1;card.hidden=true;redraw()},scrub:scrub,setMode:setMode,reveal:reveal,toggleRoutes:toggleRoutes,cont:pickCont,
       layer:function(k,on){layers[k]=on;redraw()},view:function(){cont='';Array.prototype.forEach.call(document.querySelectorAll('[data-cont]'),function(b){b.setAttribute('aria-pressed','false')});fitBox(VIEWS.world,false,true)},
       zoomBy:function(f){var s=d3.select(c);(reduced?s:s.transition().duration(250)).call(zoom.scaleBy,f)},
-      preload:function(){if(!window.DETAIL){var l=document.createElement('link');l.rel='prefetch';l.href='assets/detail.js';document.head.appendChild(l)}}};
+      preload:function(){if(!window.DETAIL){var l=document.createElement('link');l.rel='prefetch';l.href='assets/detail.js?v=oyrzq5';document.head.appendChild(l)}}};
   })();
 
   /* ---------- the globe unrolls into the flat map ---------- */
