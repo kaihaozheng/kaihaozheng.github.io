@@ -190,6 +190,9 @@ body.noting .mk{display:grid}
 .cvhead .dl{flex:none;color:var(--ink);text-decoration:none;letter-spacing:.08em;border:1px solid var(--ink);border-radius:2px;padding:.12rem .5rem;white-space:nowrap;transition:background .2s,color .2s}
 .cvhead .dl:hover,.cvhead .dl:focus-visible{background:var(--ink);color:var(--sheet)}
 .cvhead > span:last-child{flex:none}
+/* English sits apart from the rows, quietly, at the foot of the sheet: the same rule and label as its head (用户 11-13: 不要太张扬) */
+.cvfoot{display:flex;justify-content:space-between;align-items:baseline;gap:.75rem;margin-top:.8rem;padding-top:.5rem;border-top:1px solid var(--ink);font:var(--lab)/1.6 var(--mono);letter-spacing:var(--lab-sp);text-transform:uppercase;color:var(--pencil)}
+.cvfoot b{font:400 var(--f-small)/1.3 var(--serif);letter-spacing:0;text-transform:none;color:var(--ink);white-space:nowrap}
 .cvrows{display:flex;flex-direction:column}
 /* every row reads the same way (用户 11-13: 对齐): who, on one short line; where; then advisor · project in small type. Top-aligned, so the
    year, the sticker and the first line start together */
@@ -308,7 +311,10 @@ body.noting .mk{display:grid}
 /* a sheet's facts come in two layers, the degree and then the people and the work, on the same label column (用户 11-13: 分层对齐) */
 .facts + .facts{margin-top:calc(-1 * var(--s1));padding-top:var(--s3);border-top:1px solid var(--grid-strong)}
 /* looking back: not another row of facts but an index card taped on afterwards, lined up with the facts column (用户 11-13: 再构思一下怎么展示) */
-.lookback{position:relative;max-width:30rem;margin:var(--s2) 0 var(--s2) calc(8.5em + var(--s3));padding:1rem 1.3rem 1.1rem;
+/* the card and the photos of the same years side by side (用户 11-13: 和照片并列放) */
+.recall{display:grid;grid-template-columns:minmax(15rem,21rem) minmax(0,1fr);gap:var(--s4);align-items:start}
+@media (max-width:1279px){.recall{grid-template-columns:minmax(0,1fr);gap:var(--s3)}.recall .lookback{max-width:30rem}}
+.lookback{position:relative;max-width:none;margin:var(--s2) 0 0;padding:1rem 1.3rem 1.1rem;
   background:var(--sheet);box-shadow:var(--lift);transform:rotate(-.6deg)}
 .lookback .tape{position:absolute;width:3.6rem;height:1rem;background:var(--tape);left:1.2rem;top:-.5rem;transform:rotate(-4deg)}
 .lookback .k{display:block;font:var(--lab)/1.6 var(--mono);letter-spacing:var(--lab-sp);text-transform:uppercase;color:var(--pencil);
@@ -620,7 +626,7 @@ body::before{content:"";position:fixed;z-index:19;left:0;right:0;top:0;height:ca
   .pku{padding-left:.8rem}
   /* on a phone the CV sheet folds down to a strip of its five stickers, so the content comes first */
   .held .cvsheet{padding:12px 10px 10px;transform:none}
-  .held .cvhead,.held .pkuhead,.held .cvrow .yr,.held .cvrow .tx,.held .cvrow.hang::before,.held .pku::before{display:none}
+  .held .cvfoot,.held .cvhead,.held .pkuhead,.held .cvrow .yr,.held .cvrow .tx,.held .cvrow.hang::before,.held .pku::before{display:none}
   .held .pku{display:contents}
   .held .cvrows{flex-direction:row;justify-content:space-between;align-items:center}
   .held .cvrow,.held .pku .cvrow,.held .cvrow.hang{display:block;width:auto;min-height:0;border:0;padding:4px 0;margin:0}
@@ -771,32 +777,29 @@ body::before{content:"";position:fixed;z-index:19;left:0;right:0;top:0;height:ca
     master:{end:'a master’s graduate of the GeoWater Lab, Peking University',body:function(){return ''+
       '<dl class="facts"><dt>Degree</dt><dd>M.S. in Cartography and Geographical Information System</dd>'+
         '<dt>When</dt><dd>September 2023 – June 2026</dd>'+
-        '<dt>GPA</dt><dd>3.71 / 4.0</dd>'+
-        '<dt>Honors</dt><dd>Honorary graduate</dd></dl>'+
+        '<dt>GPA</dt><dd>3.71 / 4.0</dd></dl>'+
       '<dl class="facts"><dt>Group</dt><dd><a href="https://geowaterpku.github.io/" target="_blank" rel="noopener">GeoWater Lab</a>, School of Earth and Space Sciences, Peking University</dd>'+
         '<dt>Advisor</dt><dd>Dr. Peirong Lin</dd>'+
         '<dt>Thesis</dt><dd>Global modeling of flood protection potential and archetypes of dam regulation</dd></dl>'+
-      '<aside class=\"lookback\"><span class=\"tape\"></span><span class=\"k\">Looking back</span><p>I feel lucky to have been with Dr. Lin through her early years at Peking University, and to have helped her build the lab and keep it running. The group is small, close, and full of talented people.</p></aside>'+
-      acts('In the GeoWater group, besides my own project',4,'geowater')+
+      '<div class="recall">'+'<aside class="lookback"><span class="tape"></span><span class="k">Looking back</span><p>I feel lucky to have been with Dr. Lin through her early years at Peking University, and to have helped her build the lab and keep it running. The group is small, close, and full of talented people.</p></aside>'+acts('In the GeoWater group, besides my own project',4,'geowater')+'</div>'+
+      fold('Honors, 2024–2026','7','<ul class="plain"><li>Honorary Graduation, 2026.</li><li>China Optical Valley Scholarship, 2025.</li><li>Guanhao Overseas Exchange Scholarship, 2025.</li><li>Grand Prize (2025) and First Prize (2024), “Challenge Cup” research competition.</li><li>Merit Student, 2024 and 2025.</li><li>National Scholarship, 2024.</li></ul>')+
       '<div>'+jump('go','research','The papers from these years')+'</div>'}},
     utokyo:{end:'a former exchange student at Global Hydrodynamics Lab, the University of Tokyo',body:function(){return ''+
       '<dl class="facts"><dt>Program</dt><dd>Exchange student, during the master’s at Peking University</dd>'+
         '<dt>When</dt><dd>October 2025 – March 2026</dd></dl>'+
       '<dl class="facts"><dt>Group</dt><dd><a href="https://global-hydrodynamics.github.io/" target="_blank" rel="noopener">Global Hydrodynamics Lab</a>, Institute of Industrial Science, The University of Tokyo</dd>'+
         '<dt>Advisor</dt><dd>Dr. Dai Yamazaki</dd></dl>'+
-      '<aside class=\"lookback\"><span class=\"tape\"></span><span class=\"k\">Looking back</span><p>Yamazaki Sensei is one of the smartest and coolest people I have met in academia. I had a great time there, in research and outside it, and I hope I left a few lively memories behind as well.</p></aside>'+
-      acts('In Tokyo',3,'utokyo')}},
+      '<div class="recall">'+'<aside class="lookback"><span class="tape"></span><span class="k">Looking back</span><p>Yamazaki Sensei is one of the smartest and coolest people I have met in academia. I had a great time there, in research and outside it, and I hope I left a few lively memories behind as well.</p></aside>'+acts('In Tokyo',3,'utokyo')+'</div>'}},
     bachelor:{end:'a bachelor’s graduate of Peking University, in GIS and in psychology',body:function(){return ''+
       '<dl class="facts"><dt>Degree</dt><dd>B.S. in Geographical Information Science, School of Earth and Space Sciences</dd>'+
         '<dt>Double degree</dt><dd>B.S. in Psychology, School of Psychological and Cognitive Sciences</dd>'+
         '<dt>When</dt><dd>September 2019 – July 2023 (psychology from September 2020)</dd>'+
-        '<dt>Rank</dt><dd>2 of 27 in the major (first three years)</dd>'+
-        '<dt>Honors</dt><dd>Honorary graduate</dd></dl>'+
+        '<dt>Rank</dt><dd>2 of 27 in the major (first three years)</dd></dl>'+
       '<dl class="facts"><dt>Group</dt><dd><a href="https://geowaterpku.github.io/" target="_blank" rel="noopener">GeoWater Lab</a>, School of Earth and Space Sciences, Peking University</dd>'+
         '<dt>Advisor</dt><dd>Dr. Peirong Lin</dd>'+
         '<dt>Thesis</dt><dd>Mapping global 90-m geomorphic floodplains with improved spatial heterogeneity</dd></dl>'+
-      '<aside class=\"lookback\"><span class=\"tape\"></span><span class=\"k\">Looking back</span><p>My bachelor’s years were a very rich environment. The pandemic kept us in place, but it also gave me time to explore the Earth, space and beyond, and left me with a more holistic view of things.</p></aside>'+
-      acts('Outside the classroom',3,'bachelor')}}
+      '<div class="recall">'+'<aside class="lookback"><span class="tape"></span><span class="k">Looking back</span><p>My bachelor’s years were a very rich environment. The pandemic kept us in place, but it also gave me time to explore the Earth, space and beyond, and left me with a more holistic view of things.</p></aside>'+acts('Outside the classroom',3,'bachelor')+'</div>'+
+      fold('Honors, 2020–2023','5','<ul class="plain"><li>Honorary Graduation, 2023.</li><li>First Prize, “Challenge Cup” research competition, 2022 and 2023.</li><li>National Inspirational Scholarship, 2021 and 2022.</li><li>Merit Student, 2020, 2021 and 2022.</li><li>National Scholarship, 2020.</li></ul>')}}
   };
   /* the page is one long sheet in five parts; the tabs at the top are its contents */
   var SECS=['about','education','research','door'];   /* the parts you scroll through; the trip itself opens over them */
@@ -1410,7 +1413,7 @@ body::before{content:"";position:fixed;z-index:19;left:0;right:0;top:0;height:ca
       rowHTML('phd')+
       '<div class="pku"><div class="pkuhead"><img class="logo" src="assets/pku.svg" alt="Peking University seal"><span><span class="end">Peking University</span><span class="sub">School of Earth and Space Sciences · Beijing · 2019–2026</span></span></div>'+
         rowHTML('master')+rowHTML('utokyo')+rowHTML('bachelor')+'</div>'+
-      '</div></div>';
+      '</div><div class="cvfoot"><span>English proficiency</span><b>IELTS 8.5</b></div></div>';
   }
   function passHTML(){
     var first=STAYS[0];
