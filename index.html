@@ -1,11 +1,12 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"></head><body>
-<!-- written by build.js from Homepage-Source.html; edit that file, not this one -->
-<meta name="claude:viewport-fit-sides" content="cover">
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="claude:viewport-fit-sides" content="cover">
 <title>Kaihao Zheng</title>
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="assets/favicon-32.png" type="image/png" sizes="32x32">
 <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=B612+Mono:wght@400;700&family=LXGW+WenKai+TC&family=Libre+Franklin:wght@400;500;700&family=STIX+Two+Text:ital,wght@0,400;0,500;1,400&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=B612+Mono:wght@400;700&family=LXGW+WenKai+TC&family=Libre+Franklin:wght@400;500;700&family=STIX+Two+Text:ital,wght@0,400;0,500;1,400;1,700&display=swap">
+</head><body>
+<!-- written by build.js from Homepage-Source.html; edit that file, not this one -->
+
 <style>
 /* Layout: one long sheet of squared paper in five parts, with index tabs hanging from the top edge as its contents.
    The first part is a desk. Left: "I am / Kaihao Zheng," beside a cut-out portrait, a third line that changes
@@ -270,6 +271,8 @@ body.noting .mk{display:grid}
 .line{position:relative;display:flex;flex-wrap:wrap;align-items:baseline;gap:0 .28em;font-size:var(--f-h2)}
 .line .iam{font-size:1em;line-height:1.2;letter-spacing:0;color:var(--pencil)}
 .line .ending{min-height:0;flex:1 1 12em;min-width:0;font-size:1em;line-height:1.2;text-wrap:wrap}
+/* every “I am …” heading below the desk, and each sheet's “I am …”, in bold italic (用户 11-13) */
+.line .iam,.line .ending,.sheet h3.sheettitle{font-style:italic;font-weight:700}
 .nav{display:flex;gap:6px;flex:none}
 .nav button,.replay{background:var(--sheet);border:1px solid var(--grid-strong);border-radius:3px;min-width:2.5rem;min-height:2.5rem;padding:0 .7rem;cursor:pointer;font:.8rem var(--mono)}
 .nav button:hover,.replay:hover{border-color:var(--ink)}
@@ -406,6 +409,32 @@ body.noting .mk{display:grid}
 .placecard h5{font:400 1.06rem/1.25 var(--serif);margin:0 0 4px}
 .placecard p{margin:0 0 10px;font-size:.97rem;line-height:1.5}
 .placecard .one{font-size:var(--f-text);line-height:1.45;margin:10px 0 12px}
+.placecard .enl{display:block;width:100%;padding:0;border:0;background:none;cursor:zoom-in;text-align:left;font:inherit;color:inherit}
+.placecard .one .enl{display:inline}
+.placecard .enl:hover img{filter:brightness(1.05)}.placecard .one .enl:hover{color:var(--amber)}
+#lightbox{position:fixed;inset:0;z-index:80;background:rgba(27,42,65,.92);display:grid;place-items:center;
+  padding:max(3.5rem,env(safe-area-inset-top,0px)) max(1.5rem,env(safe-area-inset-right,0px)) max(1.5rem,env(safe-area-inset-bottom,0px)) max(1.5rem,env(safe-area-inset-left,0px))}
+body.lbopen{overflow:hidden}
+#lightbox .lbfig{margin:0;display:grid;place-items:center;width:100%;height:100%;min-height:0}
+#lightbox img{max-width:100%;max-height:calc(100vh - 6rem);object-fit:contain;box-shadow:0 20px 60px -20px rgba(0,0,0,.6);background:var(--sheet)}
+#lightbox.nophoto .lbfig{display:none}
+#lightbox .lbx{position:fixed;top:max(1rem,env(safe-area-inset-top,0px));right:max(1rem,env(safe-area-inset-right,0px));width:2.75rem;height:2.75rem;border:0;border-radius:50%;
+  background:var(--sheet);color:var(--ink);font:400 1.5rem/1 var(--serif);cursor:pointer}
+/* the words: a paper card on the lower-left corner, never text straight on the photo; a long text scrolls inside it */
+#lightbox .lbcap{position:fixed;left:max(1.5rem,env(safe-area-inset-left,0px));bottom:max(1.5rem,env(safe-area-inset-bottom,0px));width:min(26rem,calc(100vw - 3rem));max-height:min(46vh,24rem);overflow:auto;
+  background:var(--sheet);color:var(--ink);box-shadow:var(--lift-hi);padding:1.1rem 1.3rem 1rem;transform:rotate(-.8deg)}
+#lightbox .lbcap .tape{position:absolute;width:3.6rem;height:1rem;background:var(--tape);left:1.2rem;top:-.45rem;transform:rotate(-4deg)}
+#lightbox .lbcap h4{font:400 var(--f-h3)/1.2 var(--serif);margin:0}
+#lightbox .lbcap .when{font:var(--f-meta)/1.5 var(--mono);color:var(--amber);margin:.15rem 0 .6rem}
+#lightbox .lbcap p{margin:0 0 .6em;font-size:var(--f-text);line-height:1.5}
+#lightbox .lbcap h5{font:400 1.06rem/1.25 var(--serif);margin:.8em 0 .3em}
+#lightbox.nophoto .lbcap{position:static;transform:none;width:min(34rem,100%);max-height:80vh}
+@media (max-width:759px){
+  #lightbox{display:flex;flex-direction:column;justify-content:center;gap:1rem}
+  #lightbox .lbfig{height:auto;flex:0 1 auto}
+  #lightbox img{max-height:52vh}
+  #lightbox .lbcap{position:static;transform:none;width:100%;max-height:34vh}
+}
 .placecard .walk{display:flex;gap:6px;border-top:1px solid var(--grid-strong);padding-top:10px}
 .placecard .walk button{flex:1 1 0;background:none;border:1px solid var(--grid-strong);border-radius:3px;min-height:38px;padding:4px 6px;cursor:pointer;font:.72rem/1.3 var(--mono);text-align:left;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .placecard .walk button:hover{border-color:var(--ink)}
@@ -485,7 +514,12 @@ body.travel #view > section:not(#travels){display:none}
 body.travel #travels{padding-top:.4rem}
 #view .trav{z-index:3}                                   /* its card must stay above whatever follows it */
 /* on the heading's line of the trip: where I am and how far so far, then the way back, cut like the stub of the boarding pass */
-.sechead .headside{position:absolute;right:7.6rem;bottom:.5rem;display:flex;align-items:flex-end;gap:var(--s4)}
+/* it sits in the flow of the heading: beside “I am a traveler.” while there is room, below it when there is not, never on top of it */
+.sechead:has(.headside){display:flex;flex-wrap:wrap;align-items:flex-end;column-gap:var(--s4)}
+.sechead:has(.headside) > .k{flex:0 0 100%}
+.sechead:has(.headside) > .line{flex:0 1 auto}
+.sechead:has(.headside) > .line .ending{flex:0 1 auto}
+.sechead .headside{margin-left:auto;padding-bottom:.4rem;display:flex;flex-wrap:wrap;align-items:flex-end;gap:var(--s2) var(--s4)}
 .sechead .headside .tfacts{margin:0;padding-bottom:.2rem}
 .sechead .goback{display:grid;gap:.2rem;text-align:left;background:var(--sheet);border:0;border-left:1.5px dashed var(--pencil);box-shadow:var(--lift);
   padding:.55rem .95rem .6rem .85rem;cursor:pointer;color:var(--ink);transition:transform .25s var(--ease),box-shadow .25s}
@@ -612,10 +646,12 @@ body::before{content:"";position:fixed;z-index:19;left:0;right:0;top:0;height:ca
   .wwh .q{display:block;padding-bottom:var(--s2)}
   .wwh h4{padding-right:0}
   .wwh p{margin-top:var(--s2)}
-  .rcardwrap{justify-content:center;padding-right:.6rem}
+  /* one column: the research card and the boarding pass take the same width as the CV sheet above them (用户 11-13) */
+  .rcardwrap{justify-content:stretch;padding-right:.6rem}
+  .rcard,.passcol .pass{max-width:none}
   .sechead{padding-right:5.2rem}
   .line{display:block}.line .iam,.line .ending{display:inline}.line .iam::after{content:" "}
-  .sechead .headside{position:static;flex-wrap:wrap;gap:var(--s3);margin-top:var(--s3);align-items:center}
+  .sechead .headside{position:static;flex-wrap:wrap;gap:var(--s3);margin:var(--s3) 0 0;align-items:center}
   .sechead .sticker{--w:4rem;right:.3rem}
   .routes{width:14.5rem}
   #tabs .tabtoggle{display:block}
@@ -655,6 +691,26 @@ body::before{content:"";position:fixed;z-index:19;left:0;right:0;top:0;height:ca
   .mapwrap{order:-1}
   .mapbar{order:3}
   .mapbox{height:min(max(58vh,15rem),72vw)}
+}
+/* on a phone (用户 11-13：“布局配置有点挤”“地图看不见，上面的 routes 占了屏幕很大一块地方”“底下的标题和叉叉得能够关掉”):
+   a taller map that nothing floats over, the routes under it, the card easy to put away, the facts at the top on one line each */
+@media (max-width:759px){
+  .mapbox{height:min(max(55vh,15rem),110vw);scroll-margin-top:calc(3.3rem + env(safe-area-inset-top,0px))}
+  .marksrow{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;margin-right:-16px;padding-right:16px}
+  .marksrow::-webkit-scrollbar{display:none}
+  .marksrow button{flex:none}
+  .marksrow button.off{display:none}
+  .routes.below{position:relative;left:auto;bottom:auto;width:auto;max-width:none;max-height:none;margin:0 -16px}
+  .routes.below:not(.open){width:auto}
+  .routes.below .rin{max-height:42vh}
+  .placecard,.placecard.float{max-height:46vh;padding-top:.4rem;overscroll-behavior:contain}
+  .placecard::before{content:"";display:block;width:2.4rem;height:3px;border-radius:2px;background:var(--grid-strong);margin:0 auto .7rem}
+  .placecard .x{min-width:44px;min-height:44px;right:2px;top:2px;font-size:1.4rem;line-height:1;color:var(--ink)}
+  .placecard h4{margin-right:44px}
+  .sechead .headside .tfacts{column-gap:.7rem}
+  .sechead .headside .tfacts dd{font-size:.9rem}
+  .sechead .goback{padding:.45rem .8rem .5rem .75rem}
+  .sechead .goback b{font-size:.95rem}
 }
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{transition-duration:0s!important;animation:none!important}}
 </style>
@@ -874,7 +930,7 @@ body::before{content:"";position:fixed;z-index:19;left:0;right:0;top:0;height:ca
     function geom(){
       var vw=window.innerWidth,vh=window.innerHeight,R,sec=S.sec;
       if(sec==='travels'){R=.3*vh;return [vw/2,vh+3*R,R,0]}                       /* out of sight: the map takes over */
-      if(!wide()){R=(vw<760?1.05:.78)*vw;return [vw/2,vh-domeFrac()*vh+10+R,R,2]} /* a dome along the bottom edge */
+      if(!wide()){R=(vw<760?1.05:.78)*vw;var vb=cv.getBoundingClientRect().bottom||vh;return [vw/2,vb-domeFrac()*vh+10+R,R,2]} /* a dome along the bottom edge (measured from where the canvas really ends) */
       if(sec==='about')return aboutGeom();
       if(sec==='door'){R=Math.max(260,.5*vh);return [vw-.22*R,vh+.14*R,R,-1]}       /* beside the way in to the trip, it comes forward again */
       R=Math.max(240,.42*vh);return [.12*R,vh+.6*R,R,1];
@@ -893,7 +949,7 @@ body::before{content:"";position:fixed;z-index:19;left:0;right:0;top:0;height:ca
       var pc=view.querySelector('.passcol'),desk=document.getElementById('about');if(!pc||!desk)return;
       if(!wide()){pc.style.left=pc.style.top='';return}
       var a=aboutGeom(),ps=passSpot(),dr=desk.getBoundingClientRect();if(!ps)return;
-      pc.style.left=Math.round(ps.x-ps.pw/2-dr.left)+'px';pc.style.top=Math.round(rimY(ps.x,a[2])-ps.ph*.84-(dr.top+window.scrollY))+'px';
+      pc.style.left=Math.round(Math.min(ps.x-ps.pw/2,window.innerWidth-ps.pw-16)-dr.left)+'px';   /* never past the right edge of the window */pc.style.top=Math.round(rimY(ps.x,a[2])-ps.ph*.84-(dr.top+window.scrollY))+'px';
     }
     /* a small tag that stays beside the globe wherever it is: the standing way in to the trip */
     function placeChip(){
@@ -926,6 +982,7 @@ body::before{content:"";position:fixed;z-index:19;left:0;right:0;top:0;height:ca
       cv.width=Math.round(W*dpr);cv.height=Math.round(H*dpr);
     }
     window.addEventListener('resize',function(){size();GLOBE.aim()});size();
+    if(window.visualViewport)window.visualViewport.addEventListener('resize',function(){size();GLOBE.aim()});
     function vis(p){return d3.geoDistance(p,[-rot[0],-rot[1]])<Math.PI/2-.02}
     function dot(p,r,fill,stroke,lw){var q=proj(p);ctx.beginPath();ctx.arc(q[0],q[1],r,0,6.2832);if(fill){ctx.fillStyle=fill;ctx.fill()}if(stroke){ctx.strokeStyle=stroke;ctx.lineWidth=lw||1.5;ctx.stroke()}return q}
     function wake(){if(!running){running=true;t0=performance.now();requestAnimationFrame(frame)}}
@@ -933,6 +990,10 @@ body::before{content:"";position:fixed;z-index:19;left:0;right:0;top:0;height:ca
     function frame(now){
       if(document.hidden){running=false;return}
       var dt=Math.min(64,now-t0);t0=now;
+      /* a phone's toolbar slides the bottom of the screen up and down while it scrolls, and says so only afterwards: the canvas,
+         fixed to that bottom, moves with it, so the globe is moved by the same amount and stays on the canvas (用户 11-13: 往上滑时变大、偏掉) */
+      var rr=cv.getBoundingClientRect();
+      if(Math.abs(rr.top-offY)>.5&&Math.abs(rr.height-H)<.5){var dy=rr.top-offY;offY=rr.top;g[1]+=dy;gy+=dy}
       if(cv.clientHeight!==Math.round(H)||cv.clientWidth!==Math.round(W))size();
       var ky=key(),pinned=!!pinOf(ky),away=S.sec==='travels';
       var idle=!pinned&&!drag&&now-lastDrag>1800&&!reduced&&!away;
@@ -1016,6 +1077,27 @@ body::before{content:"";position:fixed;z-index:19;left:0;right:0;top:0;height:ca
     cv.addEventListener('pointerup',up);cv.addEventListener('pointercancel',up);
     wake();
   })()}
+
+  /* ---------- a place, large: its photo over the dimmed page, its words on a paper card in the lower left (用户 11-13) ----------
+     the words never sit straight on the photo: the card is solid paper, and a long text scrolls inside it */
+  var LB=(function(){
+    var el=document.createElement('div'),cur=null,back=null;el.id='lightbox';el.hidden=true;el.setAttribute('role','dialog');el.setAttribute('aria-modal','true');el.setAttribute('aria-label','The place, larger');
+    el.innerHTML='<button type="button" class="lbx" aria-label="Close">×</button><figure class="lbfig"><img alt=""></figure><div class="lbcap"><span class="tape"></span><h4></h4><p class="when"></p><div class="lbtext"></div></div>';
+    document.body.appendChild(el);
+    var img=el.querySelector('img'),cap=el.querySelector('.lbcap');
+    function close(){if(el.hidden)return;el.hidden=true;document.body.classList.remove('lbopen');if(back&&back.focus)back.focus({preventScroll:true})}
+    function open(){
+      if(!cur)return;back=document.activeElement;
+      el.classList.toggle('nophoto',!cur.src);if(cur.src){img.src=cur.src;img.alt=cur.name}else img.removeAttribute('src');
+      cap.querySelector('h4').textContent=cur.name;cap.querySelector('.when').textContent=cur.when;
+      cap.querySelector('.lbtext').innerHTML=(cur.one?'<p class="one">'+cur.one.replace(/&/g,'&amp;').replace(/</g,'&lt;')+'</p>':'')+(cur.notes||'');
+      cap.scrollTop=0;el.hidden=false;document.body.classList.add('lbopen');el.querySelector('.lbx').focus({preventScroll:true});
+    }
+    el.addEventListener('click',function(e){if(e.target===el||e.target.closest('.lbx')||e.target.classList.contains('lbfig'))close()});
+    document.addEventListener('keydown',function(e){if(e.key==='Escape'&&!el.hidden){e.stopPropagation();close()}},true);
+    document.addEventListener('click',function(e){if(e.target.closest('[data-enlarge]')){e.preventDefault();open()}});
+    return {set:function(v){cur=v},open:open,close:close};
+  })();
 
   /* ---------- the trip ---------- */
   var MAP=(function(){
@@ -1246,8 +1328,9 @@ body::before{content:"";position:fixed;z-index:19;left:0;right:0;top:0;height:ca
         var r=c.getBoundingClientRect(),mx=e.clientX-r.left,my=e.clientY-r.top,n=near(hits,mx,my,11).filter(canOpen),h;
         if(n.length){
           if(n.length===1||T.k>=79||(n[0].d<=n[0].q.r+2&&n[1].d-n[0].d>7))select(n[0].q.i,false);
-          else fitIds(n.map(function(v){return v.q.i}));
+          else{if(n[0].d<=n[0].q.r+5)select(n[0].q.i,false);fitIds(n.map(function(v){return v.q.i}))}   /* in a crowd: open the nearest one, and zoom in on the rest (用户 11-13) */
         }else if((h=inHot(hot,mx,my)))fitIds(h.ids);
+        else if(PHONE.matches)closeCard();   /* a tap on nothing puts the card away */
       });
       if(window.ResizeObserver)new ResizeObserver(function(){if(live&&document.getElementById('mapbox')===box)sizeA()}).observe(box);
     }
@@ -1265,10 +1348,11 @@ body::before{content:"";position:fixed;z-index:19;left:0;right:0;top:0;height:ca
       function esc(t){return String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;')}
       card.innerHTML='<button type="button" class="x" data-card-close aria-label="Close">×</button>'+
         '<h4>'+nameOf(i)+'</h4><p class="when">'+(p.c?p.c+' · ':'')+when(i)+'</p>'+
-        (pic?'<img class="img" src="'+pic+'" alt="'+esc(nameOf(i))+'">':'<div class="img">a photo'+BLANK+'</div>')+
-        (one?'<p class="one">'+esc(one)+'</p>':'')+
+        (pic?'<button type="button" class="enl" data-enlarge aria-label="Show the photo larger"><img class="img" src="'+pic+'" alt="'+esc(nameOf(i))+'"></button>':'<div class="img">a photo'+BLANK+'</div>')+
+        (one?'<p class="one"><button type="button" class="enl" data-enlarge>'+esc(one)+'</button></p>':'')+
         (ns.length?ns.map(function(n){return (n.t?'<h5>'+esc(n.t)+'</h5>':'')+(n.d&&ns.length>1?'<p class="nd">'+day(n.d)+'</p>':'')+n.x.map(function(t){return '<p>'+esc(t)+'</p>'}).join('')}).join(''):(one?'':'<p class="todo">'+FILL+' '+FILL+BLANK+'</p>'))+
         '<div class="walk">'+(prev>=0?'<button type="button" data-place="'+prev+'">← '+nameOf(prev)+'</button>':'')+(next>=0?'<button type="button" data-place="'+next+'">'+nameOf(next)+' →</button>':'')+'</div>';
+      LB.set({src:pic,name:nameOf(i),when:(p.c?p.c+' · ':'')+when(i),one:one,notes:ns.map(function(n){return (n.t?'<h5>'+esc(n.t)+'</h5>':'')+n.x.map(function(t){return '<p>'+esc(t)+'</p>'}).join('')}).join('')});
       card.hidden=true;void card.offsetWidth;card.hidden=false;card.scrollTop=0;
       Array.prototype.forEach.call(document.querySelectorAll('.plist button'),function(b){b.classList.toggle('on',+b.dataset.place===i)});
       redraw();
@@ -1326,10 +1410,27 @@ body::before{content:"";position:fixed;z-index:19;left:0;right:0;top:0;height:ca
       cont='';Array.prototype.forEach.call(document.querySelectorAll('[data-cont]'),function(b){b.setAttribute('aria-pressed','false')});
       if(sg)fitIds(Object.keys(sg.ids).map(Number),true,14);else fitBox(VIEWS.world);drawA();
     }
+    /* on a phone (用户 11-13): the routes go under the map instead of over it; the card goes away when swiped down,
+       when the map is tapped where there is nothing, or when the map is scrolled off the screen */
+    var PHONE=window.matchMedia?window.matchMedia('(max-width:759px)'):{matches:false};
+    function placeRoutes(){
+      var el=document.getElementById('routes'),mb=document.getElementById('mapbox');if(!el||!mb)return;
+      if(PHONE.matches&&el.parentNode===mb){mb.parentNode.insertBefore(el,mb.nextSibling);el.classList.add('below')}
+      else if(!PHONE.matches&&el.parentNode!==mb){mb.insertBefore(el,card);el.classList.remove('below')}
+    }
+    if(PHONE.addEventListener)PHONE.addEventListener('change',function(){if(live)placeRoutes()});
+    function closeCard(){if(!card||card.hidden)return;sel=-1;card.hidden=true;redraw()}
+    function phoneCard(){
+      var y0=null;
+      card.addEventListener('touchstart',function(e){y0=card.scrollTop<=0?e.touches[0].clientY:null},{passive:true});
+      card.addEventListener('touchend',function(e){if(y0!==null&&PHONE.matches&&e.changedTouches[0].clientY-y0>60)closeCard();y0=null},{passive:true});
+      if(!window.IntersectionObserver)return;var was=0;   /* only when the map goes off the screen, not while it is coming back onto it */
+      new IntersectionObserver(function(es){var r=es[0].intersectionRatio;if(PHONE.matches&&r<.15&&was>=.15)closeCard();was=r},{threshold:[0,.15,.5]}).observe(document.getElementById('mapbox'));
+    }
     function init(){
       if(!document.getElementById('mapbox')){live=false;return}
       card=document.getElementById('placecard');live=true;sel=-1;upto=STAYS.length-1;routeP=segP=null;
-      routes();initA();list();lit=0;cont='';
+      routes();placeRoutes();phoneCard();initA();list();lit=0;cont='';
       var r=document.getElementById('scrub');r.max=STAYS.length-1;r.value=r.max;
       document.getElementById('scrublbl').textContent=day(LAST[1])+' · '+nameOf(NOWI);
       sizeA();fitBox(VIEWS.world,true);
