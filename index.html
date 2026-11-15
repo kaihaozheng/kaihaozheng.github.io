@@ -1,5 +1,5 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="claude:viewport-fit-sides" content="cover">
-<meta name="version" content="homepage v4.5 · 2026-11-15">
+<meta name="version" content="homepage v4.6 · 2026-11-15">
 <title>Kaihao Zheng</title>
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="assets/favicon-32.png" type="image/png" sizes="32x32">
@@ -1625,7 +1625,7 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
   function eduHTML(){
     return '<section id="education" class="sec">'+secHead('education','')+
       '<div class="held"><div class="left">'+cvHTML(false)+'</div><div class="right">'+
-      ACADEMIC.map(function(id,i){return '<article class="sheet folded" id="sheet-'+id+'"><h3 class="sheettitle" data-unfold><span>I am</span> '+SHEETS[id].end+'.</h3><div class="sheet-body">'+SHEETS[id].body()+'</div><span class="unfold" aria-hidden="true"></span></article>'}).join('')+
+      ACADEMIC.filter(function(id){return id!=='phd'}).map(function(id,i){return '<article class="sheet folded" id="sheet-'+id+'"><h3 class="sheettitle" data-unfold><span>I am</span> '+SHEETS[id].end+'.</h3><div class="sheet-body">'+SHEETS[id].body()+'</div><span class="unfold" aria-hidden="true"></span></article>'}).join('')+
       '</div></div></section>';
   }
   function researchHTML(){
@@ -1822,6 +1822,7 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
     if(d.flip!==undefined){var on=!el.classList.contains('on');el.classList.toggle('on',on);el.setAttribute('aria-pressed',String(on));return}
     if(d.back!==undefined){closeTravel();return}
     if(d.tabs!==undefined){tabsEl.classList.toggle('open');return}
+    if(d.sheet==='phd'){var cvt=document.querySelector('.tabcv');if(cvt)cvt.click();return}   /* the letter lives on the Interactive CV now (user 11-15) */
     if(d.sheet){var sh=document.getElementById('sheet-'+d.sheet);if(sh)sh.classList.remove('folded');goSec('education',d.sheet);return}
     if(d.go){
       tabsEl.classList.remove('open');
