@@ -1,4 +1,5 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="claude:viewport-fit-sides" content="cover">
+<meta name="version" content="homepage v4.0 · 2026-11-15">
 <title>Kaihao Zheng</title>
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="assets/favicon-32.png" type="image/png" sizes="32x32">
@@ -713,6 +714,36 @@ body::before{content:"";position:fixed;z-index:19;left:0;right:0;top:0;height:ca
   .sechead .goback b{font-size:.95rem}
 }
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{transition-duration:0s!important;animation:none!important}}
+
+/* ---------- 02D: things that fold ---------- */
+.wtiles{display:flex;gap:var(--s2);min-height:15rem}
+.wtile{flex:1 1 0;min-width:0;display:flex;flex-direction:column;gap:.6rem;text-align:left;background:var(--sheet);border:1px solid var(--grid-strong);border-top:2px solid var(--grid-strong);
+  padding:1.1rem 1.2rem;cursor:pointer;transition:flex-grow .5s var(--ease),border-color .3s,box-shadow .3s;overflow:hidden}
+.wtile .q{font:700 var(--lab)/1 var(--mono);letter-spacing:var(--head-sp);text-transform:uppercase;color:var(--amber)}
+.wtile h4{font:400 var(--f-h3)/1.3 var(--serif);margin:0;text-wrap:balance}
+.wtile p{margin:0;line-height:1.55;max-width:38em;opacity:0;max-height:0;transition:opacity .35s .1s,max-height .5s var(--ease)}
+.wtile.on{flex-grow:2.6;border-top-color:var(--amber);box-shadow:var(--lift)}
+.wtile.on p{opacity:1;max-height:14em}
+@media (max-width:759px){.wtiles{flex-direction:column;min-height:0}.wtile{flex:none}}
+.pfold li{display:block}
+.pfold details summary{display:grid;grid-template-columns:8.5em minmax(0,1fr);gap:.2rem var(--s3);align-items:baseline;cursor:pointer;list-style:none}
+.pfold details summary::-webkit-details-marker{display:none}
+.pfold .ti::after{content:" +";color:var(--amber);font:500 var(--lab) var(--mono)}
+.pfold details[open] .ti::after{content:" –"}
+.pfold .pbody{margin:.5rem 0 .2rem 8.5em;padding-left:var(--s3);border-left:2px solid var(--amber);display:grid;gap:.4rem}
+@media (max-width:759px){.pfold details summary{grid-template-columns:minmax(0,1fr)}.pfold .pbody{margin-left:0}}
+.sheet .rest{display:grid;grid-template-rows:1fr;transition:grid-template-rows .55s var(--ease),opacity .4s}
+.sheet .rest>div{min-height:0;overflow:hidden}
+.sheet.folded .rest{grid-template-rows:0fr;opacity:.15}
+.sheet.folded{cursor:pointer}
+.sheet.folded .letter>p:nth-child(2){display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;-webkit-mask-image:linear-gradient(#000 60%,transparent)}
+.sheet.folded .letter>p:nth-child(n+3){display:none}
+.sheet.folded:hover{box-shadow:var(--lift-hi),0 0 0 1px var(--amber)}
+.sheet .sheettitle[data-unfold]{cursor:pointer}
+.unfold{display:block;margin-top:.9rem;font:700 var(--lab)/1 var(--mono);letter-spacing:var(--head-sp);text-transform:uppercase;color:var(--amber)}
+.sheet.folded .unfold::after{content:"Point here to open ▾"}
+@media (hover:none){.sheet.folded .unfold::after{content:"Tap to open ▾"}}
+.sheet:not(.folded) .unfold{display:none}
 </style>
 
 <canvas id="globe" role="img" aria-label="A very large, slowly turning paper globe with the 2026 route drawn on it"></canvas>
@@ -721,9 +752,10 @@ body::before{content:"";position:fixed;z-index:19;left:0;right:0;top:0;height:ca
 <button type="button" id="chip" data-go="travels" hidden><b>a traveler</b><i>OPEN THE MAP →</i></button>
 <div class="tip" id="tip" hidden></div>
 <aside id="notes" hidden aria-label="批注"></aside>
-<nav id="tabs" aria-label="Contents"><button type="button" class="tabtoggle" data-tabs>Contents</button><div class="tablist"><button type="button" data-go="about" aria-current="true">About me</button><button type="button" data-go="education">Educational experiences</button><button type="button" data-go="research">Research</button><button type="button" data-go="travels">Travels</button></div><button type="button" id="notesbtn" aria-pressed="false">批注</button></nav>
+<nav id="tabs" aria-label="Contents"><button type="button" class="tabtoggle" data-tabs>Contents</button><div class="tablist"><button type="button" data-go="about" aria-current="true">About me</button><button type="button" data-go="research">Research</button><button type="button" data-go="education">Educational experiences</button><button type="button" data-go="travels">Travels</button></div><button type="button" id="notesbtn" aria-pressed="false">批注</button></nav>
 
 <script src="assets/vendor/d3.min.js"></script>
+<script>if(location.hash==='#cv')location.replace('cv.html');</script>
 <script src="assets/core.js?v=s3bjbm"></script>
 <script>
 (function(){
@@ -779,7 +811,7 @@ body::before{content:"";position:fixed;z-index:19;left:0;right:0;top:0;height:ca
 
   /* ---------- the academic rows on the CV sheet, newest first (facts from ~/Areas/Research/Profile, finalised 12 Nov 2026) ---------- */
   var ROWS={
-    phd:{yr:'Fall 2027',end:'a prospective PhD student in human–water interaction',role:'a prospective PhD student',where:'in human–water interaction',
+    phd:{yr:'Fall 2027',end:'a PhD applicant in human–water interaction',role:'a PhD applicant',where:'in human–water interaction',
      stk:'<span class="stk s-phd"><b>PhD</b><i>BY AIR MAIL</i></span>',
      sub:''},
     master:{yr:'2023–26',end:'a master’s graduate of GeoWater Lab, PKU',role:'a master’s graduate',where:'GeoWater Lab',lab:['GeoWater Lab','https://geowaterpku.github.io/'],
@@ -824,14 +856,14 @@ body::before{content:"";position:fixed;z-index:19;left:0;right:0;top:0;height:ca
     ['Lei, X., Lin, H., '+ME+', &amp; Lin, P. Process diagnostics of snowmelt runoff in global hydrological models: Part II – Are more complex models better? <em>EGUsphere</em>, accepted.','10.5194/egusphere-2025-6073']
   ];
   function doi(d){return ' <a class="doi" href="https://doi.org/'+d+'" target="_blank" rel="noopener">doi</a>'}
-  function pubs(ids){return '<ul class="pubs">'+ids.map(function(id){var p=PUB[id];return '<li><span class="wh"><b>'+p.role+'</b>'+p.wh+'</span><span><span class="ti">'+p.ti+'</span><br><span class="ci">'+p.ci+(p.doi?doi(p.doi):'')+'</span>'+(p.more?'<span class="ci then">'+p.more+'</span>':'')+(p.ou?'<span class="ou'+(p.more?' last':'')+'">'+p.ou+'</span>':'')+'</span></li>'}).join('')+'</ul>'}
+  function pubs(ids){return '<ul class="pubs pfold">'+ids.map(function(id){var p=PUB[id];return '<li><details><summary><span class="wh"><b>'+p.role+'</b>'+p.wh+'</span><span class="ti">'+p.ti+'</span></summary><div class="pbody">'+(p.ou?'<span class="ou">'+p.ou+'</span>':'')+'<span class="ci">'+p.ci+(p.doi?doi(p.doi):'')+'</span>'+(p.more?'<span class="ci then">'+p.more+'</span>':'')+'</div></details></li>'}).join('')+'</ul>'}
   var MAIL='Mostaly@pku.edu.cn',MAIL2='kaihaozheng01@gmail.com',SCHOLAR='https://scholar.google.com/citations?user=X9sCvR0AAAAJ';
   var CV={en:'assets/cv/Kaihao-Zheng-CV-EN.pdf',zh:'assets/cv/Kaihao-Zheng-CV-ZH.pdf'};   /* build.js copies the newest export from ~/Areas/Research/Profile/Exports */
 
   /* ---------- the sheets of the education section ---------- */
   function jump(kind,id,txt){return '<button type="button" class="jump" data-'+kind+'="'+id+'">'+txt+' →</button>'}
   var SHEETS={
-    phd:{end:'a prospective PhD student',body:function(){return ''+
+    phd:{end:'a PhD applicant',body:function(){return ''+
       '<div class="letter"><p>Dear Professor,</p>'+
         /* the letter: why, then specifically what, then what for, then the way to the work (用户 11-13 gave the order and the middle sentence) */
         '<p>I am applying for PhD programmes starting in Fall 2027, to keep working on human–water interaction. Specifically, I am interested in developing and applying quantitative methods that reduce complex human–earth interactions to their key elements, so that places can be compared and the mechanisms behind them can be taken apart. I hope to provide scientific insights, data and frameworks for decision-makers who have to find cost-effective solutions with limited people, money and resources, and for carrying what works in one place over to others in a similar state.</p>'+
@@ -863,7 +895,7 @@ body::before{content:"";position:fixed;z-index:19;left:0;right:0;top:0;height:ca
       fold('Honors, 2020–2023','5','<ul class="plain"><li>Honorary Graduation, 2023.</li><li>First Prize, “Challenge Cup” research competition, 2022 and 2023.</li><li>National Inspirational Scholarship, 2021 and 2022.</li><li>Merit Student, 2020, 2021 and 2022.</li><li>National Scholarship, 2020.</li></ul>')}}
   };
   /* the page is one long sheet in five parts; the tabs at the top are its contents */
-  var SECS=['about','education','research','door'];   /* the parts you scroll through; the trip itself opens over them */
+  var SECS=['about','research','education','door'];   /* the parts you scroll through; the trip itself opens over them */
   var TABS={about:'About me',education:'Educational experiences',research:'Research',travels:'Travels',door:'Travels'};
   var SECEND={education:'a student and researcher at Peking University.',research:'working on human–water interaction.',travels:'a traveler.',door:'a traveler.'};
   /* the road ahead (the stops are the 11-05 plan, in its order): it starts where I am now and ends where the trip began */
@@ -1519,7 +1551,7 @@ body::before{content:"";position:fixed;z-index:19;left:0;right:0;top:0;height:ca
       rowHTML('phd')+
       '<div class="pku"><div class="pkuhead"><img class="logo" src="assets/pku.svg" alt="Peking University seal"><span><span class="end">Peking University</span><span class="sub">School of Earth and Space Sciences · Beijing · 2019–2026</span></span></div>'+
         rowHTML('master')+rowHTML('utokyo')+rowHTML('bachelor')+'</div>'+
-      '</div><div class="cvfoot"><span>English proficiency</span><b>IELTS 8.5</b></div></div>';
+      '</div></div>';
   }
   function passHTML(){
     var first=STAYS[0];
@@ -1590,7 +1622,7 @@ body::before{content:"";position:fixed;z-index:19;left:0;right:0;top:0;height:ca
   function eduHTML(){
     return '<section id="education" class="sec">'+secHead('education','')+
       '<div class="held"><div class="left">'+cvHTML(false)+'</div><div class="right">'+
-      ACADEMIC.map(function(id){return '<article class="sheet" id="sheet-'+id+'"><h3 class="sheettitle"><span>I am</span> '+SHEETS[id].end+'.</h3><div class="sheet-body">'+SHEETS[id].body()+'</div></article>'}).join('')+
+      ACADEMIC.map(function(id,i){return '<article class="sheet folded" id="sheet-'+id+'"><h3 class="sheettitle" data-unfold><span>I am</span> '+SHEETS[id].end+'.</h3><div class="sheet-body">'+SHEETS[id].body()+'</div><span class="unfold" aria-hidden="true"></span></article>'}).join('')+
       '</div></div></section>';
   }
   function researchHTML(){
@@ -1598,13 +1630,13 @@ body::before{content:"";position:fixed;z-index:19;left:0;right:0;top:0;height:ca
       ['How','Quantitative methods for large-scale comparison','I am keen on building and using frameworks that reduce complex interactions to their key elements and support large-scale comparison across places. Comparing many places in this way helps dissect the mechanisms behind them.'],
       ['Why','Cost-effective action for policy support and knowledge transfer','When people, money and resources are limited, such frameworks help decision-makers see trade-offs and synergies and find cost-effective solutions. They also allow knowledge to transfer between places that are in a similar state of human–water interaction.']];
     return '<section id="research" class="sec">'+secHead('research','')+
-      '<div class="interests"><div class="ihead"><h3>Research interests</h3></div><ol class="wwh">'+WWH.map(function(w){
-        return '<li><span class="q">'+w[0]+'</span><h4>'+w[1]+'</h4><p>'+w[2]+'</p></li>'}).join('')+'</ol></div>'+
+      '<div class="interests"><div class="ihead"><h3>Research interests</h3></div><div class="wtiles">'+WWH.map(function(w,i){
+        return '<button type="button" class="wtile'+(i?'':' on')+'" data-wwh><span class="q">'+w[0]+'</span><h4>'+w[1]+'</h4><p>'+w[2]+'</p></button>'}).join('')+'</div></div>'+
       '<article class="sheet broad"><div class="sheet-body"><div class="rcol"><h3>Projects and papers</h3>'+pubs(['frames','shift','levee','urban'])+
       '<figure class="taped todo"><div class="empty">one original figure from a paper</div><figcaption>Fig. — to be chosen'+BLANK+'</figcaption></figure>'+
       '</div>'+
       '<div class="rcol">'+
-      '<h3>Conferences</h3><ul class="talks">'+
+      fold('Conferences','11','<ul class="talks">'+
         '<li><b>2026</b>EGU General Assembly, Vienna<i>oral</i></li>'+
         '<li><b>2026</b>International Joint Workshop on Socio-Hydrology, Tokyo<i>oral</i></li>'+
         '<li><b>2025</b>AGU Annual Meeting, New Orleans<i>poster</i></li>'+
@@ -1615,8 +1647,8 @@ body::before{content:"";position:fixed;z-index:19;left:0;right:0;top:0;height:ca
         '<li><b>2024</b>International Graduate Workshop on GeoInformatics, Beijing<i>oral · best presentation</i></li>'+
         '<li><b>2023</b>International Graduate Workshop on GeoInformatics, Wuhan<i>oral · best presentation</i></li>'+
         '<li><b>2022</b>AGU Fall Meeting<i>oral</i></li>'+
-        '<li><b>2022</b>International Graduate Workshop on GeoInformatics, Beijing<i>oral · best presentation</i></li></ul>'+
-      '<h3>Also co-authored</h3><ol class="copubs">'+COPUB.map(function(c){return '<li>'+c[0]+doi(c[1])+'</li>'}).join('')+'</ol>'+
+        '<li><b>2022</b>International Graduate Workshop on GeoInformatics, Beijing<i>oral · best presentation</i></li></ul>')+
+      fold('Also co-authored',String(COPUB.length),'<ol class="copubs">'+COPUB.map(function(c){return '<li>'+c[0]+doi(c[1])+'</li>'}).join('')+'</ol>')+
       '</div>'+
       '</div></article></section>';
   }
@@ -1765,8 +1797,12 @@ body::before{content:"";position:fixed;z-index:19;left:0;right:0;top:0;height:ca
     if(best!==S.hover){S.hover=best;light(best);GLOBE.aim()}
   }
   function render(){
-    view.innerHTML=deskHTML()+eduHTML()+researchHTML()+doorHTML()+travelHTML();
+    view.innerHTML=deskHTML()+researchHTML()+eduHTML()+doorHTML()+travelHTML();
     light(S.auto);GLOBE.aim();
+    /* 02D: each sheet keeps its first block; the rest goes into a drawer that slides open */
+    Array.prototype.forEach.call(view.querySelectorAll('#education .sheet .sheet-body'),function(b){
+      var kids=Array.prototype.slice.call(b.children,1);if(!kids.length)return;var r=document.createElement('div');r.className='rest';
+      var inner=document.createElement('div');kids.forEach(function(k){inner.appendChild(k)});r.appendChild(inner);b.appendChild(r)});
   }
 
   document.addEventListener('click',function(e){
@@ -1783,12 +1819,18 @@ body::before{content:"";position:fixed;z-index:19;left:0;right:0;top:0;height:ca
     if(d.flip!==undefined){var on=!el.classList.contains('on');el.classList.toggle('on',on);el.setAttribute('aria-pressed',String(on));return}
     if(d.back!==undefined){closeTravel();return}
     if(d.tabs!==undefined){tabsEl.classList.toggle('open');return}
-    if(d.sheet){goSec('education',d.sheet);return}
+    if(d.sheet){var sh=document.getElementById('sheet-'+d.sheet);if(sh)sh.classList.remove('folded');goSec('education',d.sheet);return}
     if(d.go){
       tabsEl.classList.remove('open');
       goSec(d.go);
     }
   });
+  /* 02D: unfold a sheet; open a research-interest tile (pointing on a computer, tapping on a phone) */
+  function openSheet(a,only){Array.prototype.forEach.call(document.querySelectorAll('#education .sheet'),function(x){if(x===a)x.classList.remove('folded');else if(only)x.classList.add('folded')})}
+  if(window.matchMedia&&window.matchMedia('(hover: hover)').matches)document.addEventListener('mouseover',function(e){var a=e.target.closest&&e.target.closest('#education .sheet.folded');if(a)openSheet(a,true)});
+  document.addEventListener('click',function(e){var u=e.target.closest('[data-unfold]')||(e.target.closest('a,button')?null:e.target.closest('#education .sheet.folded'));if(u){var a=u.closest('.sheet');if(a.classList.contains('folded'))openSheet(a,true);else a.classList.add('folded');return}
+    var w=e.target.closest('[data-wwh]');if(w){Array.prototype.forEach.call(w.parentNode.children,function(x){x.classList.toggle('on',x===w)})}});
+  if(window.matchMedia&&window.matchMedia('(hover: hover)').matches)document.addEventListener('mouseover',function(e){var w=e.target.closest&&e.target.closest('[data-wwh]');if(w&&!w.classList.contains('on'))Array.prototype.forEach.call(w.parentNode.children,function(x){x.classList.toggle('on',x===w)})});
   document.addEventListener('keydown',function(e){
     if((e.key==='Enter'||e.key===' ')&&e.target.matches&&e.target.matches('[role="button"]')){e.preventDefault();e.target.click();return}
     if(e.key!=='Escape')return;tabsEl.classList.remove('open');var pc=document.getElementById('placecard');

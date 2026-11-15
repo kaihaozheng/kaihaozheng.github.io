@@ -1,0 +1,547 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="version" content="homepage v4.0 · 2026-11-15">
+<title>Kaihao Zheng — CV</title>
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=B612+Mono:wght@400&family=Libre+Franklin:wght@400;500;600&family=STIX+Two+Text:ital,wght@0,400;0,600;1,400&display=swap">
+<style>
+/* cv.html — the academic page (homepage v4.0, 2026-11-15; from session S-20261114-010127-UTC-5, prototype 02C v0.9).
+   Two type levels: --t (STIX, everything that is read) and --l (Franklin, labels and years). The name is the one exception.
+   One interaction: anything with a “+” opens on click / tap; hover only hints.                                    */
+:root{
+  --sheet:#fcfcf9; --ink:#1b2a41; --pencil:#7a8591; --rule:#dfe4e7; --amber:#a86a14; --water:#2b6ca3;
+  --board:#141d2b; --flap:#1e2a3c;
+  --serif:"STIX Two Text","Times New Roman",serif;
+  --sans:"Libre Franklin",Arial,sans-serif;
+  --mono:"B612 Mono",ui-monospace,monospace;
+  --t:clamp(16px,.42vw + 10.6px,18px);
+  --l:clamp(11.5px,.12vw + 10px,12.5px);
+  --ease:cubic-bezier(.2,.8,.2,1);
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--sheet);color:var(--ink);font:400 var(--t)/1.5 var(--serif)}
+a{color:inherit;text-decoration:none;border-bottom:1px solid var(--rule)}
+a:hover{border-color:var(--amber)}
+button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer;text-align:left}
+.lab{font:500 var(--l)/1.6 var(--sans);letter-spacing:.11em;text-transform:uppercase;color:var(--pencil)}
+
+.page{max-width:1320px;margin:0 auto;padding:clamp(20px,4vh,44px) clamp(16px,3.4vw,52px) 110px}
+
+/* ---------- header: photo, name, one line, contact ---------- */
+header{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:0 22px;align-items:center;padding-bottom:18px;border-bottom:1.5px solid var(--ink)}
+.photo{width:clamp(72px,6.4vw,100px);aspect-ratio:1;border-radius:50%;display:block;background:#fff;box-shadow:0 0 0 1px var(--rule),0 8px 18px -12px rgba(27,42,65,.35)}
+h1{margin:0 0 2px;font:400 clamp(30px,2.4vw + 12px,44px)/1.05 var(--serif);letter-spacing:-.015em}
+.line{margin:0;font-style:italic}
+.line .x{font-style:normal}
+.contact{display:grid;grid-template-columns:auto auto;gap:2px 14px;align-items:baseline;font:400 var(--l)/1.7 var(--sans);letter-spacing:.02em}
+.contact dt{font-weight:500;letter-spacing:.11em;text-transform:uppercase;color:var(--pencil)}
+.contact dd{margin:0}
+.contact dd a+a{margin-left:10px}
+
+/* the letter, opened from the header line */
+.letter{max-width:46em;overflow:hidden;max-height:0;opacity:0;transition:max-height .45s var(--ease),opacity .3s}
+.letter.on{max-height:30em;opacity:1}
+.letter>div{padding:14px 0 4px 16px;border-left:2px solid var(--amber);margin-top:16px}
+.letter p{margin:0 0 8px}
+.lt{display:grid;grid-template-columns:8.5em minmax(0,1fr);gap:8px 18px;margin:6px 0 10px}
+.lt dt{font:500 var(--l)/2 var(--sans);letter-spacing:.11em;text-transform:uppercase;color:var(--amber)}
+.lt dd{margin:0}
+.letter .sig{font-style:italic}
+@media (max-width:640px){.lt{grid-template-columns:minmax(0,1fr);gap:0}.lt dd{margin-bottom:8px}}
+
+/* ---------- the two layers ---------- */
+.upper{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:0 clamp(32px,4.5vw,72px);padding-top:8px}
+.col{min-width:0}
+section{padding:18px 0 0}
+section>h2{margin:0 0 6px}
+section>h2 .lab{color:var(--ink);font-weight:600}
+.lower{margin-top:30px;padding-top:4px;border-top:1px solid var(--rule)}
+
+/* ---------- one kind of opening thing ---------- */
+.op{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:0 14px;align-items:baseline;width:100%;padding:3px 0;transition:color .15s}
+.op .tx{min-width:0}
+.op .tx b{font-weight:600}
+.op .yr{align-self:start;padding-top:.3em;font:500 var(--l)/1.6 var(--sans);letter-spacing:.05em;color:var(--pencil);white-space:nowrap}
+.op .org::after,.op .tx:not(:has(.org))::after{content:"+";display:inline-block;margin-left:.45em;font:500 var(--l)/1 var(--sans);color:var(--pencil);opacity:.55;transition:transform .25s var(--ease),color .15s,opacity .15s}
+.op:hover,.op:focus-visible{color:var(--water);outline:0}
+.op:hover .tx::after,.op:focus-visible .tx::after,.op:hover .org::after,.op:focus-visible .org::after{color:var(--amber);opacity:1}
+.op[aria-expanded="true"] .tx::after,.op[aria-expanded="true"] .org::after{transform:rotate(45deg);color:var(--amber);opacity:1}
+.org{display:block;color:var(--pencil)}
+.hon{font:500 var(--l)/1 var(--sans);letter-spacing:.08em;text-transform:uppercase;color:var(--amber);margin-left:.6em;white-space:nowrap}
+.sub{font:500 var(--l)/1.6 var(--sans);letter-spacing:.11em;text-transform:uppercase;color:var(--pencil);margin-right:.5em}
+.more{overflow:hidden;max-height:0;opacity:0;transition:max-height .4s var(--ease),opacity .25s}
+.more.on{max-height:26em;opacity:1}
+.more>div{margin:4px 0 10px;padding:4px 0 4px 14px;border-left:2px solid var(--amber)}
+dl.f{display:grid;grid-template-columns:max-content minmax(0,1fr);gap:2px 14px;margin:0}
+dl.f dt{font:500 var(--l)/1.95 var(--sans);letter-spacing:.11em;text-transform:uppercase;color:var(--pencil)}
+dl.f dd{margin:0}
+.more ul{margin:0;padding:0;list-style:none}
+.more li{padding:1px 0}
+.more li i{font-style:normal;color:var(--pencil)}
+
+/* the paper link under a project */
+.paper{display:inline-block;margin-top:6px;font:500 var(--l)/1.6 var(--sans);letter-spacing:.1em;text-transform:uppercase;color:var(--amber);border-bottom:1px solid transparent}
+.paper:hover{border-color:var(--amber)}
+/* knowledge & skills */
+.ks{display:grid;grid-template-columns:max-content minmax(0,1fr);gap:8px 12px;align-items:baseline}
+.lang1 .sep{color:var(--pencil);margin:0 .6em}
+.lang{display:grid;grid-template-columns:4.6em minmax(0,1fr);gap:0 10px;align-items:baseline;padding:1px 0}
+.lang .sc{font:400 var(--t)/1.5 var(--serif)}
+.lang .sc i{font-style:normal;color:var(--pencil);font-size:.92em}
+.sk{margin:0;padding:0;list-style:none;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:1px 18px}
+.sk li{padding:1px 0;text-indent:-.8em;padding-left:.8em}
+.sk li::before{content:"·";color:var(--amber);display:inline-block;width:.8em;text-indent:0}
+/* chips: same “+”, same panel */
+.kv{display:grid;grid-template-columns:6.4em minmax(0,1fr);gap:0 12px;align-items:baseline;padding:3px 0}
+.chips{display:flex;flex-wrap:wrap;gap:2px 12px}
+.chip{display:inline;padding:0}
+.chip .tx::after{content:"+";margin-left:.2em;font:500 var(--l)/1 var(--sans);color:var(--pencil);opacity:.55}
+.chip:hover,.chip:focus-visible{color:var(--water);outline:0}
+.chip:hover .tx::after{color:var(--amber);opacity:1}
+.chip[aria-expanded="true"]{color:var(--ink);box-shadow:inset 0 -1.5px 0 var(--amber)}
+.chip[aria-expanded="true"] .tx::after{content:"–";color:var(--amber);opacity:1}
+.kv .more{grid-column:1/-1}
+
+/* ---------- publications, full width at the bottom ---------- */
+.pubs{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:0 clamp(32px,4.5vw,72px)}
+.pubs h3{margin:16px 0 4px}
+.pub{display:grid;grid-template-columns:3.2em minmax(0,1fr);gap:0 8px;padding:4px 0}
+.pub .y{font:500 var(--l)/2.05 var(--sans);letter-spacing:.05em;color:var(--pencil)}
+.pub a{border:0}
+.pub a:hover{color:var(--water)}
+.pub .by{display:block;font:400 var(--l)/1.6 var(--sans);letter-spacing:.02em;color:var(--pencil)}
+.pub .by b{color:var(--ink);font-weight:600}
+.pub .by em{font-style:italic}
+
+/* ---------- the globe door ---------- */
+.door{position:fixed;right:clamp(14px,2.2vw,32px);bottom:clamp(14px,2.6vh,28px);display:flex;align-items:center;gap:12px;z-index:20;border:0}
+.door .cap{font:500 var(--l)/1.35 var(--sans);letter-spacing:.08em;text-transform:uppercase;color:var(--pencil);text-align:right;max-width:11em;transition:color .2s,opacity .3s;background:var(--sheet);padding:4px 0 4px 10px;box-shadow:-12px 0 12px var(--sheet)}
+.door .g{width:clamp(52px,4.6vw,68px);aspect-ratio:1;border-radius:50%;transition:transform .45s var(--ease)}
+.door:hover .g,.door:focus-visible .g{transform:rotate(-14deg) scale(1.06)}
+.door:hover .cap{color:var(--ink)}
+.door:focus-visible{outline:0}
+.door .short{display:none}
+.door.quiet .long{opacity:0}
+.door .g{animation:breathe 5s ease-in-out infinite}
+@keyframes breathe{0%,100%{box-shadow:0 0 0 0 rgba(168,106,20,0)}50%{box-shadow:0 0 0 7px rgba(168,106,20,.10)}}
+.door svg{width:100%;height:100%;display:block;filter:drop-shadow(0 5px 9px rgba(27,42,65,.16))}
+
+/* ---------- the board: a departures board that spreads from the globe, then leaves row by row ---------- */
+.board{position:fixed;inset:0;z-index:100;display:none;pointer-events:auto;overflow:hidden}
+.board canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+.board.on{display:block}
+.board .rows{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;gap:var(--rg)}
+.brow{display:flex;justify-content:center;gap:var(--gap);will-change:transform}
+.brow .c{width:var(--cw);height:calc(var(--cw)*1.4);background:var(--flap);color:#cfd6df;border-radius:1.5px;position:relative;flex:none;
+  display:flex;align-items:center;justify-content:center;font:400 calc(var(--cw)*.78)/1 var(--mono)}
+.brow .c::after{content:"";position:absolute;left:0;right:0;top:50%;height:1px;background:rgba(0,0,0,.5)}
+.brow .c.gap{background:transparent}.brow .c.gap::after{display:none}
+.brow.head .c{background:transparent;color:#6f7f93}.brow.head .c::after{display:none}
+.brow.dim .c{color:#7f8da0}
+.brow.hero{margin:calc(var(--rg)*1.5) 0}
+.brow.hero .c{--cw:var(--cwh);color:#f1ece0}
+.brow.hero .c.amb{color:#e3ac50}
+.brow .c.tick{animation:tick .06s linear}
+@keyframes tick{0%{transform:scaleY(1)}50%{transform:scaleY(.2)}100%{transform:scaleY(1)}}
+
+
+/* the boarding pass, the same one as on the sketchpad (Homepage-Source.html .pass), scoped to the board */
+.tpass{--u:clamp(12px,1.25vw,17px);--pass:"B612 Mono",ui-monospace,monospace;position:absolute;left:0;top:0;display:grid;grid-template-columns:calc(var(--u)*1.5) minmax(0,1fr) calc(var(--u)*7.9);width:calc(var(--u)*27);
+  font-family:var(--pass);color:var(--ink);filter:drop-shadow(0 calc(var(--u)*.7) calc(var(--u)*.9) rgba(0,0,0,.35));transform-origin:50% 50%;will-change:transform,opacity}
+.tpass .pband{background:var(--amber);color:var(--sheet);border-radius:calc(var(--u)*.45) 0 0 calc(var(--u)*.45);display:grid;place-items:center}
+.tpass .pband i{font-style:normal;font-size:calc(var(--u)*.56);letter-spacing:.2em;writing-mode:vertical-rl;transform:rotate(180deg);white-space:nowrap}
+.tpass .pmain{display:block;padding:calc(var(--u)*.7) calc(var(--u)*.9) calc(var(--u)*.75) calc(var(--u)*.8);min-width:0;
+  background:radial-gradient(circle at 100% 0,transparent calc(var(--u)*.4),var(--sheet) calc(var(--u)*.43)) top/100% 51% no-repeat,radial-gradient(circle at 100% 100%,transparent calc(var(--u)*.4),var(--sheet) calc(var(--u)*.43)) bottom/100% 51% no-repeat}
+.tpass .pstub{display:flex;flex-direction:column;gap:calc(var(--u)*.12);padding:calc(var(--u)*.7) calc(var(--u)*.7) calc(var(--u)*.75) calc(var(--u)*.85);border-left:1px dashed var(--pencil);border-radius:0 calc(var(--u)*.45) calc(var(--u)*.45) 0;min-width:0;
+  background:radial-gradient(circle at 0 0,transparent calc(var(--u)*.4),var(--sheet) calc(var(--u)*.43)) top/100% 51% no-repeat,radial-gradient(circle at 0 100%,transparent calc(var(--u)*.4),var(--sheet) calc(var(--u)*.43)) bottom/100% 51% no-repeat}
+.tpass .lab{display:block;font-size:calc(var(--u)*.56);letter-spacing:.08em;color:var(--pencil)}
+.tpass .end{display:block;font:400 calc(var(--u)*1.55)/1.15 var(--serif);padding-top:calc(var(--u)*.1)}
+.tpass .proute{display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:calc(var(--u)*.6);padding:calc(var(--u)*.55) 0 calc(var(--u)*.15)}
+.tpass .proute b{display:block;font:500 calc(var(--u)*1.75)/1 var(--pass);letter-spacing:.04em}
+.tpass .proute .to{text-align:right}
+.tpass .pline{position:relative;height:0;border-top:1px dashed var(--pencil)}
+.tpass .pline svg{position:absolute;left:0;top:50%;width:calc(var(--u)*1.3);height:calc(var(--u)*1.3);margin-top:calc(var(--u)*-.65);fill:var(--ink);background:var(--sheet);padding:0 calc(var(--u)*.15);transition:left 1s cubic-bezier(.6,0,.3,1)}
+.tpass.fly .pline svg{left:calc(100% - var(--u)*1.6)}
+.tpass .pmeta{display:flex;gap:calc(var(--u)*.9);padding-top:calc(var(--u)*.5)}
+.tpass .pmeta b{display:block;font:500 calc(var(--u)*.78)/1.3 var(--pass);white-space:nowrap}
+.tpass .pstub b{font:500 calc(var(--u)*.95)/1.2 var(--pass);text-transform:uppercase;letter-spacing:.02em}
+.tpass .bars{display:block;height:calc(var(--u)*1.3);margin:calc(var(--u)*.4) 0 calc(var(--u)*.35);background:repeating-linear-gradient(90deg,var(--ink) 0 2px,transparent 2px 4px,var(--ink) 4px 5px,transparent 5px 9px,var(--ink) 9px 12px,transparent 12px 14px,var(--ink) 14px 15px,transparent 15px 17px)}
+.tpass .stamp{margin-top:auto;font-size:calc(var(--u)*.62);letter-spacing:.08em;color:var(--amber);opacity:0;transform:scale(1.6) rotate(-8deg);transition:opacity .2s,transform .25s cubic-bezier(.2,1.6,.4,1)}
+.tpass.ok .stamp{opacity:1;transform:none}
+/* the other side */
+.play{position:fixed;inset:0;z-index:50;background:var(--sheet);display:none}
+.play.on{display:block}
+.play iframe{border:0;width:100%;height:100%;display:block}
+.back{position:fixed;left:clamp(12px,2vw,28px);bottom:clamp(12px,2.4vh,26px);z-index:60;display:none;
+  font:400 var(--l)/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:#ece7da;background:var(--board);
+  padding:10px 14px;border-radius:2px;box-shadow:0 8px 20px -8px rgba(0,0,0,.5)}
+.back.on{display:block}
+
+/* ---------- portrait, tablets, phones ---------- */
+@media (max-width:959px),(orientation:portrait),(max-height:540px){
+  .page{max-width:720px}
+  .upper{display:flex;flex-direction:column}
+  .col{display:contents}
+  #s-int{order:1}#s-edu{order:2}#s-work{order:3}#s-proj{order:4}#s-skill{order:5}
+  .pubs{grid-template-columns:minmax(0,1fr)}
+  .door .long{display:none}.door .short{display:inline}
+}
+@media (max-width:640px){
+  header{grid-template-columns:auto minmax(0,1fr);gap:12px 16px}
+  .contact{grid-column:1/-1}
+  .kv,.ks{grid-template-columns:minmax(0,1fr)}
+  .ks{gap:2px 0}.ks>.lab{margin-top:8px}
+  .sk{grid-template-columns:minmax(0,1fr)}
+  dl.f{grid-template-columns:minmax(0,1fr)}
+  dl.f dd{margin-bottom:4px}
+  .op{grid-template-columns:minmax(0,1fr)}
+  .op .yr{order:-1}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="page" id="cv">
+
+<header>
+  <img class="photo" src="assets/portrait.png" alt="Portrait of Kaihao Zheng">
+  <div>
+    <h1>Kaihao Zheng</h1>
+    <p class="line">PhD applicant in human–water interaction, for Fall 2027 <span class="x">·</span> <button class="op" style="display:inline;width:auto;padding:0" data-open="letter" aria-expanded="false"><span class="tx lab" style="color:var(--amber)">My letter to professors</span></button></p>
+  </div>
+  <dl class="contact">
+    <dt>Email</dt><dd><a href="mailto:Mostaly@pku.edu.cn">Mostaly@pku.edu.cn</a></dd>
+    <dt></dt><dd><a href="mailto:kaihaozheng01@gmail.com">kaihaozheng01@gmail.com</a></dd>
+    <dt>CV</dt><dd><a href="assets/cv/Kaihao-Zheng-CV-EN.pdf">English</a><a href="assets/cv/Kaihao-Zheng-CV-ZH.pdf">中文</a></dd>
+  </dl>
+</header>
+<div class="letter" id="letter"><div>
+  <p>Dear Professor,</p>
+  <p>I am applying for PhD programmes starting in Fall 2027, to keep working on human–water interaction. Specifically, I am interested in developing and applying quantitative methods that reduce complex human–earth interactions to their key elements, so that places can be compared and the mechanisms behind them can be taken apart.</p>
+  <p>I hope to provide scientific insights, data and frameworks for decision-makers who have to find cost-effective solutions with limited people, money and resources, and for carrying what works in one place over to others in a similar state.</p>
+  <p class="sig">Kaihao Zheng</p>
+</div></div>
+
+<div class="upper">
+<div class="col">
+
+  <section id="s-int">
+    <h2><span class="lab">Research Interests</span></h2>
+    <button class="op" aria-expanded="false"><span class="tx"><span class="sub">What</span>Forces and elements within human–water dynamics</span></button>
+    <div class="more"><div><p style="margin:0">The forces that drive human–water systems and the conditions under which their mechanisms hold. In flood management: hydroclimate, the human footprint and settlements, and water infrastructure.</p></div></div>
+    <button class="op" aria-expanded="false"><span class="tx"><span class="sub">How</span>Quantitative methods for large-scale comparison</span></button>
+    <div class="more"><div><p style="margin:0">Frameworks that reduce complex interactions to their key elements and support comparison across many places, which is how the mechanisms behind them can be dissected.</p></div></div>
+    <button class="op" aria-expanded="false"><span class="tx"><span class="sub">Why</span>Cost-effective action and knowledge transfer</span></button>
+    <div class="more"><div><p style="margin:0">With limited people, money and resources, such frameworks help decision-makers see trade-offs and synergies, and let knowledge move between places in a similar state.</p></div></div>
+  </section>
+
+  <section id="s-edu">
+    <h2><span class="lab">Education</span></h2>
+    <button class="op" aria-expanded="false"><span class="tx"><b>M.S.</b> Cartography and GIS<span class="hon">Honorary Graduation</span><span class="org">Peking University</span></span><span class="yr">2023–26</span></button>
+    <div class="more"><div><dl class="f">
+      <dt>Record</dt><dd>GPA 3.71/4.0</dd>
+      <dt>Group</dt><dd><a href="https://geowaterpku.github.io/" target="_blank" rel="noopener">GeoWater Lab</a> · advisor Dr. Peirong Lin</dd>
+      <dt>Thesis</dt><dd>Global modeling of flood protection potential and archetypes of dam regulation</dd>
+      <dt>Honors</dt><dd>National Scholarship 2024 · “Challenge Cup” Grand Prize 2025, First Prize 2024 · Merit Student 2024, 2025</dd>
+    </dl></div></div>
+    <button class="op" aria-expanded="false"><span class="tx"><b>Exchange student</b><span class="org">The University of Tokyo</span></span><span class="yr">2025–26</span></button>
+    <div class="more"><div><dl class="f">
+      <dt>Group</dt><dd><a href="https://global-hydrodynamics.github.io/" target="_blank" rel="noopener">Global Hydrodynamics Lab</a> · advisor Dr. Dai Yamazaki</dd>
+      <dt>When</dt><dd>October 2025 – March 2026, during the M.S.</dd>
+    </dl></div></div>
+    <button class="op" aria-expanded="false"><span class="tx"><b>B.S.</b> Geographical Information Science<span class="hon">Honorary Graduation</span><span class="org">Peking University</span></span><span class="yr">2019–23</span></button>
+    <div class="more"><div><dl class="f">
+      <dt>Record</dt><dd>GPA 3.76/4.0 · Rank 2/27</dd>
+      <dt>Group</dt><dd><a href="https://geowaterpku.github.io/" target="_blank" rel="noopener">GeoWater Lab</a> · advisor Dr. Peirong Lin</dd>
+      <dt>Thesis</dt><dd>Mapping global 90-m geomorphic floodplains with improved spatial heterogeneity</dd>
+      <dt>Honors</dt><dd>National Scholarship 2020 · “Challenge Cup” First Prize 2022, 2023 · Merit Student 2020–22</dd>
+    </dl></div></div>
+    <button class="op" aria-expanded="false"><span class="tx"><b>B.S.</b> Psychology, double degree<span class="org">Peking University</span></span><span class="yr">2020–23</span></button>
+    <div class="more"><div><dl class="f">
+      <dt>School</dt><dd>School of Psychological and Cognitive Sciences</dd>
+    </dl></div></div>
+  </section>
+
+
+</div>
+<div class="col">
+
+  <section id="s-proj">
+    <h2><span class="lab">Research Projects</span></h2>
+    <button class="op" aria-expanded="false"><span class="tx"><b>FRAMES</b> — modeling variables of flood regulation systems</span><span class="yr">2024–26</span></button>
+    <div class="more"><div><dl class="f">
+      <dt>Question</dt><dd>When settlements, dams and hydro-climate interact, what decides how hard flood regulation becomes?</dd>
+      <dt>Approach</dt><dd>A framework linking floodplain exposure, flood return period and dam operational load, tested first in China’s Ganjiang Basin.</dd>
+      <dt>Finding</dt><dd>Urban growth from 1985 to 2015 nearly doubled the Wan’an Dam’s load under a 100-year flood (14.1% → 26.6%). The thesis scales the framework to 4,201 urban catchments worldwide.</dd>
+    </dl><a class="paper" href="https://doi.org/10.1088/1748-9326/ae08ce" target="_blank" rel="noopener">Paper ↗</a></div></div>
+    <button class="op" aria-expanded="false"><span class="tx"><b>SHIFT</b> — mapping global 90-m floodplains</span><span class="yr">2022–24</span></button>
+    <div class="more"><div><dl class="f">
+      <dt>Question</dt><dd>Global floodplain maps used one terrain setting everywhere, ignoring how rivers differ between regions.</dd>
+      <dt>Approach</dt><dd>Basin-specific floodplain hydraulic-geometry parameters on 90-m global terrain.</dd>
+      <dt>Finding</dt><dd>An open global map of geomorphic floodplains: 9.91 million km², 6.6% of the land surface.</dd>
+    </dl><a class="paper" href="https://doi.org/10.5194/essd-16-3873-2024" target="_blank" rel="noopener">Paper ↗</a></div></div>
+    <button class="op" aria-expanded="false"><span class="tx"><b>The levee effect</b> — spatiotemporal patterns in CONUS</span><span class="yr">2022–23</span></button>
+    <div class="more"><div><dl class="f">
+      <dt>Question</dt><dd>Do levees draw cities into floodplains, and can policy change that?</dd>
+      <dt>Approach</dt><dd>Seven decades of land cover around 1,129 levee systems in the contiguous United States.</dd>
+      <dt>Finding</dt><dd>Levees went with 62% faster floodplain urban growth (29% county-wide) until the late 1970s, when the effect reversed alongside flood-insurance and floodplain-management policies.</dd>
+    </dl><a class="paper" href="https://doi.org/10.1038/s41893-023-01202-9" target="_blank" rel="noopener">Paper ↗</a></div></div>
+  </section>
+
+  <section id="s-work">
+    <h2><span class="lab">Work Experience</span></h2>
+    <button class="op" aria-expanded="false"><span class="tx"><b>Research Assistant</b><span class="org">GeoWater Lab, Peking University</span></span><span class="yr">2026–</span></button>
+    <div class="more"><div><dl class="f">
+      <dt>With</dt><dd>Dr. Peirong Lin</dd>
+      <dt>Work</dt><dd>Full-time research after the M.S., continuing the flood-regulation work.</dd>
+    </dl></div></div>
+    <button class="op" aria-expanded="false"><span class="tx"><b>Teaching Assistant</b>, Water Resources Modeling<span class="org">Peking University</span></span><span class="yr">2025</span></button>
+    <div class="more"><div><dl class="f">
+      <dt>Course</dt><dd>Spatio-Temporal Modeling and Analysis of Water Resources, undergraduate, Peking University</dd>
+      <dt>With</dt><dd>Dr. Peirong Lin</dd>
+      <dt>Work</dt><dd>Ran the computer labs, graded assignments, organised a field visit to the Information Center of the Ministry of Water Resources.</dd>
+    </dl></div></div>
+    <button class="op" aria-expanded="false"><span class="tx"><b>Teaching Assistant</b>, Introduction to Computing<span class="org">Peking University</span></span><span class="yr">2024</span></button>
+    <div class="more"><div><dl class="f">
+      <dt>Course</dt><dd>Introduction to Computing (A), undergraduate, Peking University</dd>
+      <dt>Work</dt><dd>Weekly lab tutoring; set and reviewed the course’s team programming project.</dd>
+    </dl></div></div>
+  </section>
+
+  <section id="s-skill">
+    <h2><span class="lab">Knowledge &amp; Skills</span></h2>
+    <div class="ks">
+      <span class="lab">Languages</span>
+      <div class="lang1"><button class="op" aria-expanded="false" style="display:inline;width:auto;padding:0"><span class="tx">English, IELTS Academic 8.5</span></button><span class="sep">·</span>Chinese
+        <span class="more" style="display:block"><span style="display:block;margin:4px 0 6px;padding:2px 0 2px 12px;border-left:2px solid var(--amber)">Listening 9.0 · Reading 9.0 · Writing 7.5 · Speaking 8.0</span></span></div>
+      <span class="lab">Research</span>
+      <div data-group>
+        <div class="chips">
+          <button class="chip" data-p="spatial" aria-expanded="false"><span class="tx">Spatial data analysis</span></button>
+          <button class="chip" data-p="code" aria-expanded="false"><span class="tx">Programming</span></button>
+        </div>
+        <div class="more"></div>
+      </div>
+      <span class="lab">Coursework</span>
+      <div data-group>
+        <div class="chips">
+          <button class="chip" data-p="c-math" aria-expanded="false"><span class="tx">Mathematics</span></button>
+          <button class="chip" data-p="c-hyd" aria-expanded="false"><span class="tx">Hydrology &amp; climate</span></button>
+          <button class="chip" data-p="c-rs" aria-expanded="false"><span class="tx">Remote sensing &amp; GIS</span></button>
+          <button class="chip" data-p="c-cs" aria-expanded="false"><span class="tx">Computer science</span></button>
+          <button class="chip" data-p="c-psy" aria-expanded="false"><span class="tx">Psychology</span></button>
+        </div>
+        <div class="more"></div>
+      </div>
+    </div>
+  </section>
+
+</div>
+</div>
+
+<section class="lower" id="s-pub">
+  <h2><span class="lab">Publications</span></h2>
+  <div class="pubs">
+    <div>
+      <h3 class="lab">First author</h3>
+      <div class="pub"><span class="y">2025</span><span><a href="https://doi.org/10.1088/1748-9326/ae08ce" target="_blank" rel="noopener">Flood regulation as a multivariate challenge in the Anthropocene: a systematic modeling approach</a>
+        <span class="by"><b>Zheng, K.</b>, Lin, P. · <em>Environmental Research Letters</em></span></span></div>
+      <div class="pub"><span class="y">2024</span><span><a href="https://doi.org/10.5194/essd-16-3873-2024" target="_blank" rel="noopener">SHIFT: a spatial-heterogeneity improvement in DEM-based mapping of global geomorphic floodplains</a>
+        <span class="by"><b>Zheng, K.</b>, Lin, P., Yin, Z. · <em>Earth System Science Data</em></span></span></div>
+      <h3 class="lab">Co-authored</h3>
+      <div class="pub"><span class="y">2026</span><span><a href="https://doi.org/10.5194/hess-30-5343-2026" target="_blank" rel="noopener">Process diagnostics of snowmelt runoff in global hydrological and land surface models – Part 1</a>
+        <span class="by">Lei, X., Lin, H., <b>Zheng, K.</b>, Lin, P. · <em>Hydrology and Earth System Sciences</em></span></span></div>
+      <div class="pub"><span class="y">2026</span><span><a href="https://doi.org/10.1016/j.scib.2026.05.002" target="_blank" rel="noopener">Mapping global floodplain development disparities highlights drivers behind intensifying flood losses</a>
+        <span class="by">Lan, Z., … <b>Zheng, K.</b>, … Sun, F. · <em>Science Bulletin</em></span></span></div>
+    </div>
+    <div>
+      <h3 class="lab" style="visibility:hidden" aria-hidden="true">Co-authored</h3>
+      <div class="pub"><span class="y">2026</span><span><a href="https://doi.org/10.1029/2025GL120255" target="_blank" rel="noopener">Observation-based spatiotemporal analysis of the evolving flood regulation capacity for the Yangtze River Basin</a>
+        <span class="by">Su, J., Lin, P., <b>Zheng, K.</b>, et al. · <em>Geophysical Research Letters</em></span></span></div>
+      <div class="pub"><span class="y">2026</span><span><a href="https://doi.org/10.1016/j.horiz.2025.100174" target="_blank" rel="noopener">Human perturbations reshape hydrological responses in riverine systems: a reach-level framework for the Pearl River Basin</a>
+        <span class="by">Lin, H., Lin, P., <b>Zheng, K.</b> · <em>Sustainable Horizons</em></span></span></div>
+      <div class="pub"><span class="y">2026</span><span><a href="https://doi.org/10.5194/egusphere-2025-6073" target="_blank" rel="noopener">Process diagnostics of snowmelt runoff in global hydrological models – Part II: Are more complex models better?</a>
+        <span class="by">Lei, X., Lin, H., <b>Zheng, K.</b>, Lin, P. · <em>EGUsphere</em>, accepted</span></span></div>
+      <div class="pub"><span class="y">2024</span><span><a href="https://doi.org/10.59717/j.xinn-geo.2024.100086" target="_blank" rel="noopener">Tracking global floodplain urban growth</a>
+        <span class="by">Lin, P., Yin, Z., <b>Zheng, K.</b>, et al. · <em>The Innovation Geoscience</em></span></span></div>
+      <div class="pub"><span class="y">2023</span><span><a href="https://doi.org/10.1038/s41893-023-01202-9" target="_blank" rel="noopener">Reversal of the levee effect towards sustainable floodplain management</a>
+        <span class="by">Ding, M., Lin, P., … <b>Zheng, K.</b>, … Liu, Y. · <em>Nature Sustainability</em></span></span></div>
+    </div>
+  </div>
+</section>
+
+</div>
+
+<button class="door" id="globe" aria-label="See more of me on a sketchpad">
+  <span class="cap"><span class="long">Click to see more of me on a sketchpad</span><span class="short">More of me</span></span>
+  <span class="g"><svg viewBox="0 0 100 100" aria-hidden="true">
+    <circle cx="50" cy="50" r="46" fill="#fcfcf9" stroke="#1b2a41" stroke-width="3"/>
+    <ellipse cx="50" cy="50" rx="46" ry="15" fill="none" stroke="#1b2a41" stroke-width="1.6"/>
+    <path d="M10 30h80M10 70h80" stroke="#b8c2cb" stroke-width="1.3"/>
+    <ellipse cx="50" cy="50" rx="20" ry="46" fill="none" stroke="#1b2a41" stroke-width="1.6"><animate attributeName="rx" values="46;0;46" dur="9s" repeatCount="indefinite"/></ellipse>
+    <ellipse cx="50" cy="50" rx="20" ry="46" fill="none" stroke="#1b2a41" stroke-width="1.2" opacity=".55"><animate attributeName="rx" values="0;46;0" dur="9s" repeatCount="indefinite"/></ellipse>
+    <circle cx="31" cy="29" r="5" fill="#a86a14"><animate attributeName="cx" values="31;69;31" dur="9s" repeatCount="indefinite"/><animate attributeName="opacity" values="1;1;0;0;1" keyTimes="0;.42;.5;.92;1" dur="9s" repeatCount="indefinite"/></circle>
+  </svg></span>
+</button>
+
+<div class="play" id="play" aria-hidden="true"></div>
+<button class="back" id="back">← Back to the CV</button>
+<div class="board" id="board" aria-hidden="true"></div>
+
+<script>
+/* ---------- one way to open things: click / tap ---------- */
+var PEEK={
+  spatial:'<ul><li>Geospatial analysis in GIS</li><li>Remote sensing data processing and analysis</li><li>Hydrological data analysis</li><li>Terrain, hydrography and hydraulic analysis</li><li>Flood modeling and inundation mapping</li></ul>',
+  code:'<ul><li>Python, mainly</li><li>Experience with C++ and C#</li></ul>',
+  'c-math':'<ul><li>Advanced Mathematics I–II · Linear Algebra · Probability and Statistics</li><li>Discrete Mathematics · Computational Mathematics · Mathematical Models in Geoscience</li></ul>',
+  'c-hyd':'<ul><li>Spatial Information Systems in Hydrology · Global Change and the Remote-Sensing Water Cycle</li><li>Earth System Modeling · Meteorology and Climatology · Limnology</li></ul>',
+  'c-rs':'<ul><li>Principles of GIS · Advanced GIS · Spatial Analysis · GIS Algorithms</li><li>Remote-Sensing Image Processing · Quantitative Remote Sensing · LiDAR · SAR</li></ul>',
+  'c-cs':'<ul><li>Introduction to Computing (A) · Programming Languages</li><li>Database Systems · Software Engineering · Networks and WebGIS</li></ul>',
+  'c-psy':'<ul><li>General · Social · Cognitive · Developmental Psychology</li><li>Experimental Psychology</li></ul>'
+};
+function setOpen(btn,panel,on){btn.setAttribute('aria-expanded',on?'true':'false');panel.classList.toggle('on',on)}
+document.querySelectorAll('section .op').forEach(function(b){
+  var panel=b.closest('.lang1')?b.closest('.lang1').querySelector('.more'):b.nextElementSibling;
+  b.addEventListener('click',function(){setOpen(b,panel,b.getAttribute('aria-expanded')!=='true')});
+});
+var lb=document.querySelector('[data-open="letter"]'),letter=document.getElementById('letter');
+lb.addEventListener('click',function(){setOpen(lb,letter,lb.getAttribute('aria-expanded')!=='true')});
+document.querySelectorAll('[data-group]').forEach(function(g){
+  var panel=g.querySelector('.more');
+  g.querySelectorAll('.chip').forEach(function(c){
+    c.addEventListener('click',function(){
+      var was=c.getAttribute('aria-expanded')==='true';
+      g.querySelectorAll('.chip').forEach(function(o){o.setAttribute('aria-expanded','false')});
+      if(was){panel.classList.remove('on');return}
+      c.setAttribute('aria-expanded','true');panel.innerHTML='<div>'+PEEK[c.dataset.p]+'</div>';panel.classList.add('on');
+    });
+  });
+});
+
+/* ---------- the board: a globe of split-flap letters ----------
+   Out: the little globe grows into the middle of the screen; every land cell is a flap that keeps rolling,
+   the sea is faint dots; it spins and slows down facing New York (where I am now), the amber ring on the equator
+   lands as MORE OF ME, then the camera dives into the amber dot and through, into the sketchpad.
+   Back: a plain cut through black. Land: Natural Earth 1:110m from the site's own core.js, as a 2.5° mask. */
+var board=document.getElementById('board'),play=document.getElementById('play'),back=document.getElementById('back'),busy=false;
+var SITE='index.html',GLYPHS='ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+var reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+var MASK='000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000ff9ffffe0000000000000000000000000133fcfffff000700000000c000000000000129900fffff00000000e001f8000000000003c034003fff00000006007ff80080000040017c6fe01ffe000000061dfffff7f800f800002bc4c7e007fffe01fa1400000000000c00000003c1e03fbff802c000000000000000fffffff51c1f00800f7ffffffffffffffe03ffffffc0600e00003e7ffffffffffffef801e07fffe07e0000003e7fffffffffff808000801ffff87e00000214fffffffffffe038000000ffffeff80000d1fffffffffffff0300000007ffffffc00003ffffffffffffff0000000003fffff4e00003ffffffffffffff0000000003fffffc000001fff5f7fffffffe0000000003fffff0000001ebe0effffffffc4000000003ffffe000000f86f6f3fffffff08000000001ffffc000000f029ff3fffffe208000000001ffffc0000000f007ffffffff1300000000007fff80000007f003ffffffff0400000000005ffe0000000ffeebffffffff8000000000003fc10000000fffffefffffff8000000000000f810000003ffffdf3ffffff00000000000007800000003ffffdfe1ffffe80000000000003880000007ffffeff0fe7e000000000000003d81800003ffffefe07c3d000000000000000780000007fffff780781e0800000000000000e0000007fffffe00301f0c0000000000000002800003fffff9003016000000000000000017f00001ffffff000010020000000000000007f80000fbffff000808000000000000000007ff000000fffe00001860000000000000000fff000000fffc00000ce0000000000000000fffc00000fff800000ce8c00000000000000ffff80000fff0000004083c0000000000000ffffc00007ff0000002001e0000000000000ffffc00007ff00000001a0800000000000007fff800007ff0000000000000000000000007fff000007ff100000000c000000000000001fff000007ff300000007e400000000000000fff000007fc300000007fe00000000000000fff000007fc60000003fff00000000000000ffc000003fc60000007fff00000000000000ff8000003f800000007fff80000000000001ff0000001f800000003fff80000000000001ff0000001f000000003fff80000000000001fe0000001c000000003c3f80000000000001f80000000000000000000f00000000000001f00000000000000000000200200000000003c00000000000000000000200400000000001c00000000000000000000000800000000003800000000000000000000001000000000003800000000000000000000000000000000003080000000000000000000000000000000001800000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000080000000000000000000000000000000000200000000000600004400000000000000000400000000047ff1fffffff80000000000003e000005ffffffe7fffffffff000000101ffbf00007fffffffffffffffffe00003fffffff00003ffffffffffffffffff80013fffffff800e3fffffffffffffffffffe0003ffffffff8007fffffffffffffffffff00001ffffffffffffffffffffffffffffffff0000000000000000000000000000000000000000000000000000000000000000000000000',STEP=2.5,NX=144,NY=72,HERE=[-74,40.7];
+var LAND=[],SEA=[],D2R=Math.PI/180;
+(function(){var k=0;for(var j=0;j<NY;j++)for(var i=0;i<NX;i++,k++){
+  var on=(parseInt(MASK[k>>2],16)>>(3-(k&3)))&1,lon=-180+STEP*(i+.5),lat=90-STEP*(j+.5);
+  if(on)LAND.push({lon:lon,lat:lat,g:GLYPHS[(Math.random()*36)|0],t:(Math.random()*6)|0});
+  else if((i+j)%2===0&&Math.random()<Math.cos(lat*D2R)*1.1)SEA.push({lon:lon,lat:lat});
+}})();
+var RING='MORE OF ME'.split('').map(function(ch,i){return {ch:ch,lon:HERE[0]-29.25+i*6.5,lat:19,g:' ',land:0}});
+function loadPlay(){if(!play.firstChild){var f=document.createElement('iframe');f.src=SITE;f.title='More of me — the sketchpad';play.appendChild(f)}}
+setTimeout(loadPlay,1500);
+document.getElementById('globe').addEventListener('pointerenter',loadPlay);
+function wait(ms){return new Promise(function(r){setTimeout(r,ms)})}
+function ease(t){t=Math.max(0,Math.min(1,t));return 1-Math.pow(1-t,3)}
+function inout(t){t=Math.max(0,Math.min(1,t));return t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2}
+function flapText(el,to,start,step){ /* B612 flaps on the pass: roll, then land left to right */
+  var n=0,len=to.length;(function f(){n++;var out='';for(var i=0;i<len;i++){out+=(to[i]===' '||n>start+i*step)?to[i]:GLYPHS[(Math.random()*36)|0]}el.textContent=out;if(n<=start+len*step)setTimeout(f,45)})();
+}
+function passEl(){
+  var d=document.createElement('div');d.className='tpass';
+  d.innerHTML='<span class="pband"><i>BOARDING PASS</i></span>'+
+    '<span class="pmain"><span class="lab" data-f="BOARDING NOW · GATE 02">&nbsp;</span><span class="end">More of me</span>'+
+    '<span class="proute"><span><b data-f="CV">&nbsp;</b><span class="lab">ACADEMIC</span></span><span class="pline"><svg viewBox="0 0 24 24"><path d="M2.5 12.8l2-.7 3 1.6 4.3-1.5L6 5.6l2.2-.8 8.2 5.8 3.9-1.4c1.2-.4 2.4.1 2.7 1 .3.9-.4 2-1.6 2.4L6.3 17.9z"/></svg></span><span class="to"><b data-f="ME">&nbsp;</b><span class="lab">SKETCHPAD</span></span></span>'+
+    '<span class="pmeta"><span><span class="lab">PASSENGER</span><b data-f="ZHENG / KAIHAO">&nbsp;</b></span><span><span class="lab">SEAT</span><b data-f="2027">&nbsp;</b></span></span></span>'+
+    '<span class="pstub"><span class="lab">NOW AT</span><b data-f="NEW YORK">&nbsp;</b><span class="bars"></span><span class="stamp">BOARDED ✓</span></span>';
+  return d;
+}
+function globeOut(){
+  return new Promise(function(done){
+    var W=innerWidth,H=innerHeight,dpr=Math.min(2,devicePixelRatio||1),wide=W>=1100&&H>=620;
+    var cv=document.createElement('canvas');cv.width=W*dpr;cv.height=H*dpr;board.innerHTML='';board.appendChild(cv);board.classList.add('on');
+    var ctx=cv.getContext('2d');ctx.scale(dpr,dpr);
+    var r0=document.querySelector('#globe .g').getBoundingClientRect(),sx=r0.left+r0.width/2,sy=r0.top+r0.height/2,sr=r0.width/2;
+    /* where the globe sits while the pass prints, and where the sketchpad keeps its own big globe */
+    var R1=Math.min(W,H)*(wide?.26:.24),gx=W/2,gy=H*(wide?.38:.36);
+    var EX=wide?W*.93:W/2,EY=wide?H*1.16:H*.4,ER=wide?Math.max(W,H)*.36:R1;
+    var mono=getComputedStyle(document.documentElement).getPropertyValue('--mono')||'monospace';
+    var pass=passEl();board.appendChild(pass);
+    var pw=pass.offsetWidth,ph=pass.offsetHeight;
+    var P0={x:gx-pw/2,y:H+20,r:-4},P1={x:gx-pw/2,y:gy+R1*.55,r:-2.5};
+    var P2=wide?{x:W*.68,y:H*.52,r:-9,s:Math.min(1,(W*.3)/pw)}:{x:gx-pw/2,y:gy+R1*.55,r:-2.5,s:1};
+    var T0=performance.now(),printed=false,flown=false,swapped=false;
+    function place(p,s){pass.style.transform='translate('+p.x+'px,'+p.y+'px) rotate('+p.r+'deg) scale('+(s||1)+')'}
+    place(P0);
+    (function frame(now){
+      var t=now-T0;
+      var grow=ease(t/700),go=inout((t-1900)/700),fadeAll=Math.max(0,(t-2300)/320);
+      var cx=sx+(gx-sx)*grow,cy=sy+(gy-sy)*grow,R=sr+(R1-sr)*grow;
+      cx+=(EX-cx)*go;cy+=(EY-cy)*go;R+=(ER-R)*go;
+      var spin=ease(t/1800),lon0=HERE[0]+(1-spin)*-540+(t>1800?(t-1800)*.006:0),lat0=8+(HERE[1]-8)*Math.min(1,t/1800);
+      var sl0=Math.sin(lat0*D2R),cl0=Math.cos(lat0*D2R);
+      function P(lon,lat){var l=(lon-lon0)*D2R,f=lat*D2R,cf=Math.cos(f),sf=Math.sin(f),cl=Math.cos(l);
+        return [cx+R*cf*Math.sin(l),cy-R*(cl0*sf-sl0*cf*cl),sl0*sf+cl0*cf*cl]}
+      ctx.clearRect(0,0,W,H);
+      var bgA=Math.min(1,t/380)*(1-fadeAll);
+      ctx.fillStyle='rgba(20,29,43,'+bgA+')';ctx.fillRect(0,0,W,H);
+      var a=1-fadeAll,letters=1-go;   /* letters give way to dots as it settles into the sketchpad's globe */
+      ctx.fillStyle='rgba(252,252,249,'+(.06*a)+')';ctx.beginPath();ctx.arc(cx,cy,R,0,7);ctx.fill();
+      ctx.strokeStyle='rgba(207,214,223,'+(.4*a)+')';ctx.lineWidth=1;ctx.beginPath();ctx.arc(cx,cy,R,0,7);ctx.stroke();
+      var dot=Math.max(.7,R*.005);ctx.fillStyle='rgba(120,140,165,'+(.45*a)+')';
+      for(var i=0;i<SEA.length;i++){var p=P(SEA[i].lon,SEA[i].lat);if(p[2]>0&&p[0]>-9&&p[0]<W+9&&p[1]>-9&&p[1]<H+9)ctx.fillRect(p[0],p[1],dot,dot)}
+      var fs=Math.max(4,Math.min(15,R*STEP*D2R*1.05));ctx.font=fs+'px '+mono;ctx.textAlign='center';ctx.textBaseline='middle';
+      for(i=0;i<LAND.length;i++){var c=LAND[i];p=P(c.lon,c.lat);if(p[2]<=0||p[0]<-20||p[0]>W+20||p[1]<-20||p[1]>H+20)continue;
+        if(((t/45|0)+c.t)%(t<1400?1:3)===0)c.g=GLYPHS[(Math.random()*36)|0];
+        var al=(.25+.75*p[2])*a;
+        if(letters>.02){ctx.fillStyle='rgba(207,214,223,'+(al*letters)+')';ctx.fillText(c.g,p[0],p[1])}
+        if(letters<.98){ctx.fillStyle='rgba(225,231,227,'+(al*(1-letters))+')';ctx.fillRect(p[0]-R*.014,p[1]-R*.014,R*.028,R*.028)}}
+      p=P(HERE[0],HERE[1]);if(p[2]>0){ctx.fillStyle='rgba(224,170,82,'+a+')';ctx.beginPath();ctx.arc(p[0],p[1],Math.max(3,R*.022)*(1+.3*Math.sin(t/110)),0,7);ctx.fill()}
+      /* the pass: printed out from under the globe, its flaps land, it is stamped, then it flies to its place on the sketchpad */
+      if(!printed&&t>500){printed=true;
+        pass.animate([{transform:pass.style.transform},{transform:'translate('+P1.x+'px,'+P1.y+'px) rotate('+P1.r+'deg)'}],{duration:620,easing:'cubic-bezier(.2,.9,.2,1)',fill:'forwards'});
+        var k=0;pass.querySelectorAll('[data-f]').forEach(function(el){flapText(el,el.dataset.f,4+k*3,1);k++});
+        setTimeout(function(){pass.classList.add('fly')},700);
+        setTimeout(function(){pass.classList.add('ok')},1500);
+      }
+      if(!flown&&t>1900){flown=true;
+        pass.getAnimations().forEach(function(x){x.commitStyles&&x.commitStyles();x.cancel()});
+        pass.animate([{transform:'translate('+P1.x+'px,'+P1.y+'px) rotate('+P1.r+'deg) scale(1)'},{transform:'translate('+P2.x+'px,'+P2.y+'px) rotate('+P2.r+'deg) scale('+P2.s+')'}],{duration:700,easing:'cubic-bezier(.65,0,.35,1)',fill:'forwards'});
+      }
+      if(!swapped&&t>2300){swapped=true;swap(true);pass.animate([{opacity:1},{opacity:0}],{duration:320,fill:'forwards'})}
+      if(t<2640)requestAnimationFrame(frame);else done();
+    })(T0);
+  });
+}
+async function go(toPlay){
+  if(busy)return;busy=true;
+  if(toPlay)loadPlay();
+  if(reduce){swap(toPlay);busy=false;return}
+  if(toPlay){
+    await globeOut();
+  }else{
+    /* back: no show, a clean cut through black */
+    board.innerHTML='';board.classList.add('on');board.style.background='#000';
+    await board.animate([{opacity:0},{opacity:1}],{duration:170,easing:'ease-in',fill:'both'}).finished;
+    swap(false);await wait(90);
+    await board.animate([{opacity:1},{opacity:0}],{duration:260,easing:'ease-out',fill:'both'}).finished;
+  }
+  board.getAnimations().forEach(function(a){a.cancel()});
+  board.classList.remove('on');board.innerHTML='';board.style.background='';busy=false;
+}
+function swap(toPlay){
+  play.classList.toggle('on',toPlay);back.classList.toggle('on',toPlay);
+  play.setAttribute('aria-hidden',toPlay?'false':'true');
+  document.body.style.overflow=toPlay?'hidden':'';
+  history.replaceState(null,'',toPlay?'#me':'#cv');
+}
+document.getElementById('globe').addEventListener('click',function(){go(true)});
+/* the long caption only on the first screen, so it never sits on top of what is being read */
+addEventListener('scroll',function(){document.getElementById('globe').classList.toggle('quiet',scrollY>120)},{passive:true});
+back.addEventListener('click',function(){go(false)});
+addEventListener('keydown',function(e){if(e.key==='Escape'&&play.classList.contains('on'))go(false)});
+if(location.hash==='#me'){loadPlay();swap(true)}
+</script>
+</body>
+</html>
