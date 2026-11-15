@@ -1,5 +1,5 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="claude:viewport-fit-sides" content="cover">
-<meta name="version" content="homepage v4.3 · 2026-11-15">
+<meta name="version" content="homepage v4.4 · 2026-11-15">
 <title>Kaihao Zheng</title>
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="assets/favicon-32.png" type="image/png" sizes="32x32">
@@ -754,7 +754,7 @@ body::before{content:"";position:fixed;z-index:19;left:0;right:0;top:0;height:ca
 <button type="button" id="chip" data-go="travels" hidden><b>a traveler</b><i>OPEN THE MAP →</i></button>
 <div class="tip" id="tip" hidden></div>
 <aside id="notes" hidden aria-label="批注"></aside>
-<nav id="tabs" aria-label="Contents"><a class="tabcv" href="cv.html" target="_top" data-tocv>Academic CV ↗</a><button type="button" class="tabtoggle" data-tabs>Contents</button><div class="tablist"><button type="button" data-go="about" aria-current="true">About me</button><button type="button" data-go="research">Research</button><button type="button" data-go="education">Educational experiences</button><button type="button" data-go="travels">Travels</button></div><button type="button" id="notesbtn" aria-pressed="false">批注</button></nav>
+<nav id="tabs" aria-label="Contents"><a class="tabcv" href="cv.html" target="_top" data-tocv>Interactive CV ↗</a><button type="button" class="tabtoggle" data-tabs>Contents</button><div class="tablist"><button type="button" data-go="about" aria-current="true">About me</button><button type="button" data-go="research">Research</button><button type="button" data-go="education">Educational experiences</button><button type="button" data-go="travels">Travels</button></div><button type="button" id="notesbtn" aria-pressed="false">批注</button></nav>
 
 <script src="assets/vendor/d3.min.js"></script>
 <script>if(location.hash==='#cv')location.replace('cv.html');
@@ -1592,7 +1592,7 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
       '<p class="ending" id="ending" aria-live="off">'+lineOf(S.auto)+'</p>'+
       '<p class="about">I am primarily interested in human–water interaction and, more broadly, coupled human–earth systems.</p>'+
       '<dl class="links"><dt>write to</dt><dd><a href="mailto:'+MAIL+'">'+MAIL+'</a><a href="mailto:'+MAIL2+'">'+MAIL2+'</a></dd>'+
-        '<dt>CV</dt><dd class="row"><a href="cv.html">Academic page</a><a href="'+CV.en+'" download>English PDF</a><a href="'+CV.zh+'" download>中文 PDF</a></dd>'+
+        '<dt>CV</dt><dd class="row"><a href="cv.html">Interactive CV</a><a href="'+CV.en+'" download>English PDF</a><a href="'+CV.zh+'" download>中文 PDF</a></dd>'+
         '<dt>papers</dt><dd><a href="'+SCHOLAR+'" target="_blank" rel="noopener">Google Scholar ↗</a></dd>'+
         '<dt>also into</dt><dd class="tags">'+SMALLS.map(function(id){return '<span class="tg" data-paper="'+id+'">'+SMALL[id].short+'</span>'}).join('')+'</dd></dl>'+
       '</div>'+
