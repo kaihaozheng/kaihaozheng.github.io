@@ -3,13 +3,13 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="version" content="homepage v5.0 · 2026-11-15 · 2026-11-15">
+<meta name="version" content="homepage v5.1 · 2026-11-15 · 2026-11-15">
 <title>Kaihao Zheng — CV</title>
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=B612+Mono:wght@400&family=Libre+Franklin:wght@400;500;600&family=STIX+Two+Text:ital,wght@0,400;0,600;1,400&display=swap">
 <style>
-/* cv.html — the academic page; the front page index.html is the sketchpad, /#cv comes here (homepage v5.0 · 2026-11-15, 2026-11-15; from session S-20261114-010127-UTC-5, prototype 02C v0.9).
+/* cv.html — the academic page; the front page index.html is the sketchpad, /#cv comes here (homepage v5.1 · 2026-11-15, 2026-11-15; from session S-20261114-010127-UTC-5, prototype 02C v0.9).
    Two type levels: --t (STIX, everything that is read) and --l (Franklin, labels and years). The name is the one exception.
    One interaction: anything with a “+” opens on click / tap; hover only hints.                                    */
 :root{
@@ -436,8 +436,8 @@ var LAND=[],SEA=[],D2R=Math.PI/180;
 }})();
 var RING='MORE OF ME'.split('').map(function(ch,i){return {ch:ch,lon:HERE[0]-29.25+i*6.5,lat:19,g:' ',land:0}});
 function loadPlay(){if(!play.firstChild){var f=document.createElement('iframe');f.src=SITE;f.title='More of me — the sketchpad';play.appendChild(f)}}
-setTimeout(loadPlay,1500);
-document.getElementById('globe').addEventListener('pointerenter',loadPlay);
+/* v5.1: the home page is only fetched when someone heads for the globe (pointing at it, or a finger on it), not for every visitor */
+['pointerenter','pointerdown','focus'].forEach(function(ev){document.getElementById('globe').addEventListener(ev,loadPlay,{once:true})});
 function wait(ms){return new Promise(function(r){setTimeout(r,ms)})}
 function ease(t){t=Math.max(0,Math.min(1,t));return 1-Math.pow(1-t,3)}
 function inout(t){t=Math.max(0,Math.min(1,t));return t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2}

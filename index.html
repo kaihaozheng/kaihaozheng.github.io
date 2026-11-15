@@ -1,5 +1,5 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="claude:viewport-fit-sides" content="cover">
-<meta name="version" content="homepage v5.0 · 2026-11-15">
+<meta name="version" content="homepage v5.1 · 2026-11-15">
 <title>Kaihao Zheng</title>
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="assets/favicon-32.png" type="image/png" sizes="32x32">
@@ -768,7 +768,7 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
   if(window.parent!==window){try{var b=window.parent.document.getElementById('back');if(b){b.click();return}}catch(_){}}
   var k=document.createElement('div');k.style.cssText='position:fixed;inset:0;z-index:2147483647;background:#000;opacity:0;transition:opacity .17s ease-in';document.body.appendChild(k);void k.offsetWidth;k.style.opacity='1';
   try{sessionStorage.setItem('toCV','1')}catch(_){}setTimeout(function(){location.href='cv.html'},180)});</script>
-<script src="assets/core.js?v=s3bjbm"></script>
+<script src="assets/core.js?v=3naf6d"></script>
 <script>
 (function(){
   'use strict';
@@ -1597,7 +1597,7 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
   /* ---------- the five parts ---------- */
   function deskHTML(){
     return '<section id="about" class="deskview"><div class="intro">'+mk(1)+
-      '<div class="who"><h1 class="iam">I am</h1><p class="name"><span>Kaihao Zheng</span>,</p><span class="figs">'+flipHTML()+FIGS.map(function(id){var c=figOf(id);return c?'<img class="fig" data-fig="'+id+'" src="'+c+'" alt="">':''}).join('')+'</span></div>'+
+      '<div class="who"><h1 class="iam">I am</h1><p class="name"><span>Kaihao Zheng</span>,</p><span class="figs">'+flipHTML()+FIGS.map(function(id){var c=figOf(id);return c?'<img class="fig" data-fig="'+id+'" data-src="'+c+'" alt="">':''}).join('')+'</span></div>'+
       '<p class="ending" id="ending" aria-live="off">'+lineOf(S.auto)+'</p>'+
       '<p class="about">I am primarily interested in human–water interaction and, more broadly, coupled human–earth systems.</p>'+
       '<dl class="links"><dt>write to</dt><dd><a href="mailto:'+MAIL+'">'+MAIL+'</a><a href="mailto:'+MAIL2+'">'+MAIL2+'</a></dd>'+
@@ -1811,6 +1811,9 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
   function render(){
     view.innerHTML=deskHTML()+researchHTML()+eduHTML()+doorHTML()+travelHTML();
     light(S.auto);GLOBE.aim();
+    /* v5.1: the figures that only slide out on pointing load after the page has (the first-screen one is already in) */
+    (function later(){function go(){Array.prototype.forEach.call(document.querySelectorAll('img[data-src]'),function(i){i.src=i.dataset.src;i.removeAttribute('data-src')})}
+      if(document.readyState==='complete')setTimeout(go,300);else window.addEventListener('load',function(){setTimeout(go,300)},{once:true})})();
     /* 02D: each sheet keeps its first block; the rest goes into a drawer that slides open */
     Array.prototype.forEach.call(view.querySelectorAll('#education .sheet .sheet-body'),function(b){
       var kids=Array.prototype.slice.call(b.children,1);if(!kids.length)return;var r=document.createElement('div');r.className='rest';
