@@ -3,13 +3,13 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="version" content="homepage v4.6 · 2026-11-15">
+<meta name="version" content="homepage v4.7 · 2026-11-15">
 <title>Kaihao Zheng — CV</title>
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=B612+Mono:wght@400&family=Libre+Franklin:wght@400;500;600&family=STIX+Two+Text:ital,wght@0,400;0,600;1,400&display=swap">
 <style>
-/* cv.html — the academic page; the front page index.html is the sketchpad, /#cv comes here (homepage v4.6, 2026-11-15; from session S-20261114-010127-UTC-5, prototype 02C v0.9).
+/* cv.html — the academic page; the front page index.html is the sketchpad, /#cv comes here (homepage v4.7, 2026-11-15; from session S-20261114-010127-UTC-5, prototype 02C v0.9).
    Two type levels: --t (STIX, everything that is read) and --l (Franklin, labels and years). The name is the one exception.
    One interaction: anything with a “+” opens on click / tap; hover only hints.                                    */
 :root{
@@ -212,7 +212,7 @@ dl.f dd{margin:0}
   <img class="photo" src="assets/portrait.png" alt="Portrait of Kaihao Zheng">
   <div>
     <h1>Kaihao Zheng</h1>
-    <p class="line">PhD applicant in human–water interaction, for Fall 2027 <span class="x">·</span> <button class="op" style="display:inline;width:auto;padding:0" data-open="letter" aria-expanded="false"><span class="tx lab" style="color:var(--amber)">My letter to professors</span></button></p>
+    <p class="line">PhD applicant for Fall 2027 <span class="x">·</span> <button class="op" style="display:inline;width:auto;padding:0" data-open="letter" aria-expanded="false"><span class="tx lab" style="color:var(--amber)">My letter to professors</span></button></p>
   </div>
   <dl class="contact">
     <dt>Email</dt><dd><a href="mailto:Mostaly@pku.edu.cn">Mostaly@pku.edu.cn</a></dd>
@@ -222,7 +222,7 @@ dl.f dd{margin:0}
 </header>
 <div class="letter" id="letter"><div>
   <p>Dear Professor,</p>
-  <p>I am applying for PhD programmes starting in Fall 2027, to keep working on human–water interaction. Specifically, I am interested in developing and applying quantitative methods that reduce complex human–earth interactions to their key elements, so that places can be compared and the mechanisms behind them can be taken apart.</p>
+  <p>I am applying for PhD programmes starting in Fall 2027, to work on human–water interaction. Specifically, I am interested in developing and applying quantitative methods that reduce complex human–earth interactions to their key elements, so that places can be compared and the mechanisms behind them can be taken apart.</p>
   <p>I hope to provide scientific insights, data and frameworks for decision-makers who have to find cost-effective solutions with limited people, money and resources, and for carrying what works in one place over to others in a similar state.</p>
   <p class="sig">Kaihao Zheng</p>
 </div></div>
@@ -366,7 +366,7 @@ dl.f dd{margin:0}
       <div class="pub"><span class="y">2026</span><span><a href="https://doi.org/10.1016/j.horiz.2025.100174" target="_blank" rel="noopener">Human perturbations reshape hydrological responses in riverine systems: a reach-level framework for the Pearl River Basin</a>
         <span class="by">Lin, H., Lin, P., <b>Zheng, K.</b> · <em>Sustainable Horizons</em></span></span></div>
       <div class="pub"><span class="y">2026</span><span><a href="https://doi.org/10.5194/egusphere-2025-6073" target="_blank" rel="noopener">Process diagnostics of snowmelt runoff in global hydrological models – Part II: Are more complex models better?</a>
-        <span class="by">Lei, X., Lin, H., <b>Zheng, K.</b>, Lin, P. · <em>EGUsphere</em>, accepted</span></span></div>
+        <span class="by">Lei, X., Lin, H., <b>Zheng, K.</b>, Lin, P. · <em>Hydrology and Earth System Sciences</em>, accepted (EGUsphere preprint)</span></span></div>
       <div class="pub"><span class="y">2024</span><span><a href="https://doi.org/10.59717/j.xinn-geo.2024.100086" target="_blank" rel="noopener">Tracking global floodplain urban growth</a>
         <span class="by">Lin, P., Yin, Z., <b>Zheng, K.</b>, et al. · <em>The Innovation Geoscience</em></span></span></div>
       <div class="pub"><span class="y">2023</span><span><a href="https://doi.org/10.1038/s41893-023-01202-9" target="_blank" rel="noopener">Reversal of the levee effect towards sustainable floodplain management</a>
@@ -474,7 +474,7 @@ function globeOut(){
     var T0=performance.now(),printed=false,flown=false,swapped=false;
     function place(p,s){pass.style.transform='translate('+p.x+'px,'+p.y+'px) rotate('+p.r+'deg) scale('+(s||1)+')'}
     place(P0);
-    (function frame(now){
+    (function frame(now){try{
       var t=now-T0;
       var grow=ease(t/700),go=inout((t-1900)/700),fadeAll=Math.max(0,(t-2300)/320);
       var cx=sx+(gx-sx)*grow,cy=sy+(gy-sy)*grow,R=sr+(R1-sr)*grow;
@@ -506,12 +506,12 @@ function globeOut(){
         setTimeout(function(){pass.classList.add('ok')},1500);
       }
       if(!flown&&t>1900){flown=true;
-        pass.getAnimations().forEach(function(x){x.commitStyles&&x.commitStyles();x.cancel()});
+        pass.getAnimations().forEach(function(x){x.cancel()});place(P1);
         pass.animate([{transform:'translate('+P1.x+'px,'+P1.y+'px) rotate('+P1.r+'deg) scale(1)'},{transform:'translate('+P2.x+'px,'+P2.y+'px) rotate('+P2.r+'deg) scale('+P2.s+')'}],{duration:700,easing:'cubic-bezier(.65,0,.35,1)',fill:'forwards'});
       }
       if(!swapped&&t>2300){swapped=true;swap(true);pass.animate([{opacity:1},{opacity:0}],{duration:320,fill:'forwards'})}
       if(t<2640)requestAnimationFrame(frame);else done();
-    })(T0);
+    }catch(err){if(!swapped){swapped=true;swap(true)}done()}})(T0);
   });
 }
 async function go(toPlay){
@@ -519,7 +519,8 @@ async function go(toPlay){
   if(toPlay)loadPlay();
   if(reduce){swap(toPlay);busy=false;return}
   if(toPlay){
-    await globeOut();
+    await Promise.race([globeOut(),wait(4500)]);
+    if(!play.classList.contains('on'))swap(true);
   }else{
     /* back: no show, a clean cut through black */
     board.innerHTML='';board.classList.add('on');board.style.background='#000';
@@ -536,7 +537,7 @@ function swap(toPlay){
   document.body.style.overflow=toPlay?'hidden':'';
   /* one address per page: behind the globe it is the front page itself (/), back here it is /cv.html (user 11-15) */
   try{if(/^https?:/.test(location.protocol))history.replaceState(null,'',toPlay?'./':'cv.html');else history.replaceState(null,'',toPlay?'#me':'#cv')}
-  catch(_){history.replaceState(null,'',toPlay?'#me':'#cv')}
+  catch(_){try{history.replaceState(null,'',toPlay?'#me':'#cv')}catch(__){}}
   document.title=toPlay?'Kaihao Zheng':'Kaihao Zheng — CV';
 }
 document.getElementById('globe').addEventListener('click',function(){go(true)});
