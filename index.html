@@ -1,5 +1,5 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="claude:viewport-fit-sides" content="cover">
-<meta name="version" content="homepage v5.1 · 2026-11-15">
+<meta name="version" content="homepage v5.2 · 2026-11-15">
 <title>Kaihao Zheng</title>
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="assets/favicon-32.png" type="image/png" sizes="32x32">
@@ -759,7 +759,7 @@ body::before{content:"";position:fixed;z-index:19;left:0;right:0;top:0;height:ca
 <div class="tip" id="tip" hidden></div>
 <aside id="notes" hidden aria-label="批注"></aside>
 <a class="tocv" href="cv.html" target="_top" data-tocv>To the CV</a>
-<nav id="tabs" aria-label="Contents"><a class="tabcv" href="cv.html" target="_top" data-tocv>Interactive CV ↗</a><button type="button" class="tabtoggle" data-tabs>Contents</button><div class="tablist"><button type="button" data-go="about" aria-current="true">About me</button><button type="button" data-go="research">Research</button><button type="button" data-go="education">Educational experiences</button><button type="button" data-go="travels">Travels</button></div><button type="button" id="notesbtn" aria-pressed="false">批注</button></nav>
+<nav id="tabs" aria-label="Contents"><button type="button" class="tabtoggle" data-tabs>Contents</button><div class="tablist"><button type="button" data-go="about" aria-current="true">About me</button><button type="button" data-go="research">Research</button><button type="button" data-go="education">Educational experiences</button><button type="button" data-go="travels">Travels</button></div><button type="button" id="notesbtn" aria-pressed="false">批注</button></nav>
 
 <script src="assets/vendor/d3.min.js"></script>
 <script>if(location.hash==='#cv')location.replace('cv.html');
@@ -768,7 +768,7 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
   if(window.parent!==window){try{var b=window.parent.document.getElementById('back');if(b){b.click();return}}catch(_){}}
   var k=document.createElement('div');k.style.cssText='position:fixed;inset:0;z-index:2147483647;background:#000;opacity:0;transition:opacity .17s ease-in';document.body.appendChild(k);void k.offsetWidth;k.style.opacity='1';
   try{sessionStorage.setItem('toCV','1')}catch(_){}setTimeout(function(){location.href='cv.html'},180)});</script>
-<script src="assets/core.js?v=3naf6d"></script>
+<script src="assets/core.js?v=1khatzz"></script>
 <script>
 (function(){
   'use strict';
@@ -1834,7 +1834,7 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
     if(d.flip!==undefined){var on=!el.classList.contains('on');el.classList.toggle('on',on);el.setAttribute('aria-pressed',String(on));return}
     if(d.back!==undefined){closeTravel();return}
     if(d.tabs!==undefined){tabsEl.classList.toggle('open');return}
-    if(d.sheet==='phd'){var cvt=document.querySelector('.tabcv');if(cvt)cvt.click();return}   /* the letter lives on the Interactive CV now (user 11-15) */
+    if(d.sheet==='phd'){var cvt=document.querySelector('.tocv');if(cvt)cvt.click();return}   /* the letter lives on the Interactive CV now (user 11-15) */
     if(d.sheet){var sh=document.getElementById('sheet-'+d.sheet);if(sh)sh.classList.remove('folded');goSec('education',d.sheet);return}
     if(d.go){
       tabsEl.classList.remove('open');
