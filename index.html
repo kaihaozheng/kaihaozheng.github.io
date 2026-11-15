@@ -1,5 +1,5 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="claude:viewport-fit-sides" content="cover">
-<meta name="version" content="homepage v4.2 · 2026-11-15">
+<meta name="version" content="homepage v4.3 · 2026-11-15">
 <title>Kaihao Zheng</title>
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="assets/favicon-32.png" type="image/png" sizes="32x32">
@@ -563,6 +563,8 @@ body.dome #chip{display:none}   /* on a phone the dome itself is the way in: a t
 /* a strip of bare paper behind the tabs, so nothing scrolls up between them */
 body::before{content:"";position:fixed;z-index:19;left:0;right:0;top:0;height:calc(3rem + env(safe-area-inset-top,0px));pointer-events:none;background:linear-gradient(var(--paper) 60%,rgba(233,237,234,0))}
 #tabs button:hover{color:var(--ink);padding-top:.8rem}
+#tabs .tabcv{order:9;pointer-events:auto;background:var(--ink);color:var(--sheet);border:1px solid var(--ink);border-top:0;border-radius:0 0 .4rem .4rem;padding:.5rem .75rem .42rem;min-height:2rem;font:700 var(--lab)/1.2 var(--mono);letter-spacing:var(--lab-sp);text-transform:uppercase;text-decoration:none;box-shadow:var(--lift);transition:padding .25s var(--ease),background .2s;white-space:nowrap}
+#tabs .tabcv:hover,#tabs .tabcv:focus-visible{padding-top:.8rem;background:var(--amber);border-color:var(--amber);outline:0}
 #tabs button[aria-current="true"]{color:var(--ink);padding-top:.95rem;border-bottom:3px solid var(--amber)}
 #tabs .tabtoggle{display:none}
 #tabs #notesbtn{font-family:var(--hand);font-size:.82rem;letter-spacing:0;text-transform:none;border-style:dashed}
@@ -752,10 +754,11 @@ body::before{content:"";position:fixed;z-index:19;left:0;right:0;top:0;height:ca
 <button type="button" id="chip" data-go="travels" hidden><b>a traveler</b><i>OPEN THE MAP →</i></button>
 <div class="tip" id="tip" hidden></div>
 <aside id="notes" hidden aria-label="批注"></aside>
-<nav id="tabs" aria-label="Contents"><button type="button" class="tabtoggle" data-tabs>Contents</button><div class="tablist"><button type="button" data-go="about" aria-current="true">About me</button><button type="button" data-go="research">Research</button><button type="button" data-go="education">Educational experiences</button><button type="button" data-go="travels">Travels</button></div><button type="button" id="notesbtn" aria-pressed="false">批注</button></nav>
+<nav id="tabs" aria-label="Contents"><a class="tabcv" href="cv.html" target="_top" data-tocv>Academic CV ↗</a><button type="button" class="tabtoggle" data-tabs>Contents</button><div class="tablist"><button type="button" data-go="about" aria-current="true">About me</button><button type="button" data-go="research">Research</button><button type="button" data-go="education">Educational experiences</button><button type="button" data-go="travels">Travels</button></div><button type="button" id="notesbtn" aria-pressed="false">批注</button></nav>
 
 <script src="assets/vendor/d3.min.js"></script>
-<script>if(location.hash==='#cv')location.replace('cv.html');</script>
+<script>if(location.hash==='#cv')location.replace('cv.html');
+document.addEventListener('click',function(e){var a=e.target.closest&&e.target.closest('[data-tocv]');if(!a||window.parent===window)return;try{var b=window.parent.document.getElementById('back');if(b){e.preventDefault();b.click()}}catch(_){}});</script>
 <script src="assets/core.js?v=s3bjbm"></script>
 <script>
 (function(){
