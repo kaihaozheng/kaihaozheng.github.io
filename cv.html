@@ -489,6 +489,11 @@ function globeOut(){
     var R1=Math.min(W,H)*(wide?.26:.24),gx=W/2,gy=H*(wide?.38:.36);
     var EX=wide?W*.93:W/2,EY=wide?H*1.16:H*.4,ER=wide?Math.max(W,H)*.36:R1;
     var mono=getComputedStyle(document.documentElement).getPropertyValue('--mono')||'monospace';
+    /* the 36 flap letters drawn once into a strip; each frame stamps them with drawImage and an alpha (v5.11, user 11-16: the animation stuttered;
+       a fillText and a new colour string for every letter on every frame was the heavy part) */
+    var AS=Math.ceil(15*dpr*1.3),AT=document.createElement('canvas');AT.width=AS*GLYPHS.length;AT.height=AS;
+    var ax=AT.getContext('2d');ax.font=(15*dpr)+'px '+mono;ax.textAlign='center';ax.textBaseline='middle';ax.fillStyle='rgb(207,214,223)';
+    var GI={};for(var gi=0;gi<GLYPHS.length;gi++){GI[GLYPHS[gi]]=gi;ax.fillText(GLYPHS[gi],gi*AS+AS/2,AS/2)}
     var pass=passEl();board.appendChild(pass);
     var pw=pass.offsetWidth,ph=pass.offsetHeight;
     var P0={x:gx-pw/2,y:H+20,r:-4},P1={x:gx-pw/2,y:gy+R1*.55,r:-2.5};
@@ -513,12 +518,13 @@ function globeOut(){
       ctx.strokeStyle='rgba(207,214,223,'+(.4*a)+')';ctx.lineWidth=1;ctx.beginPath();ctx.arc(cx,cy,R,0,7);ctx.stroke();
       var dot=Math.max(.7,R*.005);ctx.fillStyle='rgba(120,140,165,'+(.45*a)+')';
       for(var i=0;i<SEA.length;i++){var p=P(SEA[i].lon,SEA[i].lat);if(p[2]>0&&p[0]>-9&&p[0]<W+9&&p[1]>-9&&p[1]<H+9)ctx.fillRect(p[0],p[1],dot,dot)}
-      var fs=Math.max(4,Math.min(15,R*STEP*D2R*1.05));ctx.font=fs+'px '+mono;ctx.textAlign='center';ctx.textBaseline='middle';
+      var fs=Math.max(4,Math.min(15,R*STEP*D2R*1.05)),dw=AS/dpr*fs/15;ctx.fillStyle='rgb(225,231,227)';   /* letters stamped from the sprite sheet (v5.11) */
       for(i=0;i<LAND.length;i++){var c=LAND[i];p=P(c.lon,c.lat);if(p[2]<=0||p[0]<-20||p[0]>W+20||p[1]<-20||p[1]>H+20)continue;
         if(((t/45|0)+c.t)%(t<1400?1:3)===0)c.g=GLYPHS[(Math.random()*36)|0];
         var al=(.25+.75*p[2])*a;
-        if(letters>.02){ctx.fillStyle='rgba(207,214,223,'+(al*letters)+')';ctx.fillText(c.g,p[0],p[1])}
-        if(letters<.98){ctx.fillStyle='rgba(225,231,227,'+(al*(1-letters))+')';ctx.fillRect(p[0]-R*.014,p[1]-R*.014,R*.028,R*.028)}}
+        if(letters>.02){ctx.globalAlpha=al*letters;ctx.drawImage(AT,GI[c.g]*AS,0,AS,AS,p[0]-dw/2,p[1]-dw/2,dw,dw)}
+        if(letters<.98){ctx.globalAlpha=al*(1-letters);ctx.fillRect(p[0]-R*.014,p[1]-R*.014,R*.028,R*.028)}}
+      ctx.globalAlpha=1;
       p=P(HERE[0],HERE[1]);if(p[2]>0){ctx.fillStyle='rgba(224,170,82,'+a+')';ctx.beginPath();ctx.arc(p[0],p[1],Math.max(3,R*.022)*(1+.3*Math.sin(t/110)),0,7);ctx.fill()}
       /* the pass: printed out from under the globe, its flaps land, it is stamped, then it flies to its place on the sketchpad */
       if(!printed&&t>500){printed=true;
@@ -576,74 +582,105 @@ if(location.hash==='#me'){loadPlay();swap(true)}
    user 11-16 (round 38): on a computer people still miss the little globe; a globe like the home page's, a little smaller,
    only 20–30% showing, turning, with a small hop. Its centre sits on the window's corner, so a quarter shows.
    Same look as the sketchpad's globe (paper disc, pale land with an ink edge, the graticule) and the same data (assets/core.js, D3),
-   fetched after the page has loaded, on wide screens only. The amber dot is where I am now (assets/now.js).
-   Full size at the top and the bottom of the page, smaller while someone reads; nothing moves for those who ask for less motion. */
-(function(){
-  var MQ=matchMedia('(min-width:960px) and (orientation:landscape) and (min-height:541px)');
-  var still=matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var cv=document.getElementById('orb'),ctx=cv.getContext('2d'),door=document.getElementById('globe');
-  var d3=null,geo=null,proj=null,path=null,grat=null,dpr=1,W=0,R=0,k=0,kt=1,hover=0,ht=0,lon=-100,t0=0,last=0,ready=false,raf=0,dwell=0,board=document.getElementById('board');
+   fetched after the page has loaded and the browser is idle, on wide screens only. The amber dot is where I am now (assets/now.js).
+   Full size at the top and the bottom of the page, smaller while someone reads; nothing moves for those who ask for less motion.
+   v5.11 (user 11-16: “动画好像稍微有点卡”): the drawing runs in a worker on its own canvas (OffscreenCanvas), off the page's thread;
+   where that is not possible (older browsers, a page opened from disk) it draws on the page, about 20 times a second while it only turns. */
+function orbEngine(G){   /* everything the globe draws, self-contained so the same code runs in the worker; G: ctx, d3, land, here, still */
+  var d3=G.d3,ctx=G.ctx,still=G.still;
   function dec(a){var o=new Array(a.length/2),x=0,y=0;for(var i=0;i<a.length;i+=2){x+=a[i];y+=a[i+1];o[i/2]=[x/100,y/100]}return o}
-  function load(src){return new Promise(function(ok,no){var s=document.createElement('script');s.src=src;s.onload=ok;s.onerror=no;document.head.appendChild(s)})}
-  function size(){ /* the radius: a little smaller than the sketchpad's globe */
-    R=Math.round(Math.min(220,Math.max(150,innerHeight*.24)));W=Math.ceil(R*1.12);dpr=Math.min(2,devicePixelRatio||1);
-    cv.width=W*dpr;cv.height=W*dpr;cv.style.width=cv.style.height=W+'px';
-    document.documentElement.style.setProperty('--orb',R+'px');
-  }
-  function target(){ /* full size at the top and at the end of the page, smaller while reading */
-    var end=innerHeight+scrollY>document.documentElement.scrollHeight-160;
-    kt=(scrollY<120||end)?1:.55;
-    document.documentElement.style.setProperty('--orbk',kt);
-  }
-  /* where the disc is on screen now: centre on the window's corner */
-  window.ORB={disc:function(){return ready&&MQ.matches?{x:innerWidth,y:innerHeight,r:R*k*(1+.06*hover)}:null}};
-  function draw(now){
-    raf=0;if(!MQ.matches||!ready)return;
-    if(board&&board.classList.contains('on')){raf=requestAnimationFrame(draw);return}   /* the board is over everything: draw nothing */
+  var geo={type:'MultiPolygon',coordinates:G.land.map(function(p){return p.map(dec)})};
+  var proj=d3.geoOrthographic().clipAngle(90).precision(0),path=d3.geoPath(proj,ctx),grat=d3.geoGraticule().step([15,15])();
+  var k=0,hover=0,lon=-100,t0=0,last=0;
+  /* one frame; S: W, R, dpr, kt (size target), ht (pointer on it), fps when only turning. Returns false once nothing moves (still). */
+  return function(now,S){
     if(!t0)t0=now;var t=(now-t0)/1000;
-    var busy=t<2.4||Math.abs(kt-k)>.002||Math.abs(ht-hover)>.002;
-    if(!busy&&now-last<32){raf=requestAnimationFrame(draw);return}   /* only turning: about 30 frames a second is plenty */
+    var busy=t<2.4||Math.abs(S.kt-k)>.002||Math.abs(S.ht-hover)>.002;
+    if(!busy&&now-last<1000/S.fps-2)return true;
     last=now;
     var rise=still?1:Math.min(1,t/1.1),e=1-Math.pow(1-rise,3);   /* rises in when it first shows */
-    k+=(kt-k)*(still?1:.08);hover+=(ht-hover)*(still?1:.15);
+    k+=(S.kt-k)*(still?1:.12);hover+=(S.ht-hover)*(still?1:.2);
     var hop=still?0:Math.max(0,Math.sin(Math.min(1,Math.max(0,(t-1.6)/.7))*Math.PI))*.06;   /* one small hop after it rises */
-    var r=R*k*(1+.06*hover+hop)*(.55+.45*e),cx=W,cy=W;
-    if(!still)lon+=.2;
+    var W=S.W,r=S.R*k*(1+.06*hover+hop)*(.55+.45*e),cx=W,cy=W;
+    if(!still)lon=-100+t*6;   /* six degrees a second, whatever the frame rate */
     proj.translate([cx,cy]).scale(r).rotate([lon,-18,0]);
-    ctx.setTransform(dpr,0,0,dpr,0,0);ctx.clearRect(0,0,W,W);ctx.globalAlpha=e;
+    ctx.setTransform(S.dpr,0,0,S.dpr,0,0);ctx.clearRect(0,0,W,W);ctx.globalAlpha=e;
     var sh=ctx.createRadialGradient(cx,cy,r*.96,cx,cy,r+20);sh.addColorStop(0,'rgba(27,42,65,.2)');sh.addColorStop(1,'rgba(27,42,65,0)');   /* a soft edge: a gradient, much cheaper than a canvas blur */
     ctx.beginPath();ctx.arc(cx,cy,r+20,0,6.2832);ctx.fillStyle=sh;ctx.fill();
     ctx.beginPath();ctx.arc(cx,cy,r,0,6.2832);ctx.fillStyle='#fcfcf9';ctx.fill();
     ctx.save();ctx.beginPath();ctx.arc(cx,cy,r,0,6.2832);ctx.clip();
     ctx.beginPath();path(grat);ctx.strokeStyle='#cfd8df';ctx.lineWidth=.8;ctx.stroke();
     ctx.beginPath();path(geo);ctx.fillStyle='#e1e7e3';ctx.fill();ctx.strokeStyle='#1b2a41';ctx.lineWidth=.9;ctx.stroke();
-    if(window.NOW&&NOW.x!=null){var c=d3.geoRotation(proj.rotate())([NOW.x,NOW.y]);
-      if(Math.cos(c[1]*Math.PI/180)*Math.cos(c[0]*Math.PI/180)>.05){var q=proj([NOW.x,NOW.y]),p=still?.5:(Math.sin(t*3)+1)/2;
+    if(G.here){var c=d3.geoRotation(proj.rotate())(G.here);
+      if(Math.cos(c[1]*Math.PI/180)*Math.cos(c[0]*Math.PI/180)>.05){var q=proj(G.here),p=still?.5:(Math.sin(t*3)+1)/2;
         ctx.globalAlpha=e*(.12+.12*p);ctx.beginPath();ctx.arc(q[0],q[1],9+5*p,0,6.2832);ctx.fillStyle='#a86a14';ctx.fill();
         ctx.globalAlpha=e;ctx.beginPath();ctx.arc(q[0],q[1],3.2,0,6.2832);ctx.fill();}}
     ctx.restore();ctx.globalAlpha=e;
     ctx.beginPath();ctx.arc(cx,cy,r,0,6.2832);ctx.strokeStyle='#1b2a41';ctx.lineWidth=1.3;ctx.stroke();
     ctx.globalAlpha=1;
-    if(!still||Math.abs(kt-k)>.002||Math.abs(ht-hover)>.002||rise<1)raf=requestAnimationFrame(draw);
+    return !still||busy||rise<1;
+  };
+}
+(function(){
+  var MQ=matchMedia('(min-width:960px) and (orientation:landscape) and (min-height:541px)');
+  var still=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var cv=document.getElementById('orb'),door=document.getElementById('globe'),board=document.getElementById('board');
+  var S={W:0,R:0,dpr:1,kt:1,ht:0,fps:20},ready=false,worker=null,draw=null,raf=0,paused=false,fetched=false;
+  function load(src){return new Promise(function(ok,no){var s=document.createElement('script');s.src=src;s.onload=ok;s.onerror=no;document.head.appendChild(s)})}
+  function size(){ /* the radius: a little smaller than the sketchpad's globe */
+    S.R=Math.round(Math.min(220,Math.max(150,innerHeight*.24)));S.W=Math.ceil(S.R*1.12);S.dpr=Math.min(2,devicePixelRatio||1);
+    cv.style.width=cv.style.height=S.W+'px';
+    if(!worker){cv.width=S.W*S.dpr;cv.height=S.W*S.dpr}
+    document.documentElement.style.setProperty('--orb',S.R+'px');
   }
-  function kick(){if(!raf&&ready)raf=requestAnimationFrame(draw)}
-  function inside(e){var d=ORB.disc();return d&&Math.hypot(e.clientX-d.x,e.clientY-d.y)<d.r}
+  function target(){ /* full size at the top and at the end of the page, smaller while reading */
+    var end=innerHeight+scrollY>document.documentElement.scrollHeight-160;
+    S.kt=(scrollY<120||end)?1:.55;
+  }
+  function send(){if(worker)worker.postMessage({S:S,paused:paused});else kick()}
+  /* where the disc is on screen now: centre on the window's corner (the size it is heading to) */
+  window.ORB={disc:function(){return ready&&MQ.matches?{x:innerWidth,y:innerHeight,r:S.R*S.kt*(1+.06*S.ht)}:null}};
+  function frame(now){raf=0;if(!MQ.matches||!ready||paused)return;if(draw(now,S))raf=requestAnimationFrame(frame)}
+  function kick(){if(!worker&&!raf&&ready&&!paused)raf=requestAnimationFrame(frame)}
+  function abs(u){return new URL(u,location.href).href}
   function start(){
     if(!MQ.matches||ready)return;
+    size();target();
+    var here=window.NOW&&NOW.x!=null?[NOW.x,NOW.y]:null;
+    if(cv.transferControlToOffscreen&&window.Worker&&/^https?:$/.test(location.protocol)){
+      try{   /* the worker: its own copy of D3 and the map, drawing on the canvas handed to it */
+        var src='self.window=self;var E=null,S=null,P=false,cv=null,busy=false;var orbEngine='+orbEngine.toString()+';'+
+          'var next=self.requestAnimationFrame?function(f){requestAnimationFrame(f)}:function(f){setTimeout(function(){f(performance.now())},16)};'+
+          'function tick(now){busy=false;if(!E||P)return;if(cv.width!==S.W*S.dpr){cv.width=cv.height=S.W*S.dpr}if(E(now,S)){busy=true;next(tick)}}'+
+          'onmessage=function(m){var d=m.data;if(d.init){cv=d.canvas;importScripts(d.d3,d.core);E=orbEngine({ctx:cv.getContext("2d"),d3:self.d3,land:self.CORE.land,here:d.here,still:d.still})}'+
+          'if(d.S)S=d.S;P=!!d.paused;if(!busy&&E&&!P){busy=true;next(tick)}};';
+        var w=new Worker(URL.createObjectURL(new Blob([src],{type:'text/javascript'})));
+        var off=cv.transferControlToOffscreen();
+        S.fps=30;
+        w.postMessage({init:true,canvas:off,d3:abs('assets/vendor/d3.min.js'),core:abs('assets/core.js'),here:here,still:still,S:S},[off]);
+        worker=w;ready=true;document.documentElement.classList.add('orb-on');
+        return;
+      }catch(err){worker=null}
+    }
     Promise.all([window.d3?0:load('assets/vendor/d3.min.js'),window.CORE?0:load('assets/core.js')]).then(function(){
-      d3=window.d3;geo={type:'MultiPolygon',coordinates:CORE.land.map(function(p){return p.map(dec)})};
-      proj=d3.geoOrthographic().clipAngle(90).precision(.4);path=d3.geoPath(proj,ctx);grat=d3.geoGraticule().step([15,15])();
-      size();target();ready=true;document.documentElement.classList.add('orb-on');kick();
+      draw=orbEngine({ctx:cv.getContext('2d'),d3:window.d3,land:CORE.land,here:here,still:still});
+      ready=true;document.documentElement.classList.add('orb-on');kick();
     }).catch(function(){});
   }
-  addEventListener('scroll',function(){target();kick()},{passive:true});
-  addEventListener('resize',function(){if(MQ.matches){size();target();start()}document.documentElement.classList.toggle('orb-on',ready&&MQ.matches);kick()});
-  /* the canvas takes clicks only inside the disc; the label beside it is the door as before */
-  /* the canvas lets the mouse through; inside the disc the page itself takes the pointer and the click (the label beside it is the door as before) */
-  /* the sketchpad is fetched only once the pointer rests on the globe a moment (fetching it is the heavy part) */
-  addEventListener('pointermove',function(e){var on=!!inside(e);if(on!==(ht===1)){ht=on?1:0;document.documentElement.style.cursor=on?'pointer':'';kick();clearTimeout(dwell);if(on)dwell=setTimeout(function(){door.dispatchEvent(new Event('pointerenter'))},350)}},{passive:true});
+  function inside(e,f){var d=ORB.disc();return d&&Math.hypot(e.clientX-d.x,e.clientY-d.y)<d.r*(f||1)}
+  addEventListener('scroll',function(){var k=S.kt;target();if(k!==S.kt)send()},{passive:true});
+  addEventListener('resize',function(){if(MQ.matches){size();target();start()}document.documentElement.classList.toggle('orb-on',ready&&MQ.matches);send()});
+  /* the canvas lets the mouse through; inside the disc the page takes the pointer and the click (the label on it is the door as before).
+     The sketchpad is fetched once the pointer comes near the globe, so it is there before a click (fetching it is the heavy part). */
+  addEventListener('pointermove',function(e){
+    if(!fetched&&inside(e,1.6)){fetched=true;door.dispatchEvent(new Event('pointerenter'))}
+    var on=!!inside(e);if(on!==(S.ht===1)){S.ht=on?1:0;document.documentElement.style.cursor=on?'pointer':'';send()}
+  },{passive:true});
   addEventListener('click',function(e){if(inside(e)){e.preventDefault();e.stopPropagation();door.click()}},true);
-  door.addEventListener('pointerenter',function(){ht=1;kick()});door.addEventListener('pointerleave',function(){ht=0;kick()});
+  door.addEventListener('pointerenter',function(){if(S.ht!==1){S.ht=1;send()}});door.addEventListener('pointerleave',function(){S.ht=0;send()});
+  /* while the board is up the globe rests */
+  if(board)new MutationObserver(function(){var p=board.classList.contains('on');if(p!==paused){paused=p;send()}}).observe(board,{attributes:true,attributeFilter:['class']});
+  document.addEventListener('visibilitychange',function(){paused=document.hidden||(board&&board.classList.contains('on'));send()});
   /* D3 and the map come after the page has loaded and the browser is idle */
   function later(){setTimeout(function(){(window.requestIdleCallback||function(f){setTimeout(f,1)})(start,{timeout:2500})},600)}
   if(document.readyState==='complete')later();else addEventListener('load',later);
