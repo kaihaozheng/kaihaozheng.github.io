@@ -1000,7 +1000,7 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
     GLOBE.aim=function(){
       var dome=!wide()&&S.sec!=='travels';
       document.body.classList.toggle('dome',dome);
-      cv.style.height=dome?Math.round(domeFrac()*window.innerHeight)+'px':'';
+      cv.style.height=dome?Math.round(domeFrac()*window.innerHeight)+'px':'';cv2.style.height=cv.style.height;   /* the layer over it keeps the same box (v5.13: it was left full height and drew stretched) */
       g=geom();side=g[3];placePass();placeChip();
       var p=pinOf(key());
       if(p){tk=S.sec==='about'||S.sec==='door'?1.3:1.8;tgt=toward(p,tk)}
