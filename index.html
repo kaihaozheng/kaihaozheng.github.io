@@ -61,11 +61,12 @@ body{margin:0;color:var(--ink);font-family:var(--serif);font-size:var(--f-text);
 button{font:inherit;color:inherit}
 :focus-visible{outline:2px solid var(--water);outline-offset:4px}
 #globe{position:fixed;left:0;bottom:0;width:100%;height:100%;z-index:0;display:block;touch-action:pan-y;transition:opacity .35s var(--ease)}
+#globe2{position:fixed;left:0;bottom:0;width:100%;height:100%;z-index:0;display:block;pointer-events:none;transition:opacity .35s var(--ease)}   /* the moving bits over the globe (v5.12) */
 /* the globe steps back while words that lie straight on the squared paper are crossing it */
-body.shy #globe,body.shy #chip{opacity:0;pointer-events:none}
+body.shy #globe,body.shy #globe2,body.shy #chip{opacity:0;pointer-events:none}
 /* blanks still to be filled are notes to me, not to a visitor: they show only with the notes switched on */
 body:not(.noting) .todo{display:none!important}
-body.dome #globe{z-index:3}
+body.dome #globe,body.dome #globe2{z-index:3}
 #unroll{position:fixed;inset:0;width:100%;height:100%;z-index:30;pointer-events:none;transition:opacity .3s}
 .wrap{position:relative;pointer-events:none;max-width:99rem;margin:0 auto;padding-block:3rem 4.5rem;
   padding-left:max(var(--gut),env(safe-area-inset-left,0px));padding-right:max(var(--gut),env(safe-area-inset-right,0px))}
@@ -912,6 +913,10 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
   var GLOBE={aim:function(){},state:function(){return null},hide:function(){},target:function(){return null}};
   if(HAS){(function(){
     var cv=document.getElementById('globe'),ctx=cv.getContext('2d');
+    /* the bits that move by themselves (the light along the route, the pulsing pins) go on a second canvas over it, so the globe
+       itself is drawn again only when it turns or moves (v5.12, user 11-16: “主页面球也微卡”) */
+    var cv2=document.createElement('canvas');cv2.id='globe2';cv2.setAttribute('aria-hidden','true');cv.parentNode.insertBefore(cv2,cv.nextSibling);
+    var ctx2=cv2.getContext('2d'),baseKey='';
     var proj=d3.geoOrthographic().clipAngle(90).precision(.3),path=d3.geoPath(proj,ctx);
     var grat=d3.geoGraticule().step([15,15])();
     var coords=STAYS.map(function(s){var p=PLACES[s[0]];return [p.x,p.y]});
@@ -1007,7 +1012,7 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
     GLOBE.target=function(){return g};
     function size(){
       var r=cv.getBoundingClientRect();W=r.width;H=r.height;offY=r.top;dpr=Math.min(2,window.devicePixelRatio||1);
-      cv.width=Math.round(W*dpr);cv.height=Math.round(H*dpr);
+      cv.width=Math.round(W*dpr);cv.height=Math.round(H*dpr);cv2.width=cv.width;cv2.height=cv.height;baseKey='';
     }
     window.addEventListener('resize',function(){size();GLOBE.aim()});size();
     if(window.visualViewport)window.visualViewport.addEventListener('resize',function(){size();GLOBE.aim()});
@@ -1032,16 +1037,27 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
       var mv=Math.abs(g[0]-gx)+Math.abs(g[1]-gy)+Math.abs(g[2]-gR);
       gx+=(g[0]-gx)*b;gy+=(g[1]-gy)*b;gR+=(g[2]-gR)*b;
       var settled=mv<.3&&Math.abs(d0)<.05&&Math.abs(d1)<.05&&Math.abs(tk-k)<.002&&!drag;
-      if(settled&&away){running=false;ctx.setTransform(1,0,0,1,0,0);ctx.clearRect(0,0,cv.width,cv.height);return} /* nothing to draw while the map is open */
-      if(settled&&!idle&&!pinned&&reduced){draw(now,ky);running=false;return}
+      if(settled&&away){running=false;ctx.setTransform(1,0,0,1,0,0);ctx.clearRect(0,0,cv.width,cv.height);ctx2.setTransform(1,0,0,1,0,0);ctx2.clearRect(0,0,cv2.width,cv2.height);baseKey='';return} /* nothing to draw while the map is open */
+      if(settled&&!idle&&!pinned&&reduced){draw(now,ky,false,true);running=false;return}
       odd=!odd;
-      if(!(settled&&idle&&odd))draw(now,ky);                                       /* a slow idle turn needs only every other frame */
+      if(!(settled&&idle&&odd))draw(now,ky,idle&&settled);                                       /* a slow idle turn needs only every other frame */
       requestAnimationFrame(frame);
     }
-    function draw(now,ky){
+    function fade(cz){var v=Math.max(0,Math.min(1,(cz-.08)/.3));return v*v*(3-2*v)}   /* toward the rim things fade out */
+    var snap=null,lastBase=-1e9;
+    function draw(now,ky,idle,force){   /* the globe again only if it moved or turned, at most ~30 times a second (~20 while it only drifts round; every frame under a finger); the moving bits every frame */
+      var key=[gx,gy,gR,k,rot[0],rot[1]].map(function(v){return v.toFixed(2)}).join()+'|'+ky+'|'+W+'|'+H+'|'+offY+'|'+dpr;
+      if(key!==baseKey&&(drag||force||!snap||now-lastBase>=(idle?48:31))){baseKey=key;lastBase=now;drawBase(ky);snap=[gx,gy,gR,k,rot[0],rot[1]]}
+      /* the moving bits are drawn where the globe was drawn, so they never slide off the land between two drawings of it */
+      var live=[gx,gy,gR,k,rot[0],rot[1]],c0=ctx;
+      gx=snap[0];gy=snap[1];gR=snap[2];k=snap[3];rot[0]=snap[4];rot[1]=snap[5];ctx=ctx2;
+      try{drawOver(now,ky)}finally{ctx=c0;gx=live[0];gy=live[1];gR=live[2];k=live[3];rot[0]=live[4];rot[1]=live[5]}
+    }
+    function drawBase(ky){
       ctx.setTransform(dpr,0,0,dpr,0,-offY*dpr);ctx.clearRect(0,offY,W,H);
       if(gR<=0||gy-gR>offY+H+40||gy+gR<offY-40)return;
-      ctx.save();ctx.beginPath();ctx.arc(gx,gy,gR,0,6.2832);ctx.shadowColor='rgba(27,42,65,.3)';ctx.shadowBlur=26;ctx.shadowOffsetY=side===2?-3:6;ctx.fillStyle=col.sheet;ctx.fill();ctx.restore();
+      var sy=gy+(side===2?-3:6),sh=ctx.createRadialGradient(gx,sy,gR*.94,gx,sy,gR+26);sh.addColorStop(0,'rgba(27,42,65,.3)');sh.addColorStop(1,'rgba(27,42,65,0)');ctx.beginPath();ctx.arc(gx,sy,gR+26,0,6.2832);ctx.fillStyle=sh;ctx.fill();   /* the shadow as a gradient: a canvas blur this size is slow (v5.12) */
+      ctx.beginPath();ctx.arc(gx,gy,gR,0,6.2832);ctx.fillStyle=col.sheet;ctx.fill();
       ctx.save();ctx.beginPath();ctx.arc(gx,gy,gR,0,6.2832);ctx.clip();
       proj.translate([gx,gy]).scale(gR*k).rotate([rot[0],rot[1],0]);ctx.lineJoin='round';ctx.lineCap='round';
       ctx.beginPath();path(grat);ctx.strokeStyle=col.grid;ctx.lineWidth=.8;ctx.stroke();
@@ -1059,17 +1075,23 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
       ctx.globalAlpha=1;
       if(emph||k>1.4){path.pointRadius(1.6);ctx.beginPath();path(stayPts);ctx.fillStyle=col.amber;ctx.fill()}
       /* the flights, lifted a little off the globe; like everything else they stay inside its disc, and fade out toward the rim */
-      function fade(cz){var v=Math.max(0,Math.min(1,(cz-.08)/.3));return v*v*(3-2*v)}
       ctx.strokeStyle=col.amber;ctx.lineWidth=emph?1.6:1.2;
       HOPS.forEach(function(h){if(!h.fly)return;var a=hopAt(h,0);
         for(var j=1;j<=40;j++){var b=hopAt(h,j/40),f=fade(Math.min(a[2],b[2]));if(f>0){ctx.globalAlpha=f*(.5+.5*h.k/N);ctx.beginPath();ctx.moveTo(a[0],a[1]);ctx.lineTo(b[0],b[1]);ctx.stroke()}a=b}});
       ctx.globalAlpha=1;
+      ctx.restore();ctx.beginPath();ctx.arc(gx,gy,gR,0,6.2832);ctx.strokeStyle=col.ink;ctx.lineWidth=1.2;ctx.stroke();
+    }
+    function drawOver(now,ky){
+      ctx.setTransform(dpr,0,0,dpr,0,-offY*dpr);ctx.clearRect(0,offY,W,H);
+      if(gR<=0||gy-gR>offY+H+40||gy+gR<offY-40)return;
+      proj.translate([gx,gy]).scale(gR*k).rotate([rot[0],rot[1],0]);rotr=d3.geoRotation([rot[0],rot[1],0]);
+      var N=HOPS.length;ctx.save();ctx.beginPath();ctx.arc(gx,gy,gR,0,6.2832);ctx.clip();
       /* a light runs from the start of the trip to where I am now, every ten seconds; it is only seen on the near side */
       if(!reduced&&N){var u=(now%10000)/10000,prev=null;
         for(var j=0;j<=16;j++){var q=along(Math.max(0,u-.045*(1-j/16)));if(prev){var f=fade(Math.min(prev[2],q[2]));if(f>0){ctx.beginPath();ctx.moveTo(prev[0],prev[1]);ctx.lineTo(q[0],q[1]);ctx.strokeStyle=col.amber;ctx.globalAlpha=f*j/16;ctx.lineWidth=1+1.6*j/16;ctx.stroke()}}prev=q}
         var hq=along(u),hf=fade(hq[2]);if(hf>0){ctx.globalAlpha=.25*hf;ctx.beginPath();ctx.arc(hq[0],hq[1],5.5,0,6.2832);ctx.fillStyle=col.amber;ctx.fill();ctx.globalAlpha=hf;ctx.beginPath();ctx.arc(hq[0],hq[1],2.2,0,6.2832);ctx.fillStyle=col.sheet;ctx.fill();ctx.strokeStyle=col.amber;ctx.lineWidth=1.3;ctx.stroke()}
         ctx.globalAlpha=1}
-      ctx.restore();ctx.beginPath();ctx.arc(gx,gy,gR,0,6.2832);ctx.strokeStyle=col.ink;ctx.lineWidth=1.2;ctx.stroke();
+      ctx.restore();
       /* Beijing and Tokyo, where I have lived, and where I am now */
       ctx.textBaseline='middle';ctx.textAlign='left';
       PINS.forEach(function(p){
