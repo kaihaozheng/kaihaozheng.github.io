@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="version" content="homepage v5.3 · 2026-11-15 · 2026-11-15">
+<meta name="version" content="homepage v5.5 · 2026-11-16">
 <title>Kaihao Zheng — CV</title>
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -118,18 +118,30 @@ dl.f dd{margin:0}
 .pub .by b{color:var(--ink);font-weight:600}
 .pub .by em{font-style:italic}
 
-/* ---------- the globe door ---------- */
-.door{position:fixed;right:clamp(14px,2.2vw,32px);bottom:clamp(14px,2.6vh,28px);display:flex;align-items:center;gap:12px;z-index:20;border:0}
-.door .cap{font:500 var(--l)/1.35 var(--sans);letter-spacing:.08em;text-transform:uppercase;color:var(--pencil);text-align:right;max-width:11em;transition:color .2s,opacity .3s;background:var(--sheet);padding:4px 0 4px 10px;box-shadow:-12px 0 12px var(--sheet)}
-.door .g{width:clamp(52px,4.6vw,68px);aspect-ratio:1;border-radius:50%;transition:transform .45s var(--ease)}
-.door:hover .g,.door:focus-visible .g{transform:rotate(-14deg) scale(1.06)}
-.door:hover .cap{color:var(--ink)}
+/* ---------- the globe door ----------
+   v5.5 (用户 11-16：“还是有大家注意不到右下角地球的可能性……目标是 100% 引导别人点击”): the caption is a dark pill that never fades,
+   the globe is a size larger with amber rings going out of it, the door rises in a moment after the page opens and the globe
+   hops every few seconds until someone points at it; nothing moves for those who ask for less motion */
+.door{position:fixed;right:clamp(14px,2.2vw,32px);bottom:clamp(14px,2.6vh,28px);display:flex;align-items:center;gap:14px;z-index:20;border:0;animation:arrive .9s var(--ease) .6s both}
+@keyframes arrive{from{transform:translateY(160%);opacity:0}to{transform:none;opacity:1}}
+.door .cap{font:600 var(--l)/1.3 var(--sans);letter-spacing:.1em;text-transform:uppercase;color:#fcfcf9;background:var(--ink);text-align:left;padding:9px 15px 9px 16px;border-radius:999px;box-shadow:0 8px 20px -6px rgba(27,42,65,.45);transition:background .2s,transform .3s var(--ease);white-space:nowrap}
+.door .cap b{font-weight:600;color:#f3c77a}
+.door .cap i{font-style:normal;display:inline-block;margin-left:.45em;transition:transform .3s var(--ease)}
+.door:hover .cap,.door:focus-visible .cap{background:var(--amber)}
+.door:hover .cap b,.door:focus-visible .cap b{color:#fcfcf9}
+.door:hover .cap i,.door:focus-visible .cap i{transform:translateX(4px)}
+.door .g{position:relative;width:clamp(60px,5.4vw,80px);aspect-ratio:1;border-radius:50%;transition:transform .45s var(--ease);animation:hop 7s ease-in-out 2.4s infinite}
+.door .g::before,.door .g::after{content:"";position:absolute;inset:0;border-radius:50%;border:2px solid var(--amber);opacity:0;pointer-events:none;animation:ring 2.8s ease-out 1.4s infinite}
+.door .g::after{animation-delay:2.8s}
+@keyframes ring{0%{transform:scale(1);opacity:.6}100%{transform:scale(1.85);opacity:0}}
+@keyframes hop{0%,84%,100%{transform:none}88%{transform:translateY(-10px) rotate(-12deg)}92%{transform:none}95%{transform:translateY(-4px)}}
+.door.met .g{animation:none}
+.door:hover .g,.door:focus-visible .g{transform:rotate(-14deg) scale(1.08)}
 .door:focus-visible{outline:0}
 .door .short{display:none}
-.door.quiet .long{opacity:0}
-.door .g{animation:breathe 5s ease-in-out infinite}
-@keyframes breathe{0%,100%{box-shadow:0 0 0 0 rgba(168,106,20,0)}50%{box-shadow:0 0 0 7px rgba(168,106,20,.10)}}
-.door svg{width:100%;height:100%;display:block;filter:drop-shadow(0 5px 9px rgba(27,42,65,.16))}
+.door.quiet .long{display:none}.door.quiet .short{display:inline}
+.door svg{width:100%;height:100%;display:block;filter:drop-shadow(0 6px 10px rgba(27,42,65,.2))}
+@media (prefers-reduced-motion:reduce){.door,.door .g,.door .g::before,.door .g::after{animation:none}}
 
 /* ---------- the board: a departures board that spreads from the globe, then leaves row by row ---------- */
 .board{position:fixed;inset:0;z-index:100;display:none;pointer-events:auto;overflow:hidden}
@@ -215,11 +227,14 @@ dl.f dd{margin:0}
 .letter2{column-count:2;column-gap:clamp(32px,4.5vw,72px)}
 .letter2 p{margin:0 0 8px;break-inside:avoid}
 .letter2 .dear{margin-bottom:4px}
+.letter2 strong{font-weight:600;color:var(--ink)}
 .letter2 .sig{font-style:italic;text-align:right}
 .wwh3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0 clamp(24px,3vw,48px)}
 .wwh3 .q{display:block;color:var(--amber);font-weight:600}
 .wwh3 b{display:block;font-weight:600;margin:2px 0 4px}
 .wwh3 p{margin:0;color:#3a475a}
+.wwh3 .wl{margin:4px 0 0;padding-left:1.1em;color:#3a475a}
+.wwh3 .wl li{margin:1px 0}
 .layer{display:grid;gap:0 clamp(28px,3.4vw,52px);margin-top:8px;padding-top:4px;border-top:1px solid var(--rule)}
 .layer.three{grid-template-columns:repeat(3,minmax(0,1fr))}
 .layer.two{grid-template-columns:minmax(0,1fr) minmax(0,1.55fr)}
@@ -271,16 +286,16 @@ dl.f dd{margin:0}
     <div class="pane on" id="lead-letter" role="tabpanel">
       <div class="letter2">
         <p class="dear">Dear Professor,</p>
-        <p>I am applying for PhD programmes starting in Fall 2027, to work on human–water interaction. Specifically, I am interested in developing and applying quantitative methods that reduce complex human–earth interactions to their key elements, so that places can be compared and the mechanisms behind them can be taken apart.</p>
-        <p>I hope to provide scientific insights, data and frameworks for decision-makers who have to find cost-effective solutions with limited people, money and resources, and for carrying what works in one place over to others in a similar state.</p>
+        <p>I am applying for PhD programs starting in Fall 2027 to study <strong>human–water interactions</strong>. Specifically, I want to develop and apply quantitative frameworks that <strong>distill complex human–earth interactions into necessarily simplified models</strong>, so that I can compare places systematically and understand the mechanisms underlying the differences between them.</p>
+        <p>Ultimately, I hope to give decision-makers the evidence, data and tools to find <strong>cost-effective solutions</strong> with limited resources, and to <strong>adapt what works in one place</strong> to others facing similar challenges.</p>
         <p class="sig">Kaihao Zheng</p>
       </div>
     </div>
     <div class="pane" id="lead-int" role="tabpanel">
       <div class="wwh3">
-        <div><span class="lab q">What</span><b>Forces and elements within human–water dynamics</b><p>The forces that drive human–water systems and the conditions under which their mechanisms hold. In flood management: hydroclimate, the human footprint and settlements, and water infrastructure.</p></div>
-        <div><span class="lab q">How</span><b>Quantitative methods for large-scale comparison</b><p>Frameworks that reduce complex interactions to their key elements and support comparison across many places, which is how the mechanisms behind them can be dissected.</p></div>
-        <div><span class="lab q">Why</span><b>Cost-effective action and knowledge transfer</b><p>With limited people, money and resources, such frameworks help decision-makers see trade-offs and synergies, and let knowledge move between places in a similar state.</p></div>
+        <div><span class="lab q">What</span><b>Key elements and driving forces of human–earth systems</b><p>I study the key elements of human–earth systems and the forces that drive them, starting from flood management, where hydroclimate, settlements and infrastructure interact.</p></div>
+        <div><span class="lab q">How</span><b>Quantitative frameworks for large-scale comparison</b><p>I build and apply frameworks that distill complex interactions into simplified models and compare places systematically to reveal underlying mechanisms.</p></div>
+        <div><span class="lab q">Why</span><b>Cost-effective, transferable solutions</b><p>Resources are always limited. Such frameworks help decision-makers weigh trade-offs and synergies, find cost-effective solutions, and adapt what works in one place to others facing similar challenges.</p></div>
       </div>
     </div>
   </div>
@@ -311,7 +326,7 @@ dl.f dd{margin:0}
     <h2><span class="lab">Knowledge &amp; Skills</span></h2>
     <div class="ks">
       <span class="lab">Languages</span>
-      <div class="lang1"><button class="op" aria-expanded="false" style="display:inline;width:auto;padding:0"><span class="tx">English, IELTS Academic 8.5</span></button><span class="sep">·</span>Chinese
+      <div class="lang1"><button class="op" aria-expanded="false" style="display:inline;width:auto;padding:0"><span class="tx">English, fluent (IELTS Academic 8.5/9)</span></button><span class="sep">·</span>Chinese
         <span class="more" style="display:block"><span style="display:block;margin:4px 0 6px;padding:2px 0 2px 12px;border-left:2px solid var(--amber)">Listening 9.0 · Reading 9.0 · Writing 7.5 · Speaking 8.0</span></span></div>
       <span class="lab">Research</span>
       <div data-group>
@@ -362,7 +377,7 @@ dl.f dd{margin:0}
       <div class="more"><div><p class="cite">Su, J., Lin, P., <b>Zheng, K.</b>, Lei, X., Yin, Z., Hou, A., &amp; Xie, S. <em>Geophysical Research Letters</em>, 53(8), e2025GL120255. <a class="paper" href="https://doi.org/10.1029/2025GL120255" target="_blank" rel="noopener">DOI ↗</a></p></div></div>
 <button class="op pubrow" aria-expanded="false"><span class="py">2026</span><span class="pt">Human perturbations reshape hydrological responses in riverine systems: a reach-level framework for the Pearl River Basin</span><span class="pj">Sust. Horiz.</span></button>
       <div class="more"><div><p class="cite">Lin, H., Lin, P., &amp; <b>Zheng, K.</b> <em>Sustainable Horizons</em>, 17, 100174. <a class="paper" href="https://doi.org/10.1016/j.horiz.2025.100174" target="_blank" rel="noopener">DOI ↗</a></p></div></div>
-<button class="op pubrow" aria-expanded="false"><span class="py">2026</span><span class="pt">Process diagnostics of snowmelt runoff in global hydrological models – Part II: Are more complex models better?</span><span class="pj">HESS</span></button>
+<button class="op pubrow" aria-expanded="false"><span class="py">2026</span><span class="pt">Process diagnostics of snowmelt runoff in global hydrological and land surface models – Part II: Are more complex models better?</span><span class="pj">HESS</span></button>
       <div class="more"><div><p class="cite">Lei, X., Lin, H., <b>Zheng, K.</b>, &amp; Lin, P. <em>Hydrology and Earth System Sciences</em>, accepted (EGUsphere preprint). <a class="paper" href="https://doi.org/10.5194/egusphere-2025-6073" target="_blank" rel="noopener">DOI ↗</a></p></div></div>
 <button class="op pubrow" aria-expanded="false"><span class="py">2024</span><span class="pt">Tracking global floodplain urban growth</span><span class="pj">Innov. Geosci.</span></button>
       <div class="more"><div><p class="cite">Lin, P., Yin, Z., <b>Zheng, K.</b>, Lei, X., &amp; Yuan, Z. <em>The Innovation Geoscience</em>, 2(3), 100086. <a class="paper" href="https://doi.org/10.59717/j.xinn-geo.2024.100086" target="_blank" rel="noopener">DOI ↗</a></p></div></div>
@@ -374,7 +389,7 @@ dl.f dd{margin:0}
 </div>
 
 <button class="door" id="globe" aria-label="See more of me on a sketchpad">
-  <span class="cap"><span class="long">Click to see more of me on a sketchpad</span><span class="short">More of me</span></span>
+  <span class="cap"><span class="long"><b>More of me</b> · a sketchpad<i>→</i></span><span class="short"><b>More of me</b><i>→</i></span></span>
   <span class="g"><svg viewBox="0 0 100 100" aria-hidden="true">
     <circle cx="50" cy="50" r="46" fill="#fcfcf9" stroke="#1b2a41" stroke-width="3"/>
     <ellipse cx="50" cy="50" rx="46" ry="15" fill="none" stroke="#1b2a41" stroke-width="1.6"/>
@@ -389,6 +404,7 @@ dl.f dd{margin:0}
 <button class="back" id="back" aria-hidden="true" tabindex="-1">To the CV</button>
 <div class="board" id="board" aria-hidden="true"></div>
 
+<script src="assets/now.js"></script>
 <script>
 /* ---------- one way to open things: click / tap ---------- */
 var PEEK={
@@ -421,13 +437,13 @@ document.querySelectorAll('[data-group]').forEach(function(g){
 
 /* ---------- the board: a globe of split-flap letters ----------
    Out: the little globe grows into the middle of the screen; every land cell is a flap that keeps rolling,
-   the sea is faint dots; it spins and slows down facing New York (where I am now), the amber ring on the equator
+   the sea is faint dots; it spins and slows down facing where I am now (assets/now.js, written by build.js from the trip's route table), the amber ring on the equator
    lands as MORE OF ME, then the camera dives into the amber dot and through, into the sketchpad.
    Back: a plain cut through black. Land: Natural Earth 1:110m from the site's own core.js, as a 2.5° mask. */
 var board=document.getElementById('board'),play=document.getElementById('play'),back=document.getElementById('back'),busy=false;
 var SITE='index.html',GLYPHS='ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
 var reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
-var MASK='000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000ff9ffffe0000000000000000000000000133fcfffff000700000000c000000000000129900fffff00000000e001f8000000000003c034003fff00000006007ff80080000040017c6fe01ffe000000061dfffff7f800f800002bc4c7e007fffe01fa1400000000000c00000003c1e03fbff802c000000000000000fffffff51c1f00800f7ffffffffffffffe03ffffffc0600e00003e7ffffffffffffef801e07fffe07e0000003e7fffffffffff808000801ffff87e00000214fffffffffffe038000000ffffeff80000d1fffffffffffff0300000007ffffffc00003ffffffffffffff0000000003fffff4e00003ffffffffffffff0000000003fffffc000001fff5f7fffffffe0000000003fffff0000001ebe0effffffffc4000000003ffffe000000f86f6f3fffffff08000000001ffffc000000f029ff3fffffe208000000001ffffc0000000f007ffffffff1300000000007fff80000007f003ffffffff0400000000005ffe0000000ffeebffffffff8000000000003fc10000000fffffefffffff8000000000000f810000003ffffdf3ffffff00000000000007800000003ffffdfe1ffffe80000000000003880000007ffffeff0fe7e000000000000003d81800003ffffefe07c3d000000000000000780000007fffff780781e0800000000000000e0000007fffffe00301f0c0000000000000002800003fffff9003016000000000000000017f00001ffffff000010020000000000000007f80000fbffff000808000000000000000007ff000000fffe00001860000000000000000fff000000fffc00000ce0000000000000000fffc00000fff800000ce8c00000000000000ffff80000fff0000004083c0000000000000ffffc00007ff0000002001e0000000000000ffffc00007ff00000001a0800000000000007fff800007ff0000000000000000000000007fff000007ff100000000c000000000000001fff000007ff300000007e400000000000000fff000007fc300000007fe00000000000000fff000007fc60000003fff00000000000000ffc000003fc60000007fff00000000000000ff8000003f800000007fff80000000000001ff0000001f800000003fff80000000000001ff0000001f000000003fff80000000000001fe0000001c000000003c3f80000000000001f80000000000000000000f00000000000001f00000000000000000000200200000000003c00000000000000000000200400000000001c00000000000000000000000800000000003800000000000000000000001000000000003800000000000000000000000000000000003080000000000000000000000000000000001800000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000080000000000000000000000000000000000200000000000600004400000000000000000400000000047ff1fffffff80000000000003e000005ffffffe7fffffffff000000101ffbf00007fffffffffffffffffe00003fffffff00003ffffffffffffffffff80013fffffff800e3fffffffffffffffffffe0003ffffffff8007fffffffffffffffffff00001ffffffffffffffffffffffffffffffff0000000000000000000000000000000000000000000000000000000000000000000000000',STEP=2.5,NX=144,NY=72,HERE=[-74,40.7];
+var MASK='000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000ff9ffffe0000000000000000000000000133fcfffff000700000000c000000000000129900fffff00000000e001f8000000000003c034003fff00000006007ff80080000040017c6fe01ffe000000061dfffff7f800f800002bc4c7e007fffe01fa1400000000000c00000003c1e03fbff802c000000000000000fffffff51c1f00800f7ffffffffffffffe03ffffffc0600e00003e7ffffffffffffef801e07fffe07e0000003e7fffffffffff808000801ffff87e00000214fffffffffffe038000000ffffeff80000d1fffffffffffff0300000007ffffffc00003ffffffffffffff0000000003fffff4e00003ffffffffffffff0000000003fffffc000001fff5f7fffffffe0000000003fffff0000001ebe0effffffffc4000000003ffffe000000f86f6f3fffffff08000000001ffffc000000f029ff3fffffe208000000001ffffc0000000f007ffffffff1300000000007fff80000007f003ffffffff0400000000005ffe0000000ffeebffffffff8000000000003fc10000000fffffefffffff8000000000000f810000003ffffdf3ffffff00000000000007800000003ffffdfe1ffffe80000000000003880000007ffffeff0fe7e000000000000003d81800003ffffefe07c3d000000000000000780000007fffff780781e0800000000000000e0000007fffffe00301f0c0000000000000002800003fffff9003016000000000000000017f00001ffffff000010020000000000000007f80000fbffff000808000000000000000007ff000000fffe00001860000000000000000fff000000fffc00000ce0000000000000000fffc00000fff800000ce8c00000000000000ffff80000fff0000004083c0000000000000ffffc00007ff0000002001e0000000000000ffffc00007ff00000001a0800000000000007fff800007ff0000000000000000000000007fff000007ff100000000c000000000000001fff000007ff300000007e400000000000000fff000007fc300000007fe00000000000000fff000007fc60000003fff00000000000000ffc000003fc60000007fff00000000000000ff8000003f800000007fff80000000000001ff0000001f800000003fff80000000000001ff0000001f000000003fff80000000000001fe0000001c000000003c3f80000000000001f80000000000000000000f00000000000001f00000000000000000000200200000000003c00000000000000000000200400000000001c00000000000000000000000800000000003800000000000000000000001000000000003800000000000000000000000000000000003080000000000000000000000000000000001800000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000080000000000000000000000000000000000200000000000600004400000000000000000400000000047ff1fffffff80000000000003e000005ffffffe7fffffffff000000101ffbf00007fffffffffffffffffe00003fffffff00003ffffffffffffffffff80013fffffff800e3fffffffffffffffffffe0003ffffffff8007fffffffffffffffffff00001ffffffffffffffffffffffffffffffff0000000000000000000000000000000000000000000000000000000000000000000000000',STEP=2.5,NX=144,NY=72,NOW=window.NOW&&window.NOW.n?window.NOW:{n:'New York',x:-74,y:40.7},HERE=[NOW.x,NOW.y];   /* where I am: assets/now.js (build.js), New York if it did not load */
 var LAND=[],SEA=[],D2R=Math.PI/180;
 (function(){var k=0;for(var j=0;j<NY;j++)for(var i=0;i<NX;i++,k++){
   var on=(parseInt(MASK[k>>2],16)>>(3-(k&3)))&1,lon=-180+STEP*(i+.5),lat=90-STEP*(j+.5);
@@ -450,7 +466,7 @@ function passEl(){
     '<span class="pmain"><span class="lab" data-f="BOARDING NOW · GATE 02">&nbsp;</span><span class="end">More of me</span>'+
     '<span class="proute"><span><b data-f="CV">&nbsp;</b><span class="lab">ACADEMIC</span></span><span class="pline"><svg viewBox="0 0 24 24"><path d="M2.5 12.8l2-.7 3 1.6 4.3-1.5L6 5.6l2.2-.8 8.2 5.8 3.9-1.4c1.2-.4 2.4.1 2.7 1 .3.9-.4 2-1.6 2.4L6.3 17.9z"/></svg></span><span class="to"><b data-f="ME">&nbsp;</b><span class="lab">SKETCHPAD</span></span></span>'+
     '<span class="pmeta"><span><span class="lab">PASSENGER</span><b data-f="ZHENG / KAIHAO">&nbsp;</b></span><span><span class="lab">SEAT</span><b data-f="2027">&nbsp;</b></span></span></span>'+
-    '<span class="pstub"><span class="lab">NOW AT</span><b data-f="NEW YORK">&nbsp;</b><span class="bars"></span><span class="stamp">BOARDED ✓</span></span>';
+    '<span class="pstub"><span class="lab">NOW AT</span><b data-f="'+NOW.n.toUpperCase().replace(/[&<>"]/g,'')+'">&nbsp;</b><span class="bars"></span><span class="stamp">BOARDED ✓</span></span>';
   return d;
 }
 function globeOut(){
@@ -539,6 +555,8 @@ function swap(toPlay){
 document.getElementById('globe').addEventListener('click',function(){go(true)});
 /* the long caption only on the first screen, so it never sits on top of what is being read */
 addEventListener('scroll',function(){document.getElementById('globe').classList.toggle('quiet',scrollY>120)},{passive:true});
+/* the globe stops hopping once someone has pointed at it (v5.5) */
+['pointerenter','focus'].forEach(function(ev){document.getElementById('globe').addEventListener(ev,function(){document.getElementById('globe').classList.add('met')},{once:true})});
 back.addEventListener('click',function(){go(false)});
 addEventListener('keydown',function(e){if(e.key==='Escape'&&play.classList.contains('on'))go(false)});
 if(location.hash==='#me'){loadPlay();swap(true)}

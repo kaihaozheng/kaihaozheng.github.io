@@ -1,5 +1,5 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="claude:viewport-fit-sides" content="cover">
-<meta name="version" content="homepage v5.3 · 2026-11-15">
+<meta name="version" content="homepage v5.5 · 2026-11-16">
 <title>Kaihao Zheng</title>
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="assets/favicon-32.png" type="image/png" sizes="32x32">
@@ -865,7 +865,7 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
     ['Lan, Z., Liu, W., Schmitt, R. J. P., … '+ME+', … &amp; Sun, F. (2026). Mapping global floodplain development disparities highlights drivers behind intensifying flood losses. <em>Science Bulletin</em>, 71(12), 3097–3106.','10.1016/j.scib.2026.05.002'],
     ['Su, J., Lin, P., '+ME+', Lei, X., Yin, Z., Hou, A., &amp; Xie, S. (2026). Observation-based spatiotemporal analysis of the evolving flood regulation capacity for the Yangtze River Basin. <em>Geophysical Research Letters</em>, 53(8), e2025GL120255.','10.1029/2025GL120255'],
     ['Lin, H., Lin, P., &amp; '+ME+' (2026). Human perturbations reshape hydrological responses in riverine systems: insights from a reach-level quantification framework to the Pearl River Basin. <em>Sustainable Horizons</em>, 17, 100174.','10.1016/j.horiz.2025.100174'],
-    ['Lei, X., Lin, H., '+ME+', &amp; Lin, P. Process diagnostics of snowmelt runoff in global hydrological models: Part II – Are more complex models better? <em>EGUsphere</em>, accepted.','10.5194/egusphere-2025-6073']
+    ['Lei, X., Lin, H., '+ME+', &amp; Lin, P. Process diagnostics of snowmelt runoff in global hydrological and land surface models – Part II: Are more complex models better? <em>Hydrology and Earth System Sciences</em>, accepted (EGUsphere preprint).','10.5194/egusphere-2025-6073']
   ];
   function doi(d){return ' <a class="doi" href="https://doi.org/'+d+'" target="_blank" rel="noopener">doi</a>'}
   function pubs(ids){return '<ul class="pubs pfold">'+ids.map(function(id){var p=PUB[id];return '<li><details><summary><span class="wh"><b>'+p.role+'</b>'+p.wh+'</span><span class="ti">'+p.ti+'</span></summary><div class="pbody">'+(p.ou?'<span class="ou">'+p.ou+'</span>':'')+'<span class="ci">'+p.ci+(p.doi?doi(p.doi):'')+'</span>'+(p.more?'<span class="ci then">'+p.more+'</span>':'')+'</div></details></li>'}).join('')+'</ul>'}
@@ -878,7 +878,7 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
     phd:{end:'a PhD applicant',body:function(){return ''+
       '<div class="letter"><p>Dear Professor,</p>'+
         /* the letter: why, then specifically what, then what for, then the way to the work (用户 11-13 gave the order and the middle sentence) */
-        '<p>I am applying for PhD programmes starting in Fall 2027, to keep working on human–water interaction. Specifically, I am interested in developing and applying quantitative methods that reduce complex human–earth interactions to their key elements, so that places can be compared and the mechanisms behind them can be taken apart. I hope to provide scientific insights, data and frameworks for decision-makers who have to find cost-effective solutions with limited people, money and resources, and for carrying what works in one place over to others in a similar state.</p>'+
+        '<p>I am applying for PhD programs starting in Fall 2027 to study human–water interactions. Specifically, I want to develop and apply quantitative frameworks that distill complex human–earth interactions into necessarily simplified models, so that I can compare places systematically and understand the mechanisms underlying the differences between them. Ultimately, I hope to give decision-makers the evidence, data and tools to find cost-effective solutions with limited resources, and to adapt what works in one place to others facing similar challenges.</p>'+
         '<p>Kaihao Zheng<br><span class="mail">'+MAIL+'</span></p></div>'+
       '<div class="morelab"><span>More about research:</span> '+jump('go','research','What I work on, and the papers')+'</div>'}},
     master:{end:'a master’s graduate of the GeoWater Lab, Peking University',body:function(){return ''+
@@ -1579,7 +1579,7 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
     return '<button type="button" class="rcard" data-go="research" data-paper="research" aria-label="I am a researcher: go to research">'+mk(4)+
       '<span class="rk"><span>RESEARCH</span><span>9 PAPERS · 11 CONFERENCES</span></span>'+
       '<span class="end">Working on human–water interaction</span>'+
-      '<span class="wwhl"><b>What</b><i>forces and elements of human–water dynamics</i><b>How</b><i>large-scale quantitative comparison</i><b>Why</b><i>cost-effective action</i></span>'+
+      '<span class="wwhl"><b>What</b><i>key elements and driving forces of human–earth systems</i><b>How</b><i>large-scale quantitative comparison</i><b>Why</b><i>cost-effective, transferable solutions</i></span>'+
       '<span class="rlist">Environmental Research Letters <b>2025</b> · Earth System Science Data <b>2024</b> · and 7 co-authored</span>'+
       '<span class="more">READ THE RESEARCH →</span></button>';
   }
@@ -1638,9 +1638,9 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
       '</div></div></section>';
   }
   function researchHTML(){
-    var WWH=[['What','Forces and elements within human–water dynamics','I want to understand the forces that drive human–water systems and the conditions under which their mechanisms hold. In flood management, for example, the key elements include hydroclimate, the human footprint and settlements, and water infrastructure.'],
-      ['How','Quantitative methods for large-scale comparison','I am keen on building and using frameworks that reduce complex interactions to their key elements and support large-scale comparison across places. Comparing many places in this way helps dissect the mechanisms behind them.'],
-      ['Why','Cost-effective action for policy support and knowledge transfer','When people, money and resources are limited, such frameworks help decision-makers see trade-offs and synergies and find cost-effective solutions. They also allow knowledge to transfer between places that are in a similar state of human–water interaction.']];
+    var WWH=[['What','Key elements and driving forces of human–earth systems','I study the key elements of human–earth systems and the forces that drive them, starting from flood management, where hydroclimate, settlements and infrastructure interact.'],
+      ['How','Quantitative frameworks for large-scale comparison','I build and apply frameworks that distill complex interactions into simplified models and compare places systematically to reveal underlying mechanisms.'],
+      ['Why','Cost-effective, transferable solutions','When resources are limited, such frameworks help decision-makers weigh trade-offs and synergies and find cost-effective solutions. They also help adapt what works in one place to others facing similar challenges.']];
     return '<section id="research" class="sec">'+secHead('research','')+
       '<div class="interests"><div class="ihead"><h3>Research interests</h3></div><div class="wtiles">'+WWH.map(function(w,i){
         return '<button type="button" class="wtile'+(i?'':' on')+'" data-wwh><span class="q">'+w[0]+'</span><h4>'+w[1]+'</h4><p>'+w[2]+'</p></button>'}).join('')+'</div></div>'+
@@ -1822,7 +1822,7 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
 
   document.addEventListener('click',function(e){
     if(e.target.closest('a[href]'))return;   /* a link inside a row goes where it says */
-    var el=e.target.closest('[data-flip],[data-place],[data-card-close],[data-zoom],[data-view],[data-cont],[data-routes],[data-seg],[data-tabs],[data-back],[data-sheet],[data-go]');if(!el)return;
+    var el=e.target.closest('[data-flip],[data-place],[data-card-close],[data-zoom],button[data-view],[data-cont],[data-routes],[data-seg],[data-tabs],[data-back],[data-sheet],[data-go]');if(!el)return;   /* button[data-view]: <body data-view> says which page is showing; without “button” any click on the trip page (the photo, the card) put the map back to the whole world (用户 11-16) */
     var d=el.dataset;
     if(d.place!==undefined){MAP.select(+d.place);var mb=document.getElementById('mapbox');if(mb&&window.innerWidth<1180)mb.scrollIntoView({behavior:reduced?'auto':'smooth',block:'start'});return}
     if(d.cardClose!==undefined){MAP.close();return}
