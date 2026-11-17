@@ -944,7 +944,7 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
     var planLine={type:'LineString',coordinates:PLAN.map(function(s){return [s[0],s[1]]})};
     var nowPt=[NOW.x,NOW.y];
     var PINS=[{c:BEIJING,name:'Beijing',on:['master','bachelor'],home:1},{c:TOKYO,name:'Tokyo',on:['utokyo'],home:1},{c:nowPt,name:NOW.n+' · now',on:['phd','traveler']}];
-    function domeFrac(){return window.innerHeight<520?.2:(S.sec==='about'?.25:.15)}
+    function domeFrac(){return .2}   /* one height in every section (v5.14, user 11-17: “它会飘”: it was .25 on About and .15 after, so it rose and sank as one scrolled) */
     /* on the desk: as large as it can be without sliding under the CV sheet (measured with the page scrolled to the top) */
     function passSpot(){ /* where the middle of the boarding pass goes, and how low it must be to clear the research card */
       var pc=view.querySelector('.passcol'),cs=view.querySelector('#about .cvsheet'),rc=view.querySelector('.rcard');if(!pc||!cs)return null;
@@ -963,7 +963,8 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
     function geom(){
       var vw=window.innerWidth,vh=window.innerHeight,R,sec=S.sec;
       if(sec==='travels'){R=.3*vh;return [vw/2,vh+3*R,R,0]}                       /* out of sight: the map takes over */
-      if(!wide()){R=(vw<760?1.05:.78)*vw;var vb=cv.getBoundingClientRect().bottom||vh;return [vw/2,vb-domeFrac()*vh+10+R,R,2]} /* a dome along the bottom edge (measured from where the canvas really ends) */
+      if(!wide()){R=(vw<760?.8:.5)*vw;   /* v5.14: smaller than before (1.05 and .78), so it reads as a globe close by, not a far horizon */
+        var vb=cv.getBoundingClientRect().bottom||vh;return [vw/2,vb-domeFrac()*vh+10+R,R,2]} /* a dome along the bottom edge (measured from where the canvas really ends) */
       if(sec==='about')return aboutGeom();
       if(sec==='door'){R=Math.max(260,.5*vh);return [vw-.22*R,vh+.14*R,R,-1]}       /* beside the way in to the trip, it comes forward again */
       R=Math.max(240,.42*vh);return [.12*R,vh+.6*R,R,1];
@@ -1038,25 +1039,21 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
       gx+=(g[0]-gx)*b;gy+=(g[1]-gy)*b;gR+=(g[2]-gR)*b;
       var settled=mv<.3&&Math.abs(d0)<.05&&Math.abs(d1)<.05&&Math.abs(tk-k)<.002&&!drag;
       if(settled&&away){running=false;ctx.setTransform(1,0,0,1,0,0);ctx.clearRect(0,0,cv.width,cv.height);ctx2.setTransform(1,0,0,1,0,0);ctx2.clearRect(0,0,cv2.width,cv2.height);baseKey='';return} /* nothing to draw while the map is open */
-      if(settled&&!idle&&!pinned&&reduced){draw(now,ky,false,true);running=false;return}
+      if(settled&&!idle&&!pinned&&reduced){draw(now,ky);running=false;return}
       odd=!odd;
-      if(!(settled&&idle&&odd))draw(now,ky,idle&&settled);                                       /* a slow idle turn needs only every other frame */
+      if(!(settled&&idle&&odd))draw(now,ky);                                       /* a slow idle turn needs only every other frame */
       requestAnimationFrame(frame);
     }
     function fade(cz){var v=Math.max(0,Math.min(1,(cz-.08)/.3));return v*v*(3-2*v)}   /* toward the rim things fade out */
-    var snap=null,lastBase=-1e9;
-    function draw(now,ky,idle,force){   /* the globe again only if it moved or turned, at most ~30 times a second (~20 while it only drifts round; every frame under a finger); the moving bits every frame */
+    function draw(now,ky){   /* the globe again only when it moved or turned (every such frame); the moving bits every frame */
       var key=[gx,gy,gR,k,rot[0],rot[1]].map(function(v){return v.toFixed(2)}).join()+'|'+ky+'|'+W+'|'+H+'|'+offY+'|'+dpr;
-      if(key!==baseKey&&(drag||force||!snap||now-lastBase>=(idle?48:31))){baseKey=key;lastBase=now;drawBase(ky);snap=[gx,gy,gR,k,rot[0],rot[1]]}
-      /* the moving bits are drawn where the globe was drawn, so they never slide off the land between two drawings of it */
-      var live=[gx,gy,gR,k,rot[0],rot[1]],c0=ctx;
-      gx=snap[0];gy=snap[1];gR=snap[2];k=snap[3];rot[0]=snap[4];rot[1]=snap[5];ctx=ctx2;
-      try{drawOver(now,ky)}finally{ctx=c0;gx=live[0];gy=live[1];gR=live[2];k=live[3];rot[0]=live[4];rot[1]=live[5]}
+      if(key!==baseKey){baseKey=key;drawBase(ky)}
+      var c0=ctx;ctx=ctx2;try{drawOver(now,ky)}finally{ctx=c0}
     }
     function drawBase(ky){
       ctx.setTransform(dpr,0,0,dpr,0,-offY*dpr);ctx.clearRect(0,offY,W,H);
       if(gR<=0||gy-gR>offY+H+40||gy+gR<offY-40)return;
-      var sy=gy+(side===2?-3:6),sh=ctx.createRadialGradient(gx,sy,gR*.94,gx,sy,gR+26);sh.addColorStop(0,'rgba(27,42,65,.3)');sh.addColorStop(1,'rgba(27,42,65,0)');ctx.beginPath();ctx.arc(gx,sy,gR+26,0,6.2832);ctx.fillStyle=sh;ctx.fill();   /* the shadow as a gradient: a canvas blur this size is slow (v5.12) */
+      var ext=side===2?Math.max(0,Math.min(18,gy-gR-offY-2)):26,sy=gy+(side===2?-2:6),sh=ctx.createRadialGradient(gx,sy,gR,gx,sy,gR+ext);sh.addColorStop(0,'rgba(27,42,65,.3)');sh.addColorStop(1,'rgba(27,42,65,0)');if(ext>0){ctx.beginPath();ctx.arc(gx,sy,gR+ext,0,6.2832);ctx.fillStyle=sh;ctx.fill()}   /* the shadow as a gradient: a canvas blur this size is slow (v5.12) */
       ctx.beginPath();ctx.arc(gx,gy,gR,0,6.2832);ctx.fillStyle=col.sheet;ctx.fill();
       ctx.save();ctx.beginPath();ctx.arc(gx,gy,gR,0,6.2832);ctx.clip();
       proj.translate([gx,gy]).scale(gR*k).rotate([rot[0],rot[1],0]);ctx.lineJoin='round';ctx.lineCap='round';
@@ -1095,7 +1092,7 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
       /* Beijing and Tokyo, where I have lived, and where I am now */
       ctx.textBaseline='middle';ctx.textAlign='left';
       PINS.forEach(function(p){
-        if(!vis(p.c))return;var on=p.on.indexOf(ky)>=0,q;
+        if(!vis(p.c))return;var q1=proj(p.c);if(Math.hypot(q1[0]-gx,q1[1]-gy)>gR-8)return;   /* only places that fall on the disc (v5.14, user 11-17: a pin showed above the dome) */var on=p.on.indexOf(ky)>=0,q;
         if(on){var pulse=reduced?0:(Math.sin(now/420)+1)/2;q=proj(p.c);ctx.globalAlpha=.16;ctx.beginPath();ctx.arc(q[0],q[1],26,0,6.2832);ctx.fillStyle=col.amber;ctx.fill();ctx.globalAlpha=1;
           dot(p.c,10+pulse*6,null,col.amber,1.4);dot(p.c,6,col.amber,col.sheet,2);ctx.font='bold 13px '+MAPF}
         else if(p.home){q=proj(p.c);ctx.globalAlpha=.14;ctx.beginPath();ctx.arc(q[0],q[1],14,0,6.2832);ctx.fillStyle=col.ink;ctx.fill();ctx.globalAlpha=1;
