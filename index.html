@@ -1,5 +1,5 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="claude:viewport-fit-sides" content="cover">
-<meta name="version" content="homepage v5.16 · 2026-11-17">
+<meta name="version" content="homepage v5.17 · 2026-11-17">
 <title>Kaihao Zheng</title>
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="assets/favicon-32.png" type="image/png" sizes="32x32">
@@ -525,19 +525,19 @@ body.travel #travels{padding-top:.4rem}
 .sechead .headside .tfacts{margin:0;padding-bottom:.2rem}
 .sechead .goback{display:grid;gap:.2rem;text-align:left;background:var(--sheet);border:0;border-left:1.5px dashed var(--pencil);box-shadow:var(--lift);
   padding:.55rem .95rem .6rem .85rem;cursor:pointer;color:var(--ink);transition:transform .25s var(--ease),box-shadow .25s}
-.sechead .goback b{font:400 var(--f-text)/1.2 var(--serif)}
+.sechead .goback b{font:600 .75rem/1.2 var(--mono);letter-spacing:.1em;text-transform:uppercase}
 .sechead .goback:hover{transform:translateY(-2px);box-shadow:var(--lift-hi)}
 .sechead .goback:hover b{color:var(--amber)}
 .doorrow{display:flex;flex-direction:column;align-items:flex-start;gap:var(--s3);padding-top:var(--s3)}
 .doorbtn{flex:none;display:block;text-align:left;cursor:pointer;background:var(--sheet);border:0;border-left:6px solid var(--amber);box-shadow:var(--lift);padding:.8rem 1.3rem .7rem 1rem;transform:rotate(-1.5deg);transition:transform .25s var(--ease),box-shadow .25s}
-.doorbtn b{display:block;font:400 var(--f-h3)/1.2 var(--serif)}
+.doorbtn b{display:block;font:600 .9375rem/1.2 var(--mono);letter-spacing:.1em;text-transform:uppercase}   /* v5.17: same action caps as the chip and Return */
+.doorbtn:hover b{color:var(--amber)}
 .doorbtn:hover{transform:rotate(0deg) translateY(-.2rem);box-shadow:var(--lift-hi)}
-/* v5.15 (user 11-17): just the words, no paper slip; a paper-coloured halo keeps them legible over the grid and the globe */
-#chip{position:fixed;z-index:1;display:block;cursor:pointer;background:none;border:0;padding:.2rem .1rem;color:var(--ink);
-  font:400 var(--f-text)/1.2 var(--serif);white-space:nowrap;text-decoration:underline;text-decoration-color:var(--amber);text-decoration-thickness:1.5px;text-underline-offset:.22em;
-  text-shadow:0 0 3px var(--paper),0 0 6px var(--paper),0 0 10px var(--paper);
+/* v5.17 (user 11-17): the paper tag is back (bare words felt abrupt), one line only; action words are Libre Franklin caps like READ THE RESEARCH, set apart from the serif text */
+#chip{position:fixed;z-index:1;display:block;cursor:pointer;background:var(--sheet);border:0;border-left:4px solid var(--amber);box-shadow:var(--lift);padding:.5rem .8rem .45rem .65rem;transform:rotate(-2deg);
+  font:600 .75rem/1.2 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--ink);white-space:nowrap;
   transition:color .2s,transform .25s var(--ease),left .5s var(--ease),top .5s var(--ease),opacity .35s var(--ease)}
-#chip:hover{color:var(--amber);transform:translateY(-2px)}
+#chip:hover{color:var(--amber);transform:rotate(0deg) translateY(-2px)}
 body.dome #chip{display:none}   /* on a phone the dome itself is the way in: a tag beside it would sit on the words scrolling past */
 /* things done besides the work: a row of snapshots that scrolls sideways; and lists that fold */
 .acts{min-width:0}
@@ -717,7 +717,7 @@ body::before{content:"";position:fixed;z-index:19;left:0;right:0;top:0;height:ca
   .sechead .headside .tfacts{column-gap:.7rem}
   .sechead .headside .tfacts dd{font-size:.9rem}
   .sechead .goback{padding:.45rem .8rem .5rem .75rem}
-  .sechead .goback b{font-size:.95rem}
+  .sechead .goback b{font-size:.72rem}
 }
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{transition-duration:0s!important;animation:none!important}}
 
