@@ -1,5 +1,5 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="claude:viewport-fit-sides" content="cover">
-<meta name="version" content="homepage v5.15 · 2026-11-17">
+<meta name="version" content="homepage v5.16 · 2026-11-17">
 <title>Kaihao Zheng</title>
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="assets/favicon-32.png" type="image/png" sizes="32x32">
@@ -742,14 +742,13 @@ body::before{content:"";position:fixed;z-index:19;left:0;right:0;top:0;height:ca
 .sheet .rest>div{min-height:0;overflow:hidden}
 .sheet.folded .rest{grid-template-rows:0fr;opacity:.15}
 .sheet.folded{cursor:pointer}
+#education .sheet{transition:padding-bottom .55s var(--ease)}
+#education .sheet.folded{padding-bottom:calc(2.5rem - var(--s3))}   /* v5.16: the folded part still leaves a grid gap; take it back out of the bottom padding now that no hint line sits there */
 .sheet.folded .letter>p:nth-child(2){display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;-webkit-mask-image:linear-gradient(#000 60%,transparent)}
 .sheet.folded .letter>p:nth-child(n+3){display:none}
 .sheet.folded:hover{box-shadow:var(--lift-hi),0 0 0 1px var(--amber)}
 .sheet .sheettitle[data-unfold]{cursor:pointer}
-.unfold{display:block;margin-top:.9rem;font:700 var(--lab)/1 var(--mono);letter-spacing:var(--head-sp);text-transform:uppercase;color:var(--amber)}
-.sheet.folded .unfold::after{content:"Point here to open ▾"}
-@media (hover:none){.sheet.folded .unfold::after{content:"Tap to open ▾"}}
-.sheet:not(.folded) .unfold{display:none}
+/* v5.16 (user 11-17): no "Point here to open" line; the faded text and the amber outline on hover say it opens */
 </style>
 
 <canvas id="globe" role="img" aria-label="A very large, slowly turning paper globe with the 2026 route drawn on it"></canvas>
@@ -1232,12 +1231,12 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
           var n=G.ids.length,cont=o.groups==='continent';if(!cont&&n<2)return;
           var nm=(cont?CONT[G.key]:CTRY[G.key])||G.key,cx=G.sx/n,l1,l2,w1,w2,bw,bh,bx;
           if(cont){x.font='bold 11px '+MAPF;try{x.letterSpacing='2px'}catch(_){}l1=nm.toUpperCase();w1=x.measureText(l1).width;try{x.letterSpacing='0px'}catch(_){}
-            x.font='12.5px '+MAPF;l2=n+(n===1?' place':' places');w2=x.measureText(l2).width;bw=Math.max(w1,w2);bh=30}
+            l2='';w2=0;bw=w1;bh=14}   /* v5.16: just the name; the count is on the continent buttons above the map (user 11-17: one place for each number) */
           else{x.font='13px '+MAPF;l1=nm;w1=x.measureText(l1).width;x.font='bold 10.5px '+MAPF;l2=String(n);w2=x.measureText(l2).width;bw=w1+6+w2;bh=16}
           var tries=[[cx-bw/2,G.y1+9],[cx-bw/2,G.y0-9-bh],[G.x1+10,(G.y0+G.y1)/2-bh/2],[G.x0-10-bw,(G.y0+G.y1)/2-bh/2]];
           for(var t=0;t<tries.length;t++){bx=[tries[t][0]-3,tries[t][1]-2,tries[t][0]+bw+3,tries[t][1]+bh+2];if(free(bx)){
             var px=tries[t][0],py=tries[t][1];x.globalAlpha=now?fadeA('g:'+o.groups+G.key,now):1;
-            if(cont){x.font='bold 11px '+MAPF;try{x.letterSpacing='2px'}catch(_){}halo(l1,px+(bw-w1)/2,py);try{x.letterSpacing='0px'}catch(_){}x.font='12.5px '+MAPF;halo(l2,px+(bw-w2)/2,py+15,col.pencil)}
+            if(cont){x.font='bold 11px '+MAPF;try{x.letterSpacing='2px'}catch(_){}halo(l1,px+(bw-w1)/2,py);try{x.letterSpacing='0px'}catch(_){}}
             else{x.font='13px '+MAPF;halo(l1,px,py);x.font='bold 10.5px '+MAPF;halo(l2,px+w1+6,py+3,col.amber)}
             x.globalAlpha=1;placed.push(bx);ht.push({x0:bx[0],y0:bx[1],x1:bx[2],y1:bx[3],ids:G.ids,name:nm});break}}
         });
@@ -1636,7 +1635,7 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
   function eduHTML(){
     return '<section id="education" class="sec">'+secHead('education','')+
       '<div class="held"><div class="left">'+cvHTML(false)+'</div><div class="right">'+
-      ACADEMIC.filter(function(id){return id!=='phd'}).map(function(id,i){return '<article class="sheet folded" id="sheet-'+id+'"><h3 class="sheettitle" data-unfold><span>I am</span> '+SHEETS[id].end+'.</h3><div class="sheet-body">'+SHEETS[id].body()+'</div><span class="unfold" aria-hidden="true"></span></article>'}).join('')+
+      ACADEMIC.filter(function(id){return id!=='phd'}).map(function(id,i){return '<article class="sheet folded" id="sheet-'+id+'"><h3 class="sheettitle" data-unfold><span>I am</span> '+SHEETS[id].end+'.</h3><div class="sheet-body">'+SHEETS[id].body()+'</div></article>'}).join('')+
       '</div></div></section>';
   }
   function researchHTML(){
@@ -1698,8 +1697,8 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
       '<div class="mapwrap">'+
         '<div class="mapbar">'+
           '<div class="legend">'+
-            '<label><input type="checkbox" id="lay-t" data-layer="t" checked><span class="key t"></span><span>This trip <small>'+nTrip+'</small></span></label>'+
-            '<label><input type="checkbox" id="lay-b" data-layer="b" checked><span class="key b"></span><span>Earlier trips <small>'+TRIPS.length+'</small></span></label>'+
+            '<label><input type="checkbox" id="lay-t" data-layer="t" checked><span class="key t"></span><span>This trip</span></label>'+
+            '<label><input type="checkbox" id="lay-b" data-layer="b" checked><span class="key b"></span><span>Earlier trips</span></label>'+
             '<label><input type="checkbox" id="lay-p" data-layer="p" checked><span class="key p"></span><span>Planned</span></label></div>'+
         '</div>'+
         '<div id="mapA"><div class="marksrow">'+CONTS.map(function(c){var n=NCONT[c[0]]||0;
