@@ -1,5 +1,5 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="claude:viewport-fit-sides" content="cover">
-<meta name="version" content="homepage v5.5 · 2026-11-16">
+<meta name="version" content="homepage v5.15 · 2026-11-17">
 <title>Kaihao Zheng</title>
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="assets/favicon-32.png" type="image/png" sizes="32x32">
@@ -525,20 +525,19 @@ body.travel #travels{padding-top:.4rem}
 .sechead .headside .tfacts{margin:0;padding-bottom:.2rem}
 .sechead .goback{display:grid;gap:.2rem;text-align:left;background:var(--sheet);border:0;border-left:1.5px dashed var(--pencil);box-shadow:var(--lift);
   padding:.55rem .95rem .6rem .85rem;cursor:pointer;color:var(--ink);transition:transform .25s var(--ease),box-shadow .25s}
-.sechead .goback span{font:400 .62rem/1 var(--pass);letter-spacing:.14em;text-transform:uppercase;color:var(--pencil)}
 .sechead .goback b{font:400 var(--f-text)/1.2 var(--serif)}
 .sechead .goback:hover{transform:translateY(-2px);box-shadow:var(--lift-hi)}
 .sechead .goback:hover b{color:var(--amber)}
 .doorrow{display:flex;flex-direction:column;align-items:flex-start;gap:var(--s3);padding-top:var(--s3)}
 .doorbtn{flex:none;display:block;text-align:left;cursor:pointer;background:var(--sheet);border:0;border-left:6px solid var(--amber);box-shadow:var(--lift);padding:.8rem 1.3rem .7rem 1rem;transform:rotate(-1.5deg);transition:transform .25s var(--ease),box-shadow .25s}
 .doorbtn b{display:block;font:400 var(--f-h3)/1.2 var(--serif)}
-.doorbtn i{display:block;font:var(--lab)/1.7 var(--mono);font-style:normal;letter-spacing:var(--lab-sp);color:var(--pencil)}
 .doorbtn:hover{transform:rotate(0deg) translateY(-.2rem);box-shadow:var(--lift-hi)}
-#chip{position:fixed;z-index:1;display:block;text-align:left;cursor:pointer;background:var(--sheet);border:0;border-left:5px solid var(--amber);box-shadow:var(--lift);padding:.4rem .8rem .32rem .6rem;transform:rotate(-2deg);
-  transition:transform .25s var(--ease),left .5s var(--ease),top .5s var(--ease),opacity .35s var(--ease)}
-#chip b{display:block;font:400 var(--f-text)/1.15 var(--serif)}
-#chip i{display:block;font:.625rem/1.6 var(--mono);font-style:normal;letter-spacing:var(--lab-sp);color:var(--pencil)}
-#chip:hover{transform:rotate(0deg) translateY(-2px)}
+/* v5.15 (user 11-17): just the words, no paper slip; a paper-coloured halo keeps them legible over the grid and the globe */
+#chip{position:fixed;z-index:1;display:block;cursor:pointer;background:none;border:0;padding:.2rem .1rem;color:var(--ink);
+  font:400 var(--f-text)/1.2 var(--serif);white-space:nowrap;text-decoration:underline;text-decoration-color:var(--amber);text-decoration-thickness:1.5px;text-underline-offset:.22em;
+  text-shadow:0 0 3px var(--paper),0 0 6px var(--paper),0 0 10px var(--paper);
+  transition:color .2s,transform .25s var(--ease),left .5s var(--ease),top .5s var(--ease),opacity .35s var(--ease)}
+#chip:hover{color:var(--amber);transform:translateY(-2px)}
 body.dome #chip{display:none}   /* on a phone the dome itself is the way in: a tag beside it would sit on the words scrolling past */
 /* things done besides the work: a row of snapshots that scrolls sideways; and lists that fold */
 .acts{min-width:0}
@@ -756,7 +755,7 @@ body::before{content:"";position:fixed;z-index:19;left:0;right:0;top:0;height:ca
 <canvas id="globe" role="img" aria-label="A very large, slowly turning paper globe with the 2026 route drawn on it"></canvas>
 <div class="wrap"><div id="view"></div></div>
 <canvas id="unroll" hidden aria-hidden="true"></canvas>
-<button type="button" id="chip" data-go="travels" hidden><b>a traveler</b><i>OPEN THE MAP →</i></button>
+<button type="button" id="chip" data-go="travels" hidden>Open the map →</button>
 <div class="tip" id="tip" hidden></div>
 <aside id="notes" hidden aria-label="批注"></aside>
 <a class="tocv" href="cv.html" target="_top" data-tocv>To the interactive CV</a>
@@ -988,10 +987,10 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
     /* a small tag that stays beside the globe wherever it is: the standing way in to the trip */
     function placeChip(){
       var ch=document.getElementById('chip');if(!ch)return;
-      var hide=S.sec==='travels'||(S.sec==='about'&&wide());ch.hidden=hide;if(hide)return;
+      var hide=S.sec==='travels'||S.sec==='door'||(S.sec==='about'&&wide());   /* v5.15: on the Travels intro the 'Open the map' button is right there, one is enough (user 11-17) */ch.hidden=hide;if(hide)return;
       var vw=window.innerWidth,vh=window.innerHeight,w=ch.offsetWidth,h=ch.offsetHeight,x,y;
       if(side===2){x=vw/2-w/2;y=vh-domeFrac()*vh-h*.6}
-      else{x=g[0]+side*.707*g[2]-(side<0?w*.8:w*.2);y=g[1]-.707*g[2]-h-4}
+      else{x=g[0]+side*.42*g[2]-(side<0?w*.8:w*.2);y=g[1]-.9*g[2]-h-6}   /* v5.15: higher up the rim, so the plain words stay clear of the To the interactive CV button below */
       ch.style.left=Math.round(Math.max(8,Math.min(vw-w-8,x)))+'px';ch.style.top=Math.round(Math.max(60,Math.min(vh-h-8,y)))+'px';
     }
     function onPass(e){
@@ -1616,7 +1615,7 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
   function secHead(id,stk,back){
     return '<header class="sechead'+(stk?'':' bare')+'"><span class="k">'+TABS[id]+'</span><div class="line"><h2 class="iam">I am</h2><p class="ending">'+SECEND[id]+(id==='travels'||id==='door'?'':TAG)+'</p></div>'+
       (back?'<div class="headside">'+(id==='travels'?'<dl class="tfacts"><dt>Now</dt><dd>'+NOW.n+', since '+day(LAST[1])+'</dd><dt>So far</dt><dd>'+nTrip+' places in '+nCountries+' countries, '+DAYN+' days</dd></dl>':'')+
-        '<button type="button" class="goback" data-back><span>Return</span><b>← Back to where I was</b></button></div>':'')+(stk?sticker(stk):'')+'</header>';
+        '<button type="button" class="goback" data-back><b>← Return</b></button></div>':'')+(stk?sticker(stk):'')+'</header>';
   }
   /* things done besides the work itself: one row of snapshots that scrolls sideways, so a sheet never grows longer */
   function acts(title,n,key){ /* the photos come from a folder under Assets/2-Photos; the file name is the caption */
@@ -1631,7 +1630,7 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
   function doorHTML(){
     return '<section id="door" class="sec">'+secHead('door','s4')+
       '<div class="doorrow"><p class="lead">I am on a trip I have been planning for three years: at 25, I am travelling around the world. So far, '+nTrip+' places in '+nCountries+' countries; today is day '+DAYN+'.</p>'+
-      '<button type="button" class="doorbtn" data-go="travels"><b>Open the map →</b><i>THE GLOBE UNROLLS INTO IT</i></button></div>'+
+      '<button type="button" class="doorbtn" data-go="travels"><b>Open the map →</b></button></div>'+
       '<footer class="colophon">Last updated in November 2026, from '+NOW.n+'</footer></section>';
   }
   function eduHTML(){
