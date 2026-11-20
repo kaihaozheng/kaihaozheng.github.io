@@ -371,7 +371,7 @@ body.noting .mk{display:grid}
 .legend label{display:flex;align-items:center;gap:.45rem;cursor:pointer;font-size:.97rem;line-height:1.3}
 .legend input{width:1rem;height:1rem;accent-color:var(--amber);flex:none;margin:0}
 .legend .key{flex:none;width:.8rem;height:.8rem;border-radius:50%}
-.key.t{background:var(--amber)}.key.b{background:var(--pencil)}.key.p{border:0;border-radius:0;width:1.3rem;height:0;border-top:2px dashed var(--pencil)}
+.key.t{background:var(--amber)}.key.all{background:radial-gradient(circle,var(--amber) 0 22%,transparent 24%) 0 0/6px 6px}.key.w{border-radius:0;width:1.3rem;height:0;border-top:2px solid var(--water);opacity:.6}.key.b{background:var(--pencil)}.key.p{border:0;border-radius:0;width:1.3rem;height:0;border-top:2px dashed var(--pencil)}
 .legend small{font:.69rem var(--mono);color:var(--pencil)}
 .mapbox{position:relative;height:min(clamp(24rem,calc(100vh - 19rem),50rem),72vw);min-height:15rem;background:var(--sea);box-shadow:var(--lift-hi);overflow:hidden}
 .mapbox canvas{position:absolute;inset:0;width:100%;height:100%;display:block;touch-action:pan-y;cursor:grab;transition:opacity .35s}
@@ -398,8 +398,9 @@ body.noting .mk{display:grid}
 .mapwrap.pre .marksrow > *,.mapwrap.pre .mapctl,.mapwrap.pre .routes,.mapwrap.pre .scrub{transition-delay:0s}
 /* the map keeps to Arial alone, like the words drawn on it (用户 11-13) */
 .mapwrap,.tip{--serif:var(--mono)}
-.tip{position:fixed;z-index:25;pointer-events:none;background:var(--ink);color:var(--sheet);font:.75rem/1.4 var(--mono);padding:5px 8px;border-radius:3px;white-space:nowrap;transform:translate(-50%,-125%)}
-.tip small{display:block;font-size:.69rem;opacity:.75}
+.tip{position:fixed;z-index:25;pointer-events:none;background:var(--ink);color:var(--sheet);font:.75rem/1.4 var(--mono);padding:5px 8px;border-radius:3px;white-space:nowrap;transform:translateY(-125%)}
+.tip small{display:block;font-size:.69rem;opacity:.75;white-space:normal}
+.tip{max-width:calc(100vw - 16px)}   /* a long line (a river's basin) wraps on a phone instead of running off the screen */
 .placecard{position:absolute;z-index:4;right:.75rem;top:3.4rem;width:19rem;max-width:calc(100% - 1.5rem);max-height:calc(100% - 6.4rem);overflow:auto;background:var(--sheet);box-shadow:var(--lift-hi);padding:1rem 1rem .9rem}
 .placecard.float{position:fixed;z-index:20;top:auto;bottom:1rem;right:1rem;max-height:70vh}
 .placecard .x{position:absolute;right:6px;top:6px;background:none;border:0;min-width:36px;min-height:36px;cursor:pointer;font:1rem var(--mono);color:var(--pencil)}
@@ -442,6 +443,7 @@ body.lbopen{overflow:hidden}
 .placecard .walk button:hover{border-color:var(--ink)}
 .scrub{position:relative;display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px;font:.75rem/1.4 var(--mono)}
 .scrub input{flex:1 1 220px;min-width:0;accent-color:var(--amber)}
+.scrub .credit{flex:1 0 100%;text-align:right;font-size:.62rem;color:var(--pencil);opacity:.8}.scrub .credit a{color:inherit}
 .travcols{display:grid;grid-template-columns:minmax(0,1fr);gap:1.6rem 2.5rem;align-items:start}
 .travcols h3{margin-bottom:.5rem}
 .travcols p{margin:0 0 .6em;max-width:30em}
@@ -767,7 +769,7 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
   if(window.parent!==window){try{var b=window.parent.document.getElementById('back');if(b){b.click();return}}catch(_){}}
   var k=document.createElement('div');k.style.cssText='position:fixed;inset:0;z-index:2147483647;background:#000;opacity:0;transition:opacity .17s ease-in';document.body.appendChild(k);void k.offsetWidth;k.style.opacity='1';
   try{sessionStorage.setItem('toCV','1')}catch(_){}setTimeout(function(){location.href='cv.html'},180)});</script>
-<script src="assets/core.js?v=1tmxzj6"></script>
+<script src="assets/core.js?v=1pgmnsw"></script>
 <script>
 (function(){
   'use strict';
@@ -778,7 +780,7 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
   var CORE=window.CORE,HAS=!!(window.d3&&CORE);
   var BEIJING=[116.31,39.99],TOKYO=[139.76,35.71];
   var css=getComputedStyle(document.documentElement),C=function(n){return css.getPropertyValue(n).trim()};
-  var col={sheet:C('--sheet'),grid:C('--grid-strong'),land:C('--land'),ink:C('--ink'),pencil:C('--pencil'),amber:C('--amber'),sea:C('--sea')};
+  var col={sheet:C('--sheet'),grid:C('--grid-strong'),land:C('--land'),ink:C('--ink'),pencil:C('--pencil'),amber:C('--amber'),sea:C('--sea'),water:C('--water')};
   var MAPF='"Libre Franklin",Arial,sans-serif';   /* every word drawn on the globe and the map: one family, regular and bold (用户 11-13) */
 
   /* ---------- data: geometry is delta-encoded in 0.01 degree ---------- */
@@ -917,6 +919,7 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
     var ctx2=cv2.getContext('2d'),baseKey='';
     var proj=d3.geoOrthographic().clipAngle(90).precision(.3),path=d3.geoPath(proj,ctx);
     var grat=d3.geoGraticule().step([15,15])();
+    var RIV=CORE.riv?{type:'MultiLineString',coordinates:CORE.riv.map(dec)}:null;
     var coords=STAYS.map(function(s){var p=PLACES[s[0]];return [p.x,p.y]});
     var stayPts={type:'MultiPoint',coordinates:coords};
     /* where I have been, this trip and the big earlier ones: soft grey patches under everything, grey lines for the earlier trips */
@@ -1057,6 +1060,7 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
       proj.translate([gx,gy]).scale(gR*k).rotate([rot[0],rot[1],0]);ctx.lineJoin='round';ctx.lineCap='round';
       ctx.beginPath();path(grat);ctx.strokeStyle=col.grid;ctx.lineWidth=.8;ctx.stroke();
       ctx.beginPath();path(GEO.land);ctx.fillStyle=col.land;ctx.fill();ctx.strokeStyle=col.ink;ctx.lineWidth=.9;ctx.stroke();
+      if(RIV){ctx.beginPath();path(RIV);ctx.strokeStyle=col.water;ctx.globalAlpha=.5;ctx.lineWidth=.9;ctx.stroke();ctx.globalAlpha=1}   /* the great rivers (v5.22, user 11-19) */
       /* borders: China's from CN-border, the rest with every China-adjacent line left out */
       ctx.strokeStyle=col.pencil;ctx.globalAlpha=.6;ctx.lineWidth=.55;ctx.beginPath();path(GEO.world);ctx.stroke();
       ctx.lineWidth=.7;ctx.beginPath();path(GEO.cn);ctx.stroke();ctx.beginPath();path(GEO.dash);ctx.stroke();ctx.globalAlpha=1;
@@ -1156,7 +1160,7 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
       o.sphere=new Path2D();d3.geoPath(pr,o.sphere)({type:'Sphere'});return o;
     }
     var PB=paths(BASE,GEO,15);
-    var box,c,x,W=0,H=0,dpr=1,s0=1,off=[0,0],T=d3.zoomIdentity,zoom,layers={t:true,b:true,p:true},upto=1e9,sel=-1,hov=-1,live=false,card,hits=[],hot=[],routeP=null,segP=null,planP=null,pastP=null,FADE={},fadeMore=false,fadeRaf=0,lit=0,cont='';
+    var box,c,x,W=0,H=0,dpr=1,s0=1,off=[0,0],T=d3.zoomIdentity,zoom,layers={t:true,b:true,p:true,w:true},upto=1e9,sel=-1,hov=-1,live=false,card,hits=[],hot=[],routeP=null,segP=null,planP=null,pastP=null,FADE={},fadeMore=false,fadeRaf=0,lit=0,cont='';
     var CONT={EU:'Europe',AS:'Asia',NA:'North America',SA:'South America',AF:'Africa',OC:'Oceania'};
     var CTRY={DE:'Germany',ES:'Spain',ME:'Montenegro',AL:'Albania',MK:'North Macedonia',BG:'Bulgaria',PL:'Poland',RO:'Romania',HU:'Hungary',SK:'Slovakia',EE:'Estonia',FR:'France',IT:'Italy',CH:'Switzerland',NL:'Netherlands',AT:'Austria',SI:'Slovenia',HR:'Croatia',DK:'Denmark',SE:'Sweden',CZ:'Czechia',BE:'Belgium',BA:'Bosnia & Herzegovina',US:'United States',CN:'China',JP:'Japan',PT:'Portugal',TR:'Türkiye',LT:'Lithuania',LV:'Latvia',FI:'Finland',RU:'Russia',VN:'Vietnam',TH:'Thailand',RS:'Serbia',MX:'Mexico',LA:'Laos',SG:'Singapore',MY:'Malaysia',AE:'UAE',XK:'Kosovo',VA:'Vatican',SM:'San Marino',MC:'Monaco',LU:'Luxembourg',AD:'Andorra',KR:'Korea'};
     function ctryOf(p){return p.c==='TW'||p.c==='HK'||p.c==='MO'?'CN':p.c}
@@ -1171,7 +1175,13 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
     /* an earlier trip, or all the trips of one year, can be picked out the same way as a leg of this one */
     function idsOf(tr){var ids={};tr.forEach(function(k){TRIPS[k].s.forEach(function(i){ids[i]=1})});return ids}
     var PAST=TRIPS.map(function(t,k){return {id:'b'+k,name:t.n,tr:[k],ids:idsOf([k]),n:t.s.length}});
-    function curSeg(){var id=S.seg;if(!id)return null;return (id.charAt(0)==='t'?SEGS:PAST)[+id.slice(1)]||null}
+    /* quiet until pointed at (v5.23, user 11-19: “去的地方太多的时候……看着就会有点吵”; chose this of three tries, “有一点太淡了”):
+       from the continent zoom in, the trip, its places and the country names step back, and the leg of the place pointed at (on a
+       phone: the place picked) lights up with its stops named. ‘All places’ in the legend turns it off and shows everything at full
+       strength, as v5.22 did (user 11-19). hseg: the leg lit by pointing */
+    var QUIET=true,hseg='';
+    function legOf(i){var f=FIRST[i];if(f===undefined)return '';for(var j=0;j<SEGS.length;j++)if(SEGS[j].a<=f&&f<=SEGS[j].e)return SEGS[j].id;return ''}
+    function curSeg(){var id=S.seg||(QUIET?hseg:'');if(!id)return null;return (id.charAt(0)==='t'?SEGS:PAST)[+id.slice(1)]||null}
     /* the continents never travelled to stay unlit: their land is drawn faded */
     var DARK=[['SA',[[-77.37,8.67],[-77.6,14],[-25,14],[-25,-60],[-95,-60],[-93,2],[-80,5],[-77.89,7.22]]],
       ['AF',[[-27,30],[-12,34],[-5.7,35.95],[-1,36.6],[9.5,37.8],[11.3,37.3],[12.3,35.7],[25,33.8],[32.3,31.6],[32.55,29.9],[34.4,27.6],[38,21.5],[41,16],[43.4,12.6],[48,12.7],[52,13.2],[60,-40],[-27,-40]]],
@@ -1211,7 +1221,7 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
       items.sort(function(a,b){return b.r-a.r});
       x.lineJoin='round';
       items.forEach(function(q){
-        x.globalAlpha=q.dim?.2:1;x.beginPath();if(PLACES[q.i].h&&q.k==='b'){var hr=q.r+.8;x.rect(q.x-hr,q.y-hr,2*hr,2*hr)}else x.arc(q.x,q.y,q.r,0,6.2832);
+        x.globalAlpha=q.dim?.2:q.quiet?.78:1;x.beginPath();if(PLACES[q.i].h&&q.k==='b'){var hr=q.r+.8;x.rect(q.x-hr,q.y-hr,2*hr,2*hr)}else x.arc(q.x,q.y,q.r,0,6.2832);
         if(q.k==='t'){x.fillStyle=col.amber;x.fill();if(q.r>2.4){x.strokeStyle=col.sheet;x.lineWidth=1.1;x.stroke()}}
         else if(q.k==='b'){if(q.r>2.4&&!q.dim){x.fillStyle=col.sheet;x.fill();x.strokeStyle=col.pencil;x.lineWidth=1.2;x.stroke()}else{x.globalAlpha*=.75;x.fillStyle=col.pencil;x.fill()}}
         else{x.fillStyle=col.sheet;x.fill();x.setLineDash([2,2]);x.strokeStyle=col.pencil;x.lineWidth=1.1;x.stroke();x.setLineDash([])}
@@ -1232,12 +1242,12 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
           var nm=(cont?CONT[G.key]:CTRY[G.key])||G.key,cx=G.sx/n,l1,l2,w1,w2,bw,bh,bx;
           if(cont){x.font='bold 11px '+MAPF;try{x.letterSpacing='2px'}catch(_){}l1=nm.toUpperCase();w1=x.measureText(l1).width;try{x.letterSpacing='0px'}catch(_){}
             l2='';w2=0;bw=w1;bh=14}   /* v5.16: just the name; the count is on the continent buttons above the map (user 11-17: one place for each number) */
-          else{x.font='13px '+MAPF;l1=nm;w1=x.measureText(l1).width;x.font='bold 10.5px '+MAPF;l2=String(n);w2=x.measureText(l2).width;bw=w1+6+w2;bh=16}
+          else{x.font='13px '+MAPF;l1=nm;w1=x.measureText(l1).width;x.font='bold 10.5px '+MAPF;l2=String(n);w2=l2?x.measureText(l2).width:0;bw=w1+(l2?6:0)+w2;bh=16}
           var tries=[[cx-bw/2,G.y1+9],[cx-bw/2,G.y0-9-bh],[G.x1+10,(G.y0+G.y1)/2-bh/2],[G.x0-10-bw,(G.y0+G.y1)/2-bh/2]];
           for(var t=0;t<tries.length;t++){bx=[tries[t][0]-3,tries[t][1]-2,tries[t][0]+bw+3,tries[t][1]+bh+2];if(free(bx)){
             var px=tries[t][0],py=tries[t][1];x.globalAlpha=now?fadeA('g:'+o.groups+G.key,now):1;
             if(cont){x.font='bold 11px '+MAPF;try{x.letterSpacing='2px'}catch(_){}halo(l1,px+(bw-w1)/2,py);try{x.letterSpacing='0px'}catch(_){}}
-            else{x.font='13px '+MAPF;halo(l1,px,py);x.font='bold 10.5px '+MAPF;halo(l2,px+w1+6,py+3,col.amber)}
+            else{x.font='13px '+MAPF;if(o.quiet)x.globalAlpha*=.8;halo(l1,px,py);if(l2){x.font='bold 10.5px '+MAPF;halo(l2,px+w1+6,py+3,col.amber)}}
             x.globalAlpha=1;placed.push(bx);ht.push({x0:bx[0],y0:bx[1],x1:bx[2],y1:bx[3],ids:G.ids,name:nm});break}}
         });
       }
@@ -1258,7 +1268,7 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
               x.globalAlpha=1;placed.push(bx);break}}
         });
       }
-      return {hits:hs,hot:ht};
+      return {hits:hs,hot:ht,placed:placed};
     }
     function scaleBar(x,inv,w,h,right){
       var a=inv([w/2,h/2]),b=inv([w/2+100,h/2]);if(!a||!b||isNaN(a[0])||isNaN(b[0]))return;
@@ -1271,6 +1281,102 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
       x.strokeStyle=col.ink;x.lineWidth=1.3;x.stroke();x.fillStyle=col.ink;x.fillText(t,x0+len+7,y0+2);
     }
     function planLine(pr){var P=new Path2D();d3.geoPath(pr,P)({type:'LineString',coordinates:PLAN.map(function(p){return [p[0],p[1]]})});return P}
+
+    /* ----- rivers and lakes (v5.21, user 11-19): Natural Earth 1:10m, each with the web-map zoom it is meant to appear at (min_zoom)
+       and to be named at (min_label). zw() says how close the map is in those terms; a river fades in over half a level once the map
+       reaches its zoom. Drawn under the borders, so a continent never travelled to fades them with its land. ----- */
+    var WAT=null,wload=0,ZB=-.2,ZL=0;   /* ZB, ZL: how much later than Natural Earth intends rivers appear and are named */
+    function zw(){return Math.log(ppd()*360/256)/Math.LN2+ZB}
+    function waterIn(){
+      var src=window.WATER;if(!src)return;var R={},L={},lab=[],RV=[];
+      function bucket(o,z,w){var key=z+'|'+w;return o[key]||(o[key]={z:z,w:w,p:new Path2D()})}
+      src.r.forEach(function(f,ri){var w=f[3]<=1?1.5:f[3]<=3?1.2:f[3]<=5?.95:.75,b=bucket(R,f[1],w),g=d3.geoPath(BASE,b.p),lines=f[4].map(dec),own=new Path2D(),ml={type:'MultiLineString',coordinates:lines};
+        g(ml);d3.geoPath(BASE,own)(ml);RV.push({n:f[0],z:f[1],w:w,b:f[5],p:own});   /* each river once more on its own, to be picked out with its basin */
+        if(f[0])lines.forEach(function(l){if(l.length<2)return;var pts=l.map(function(p){return BASE(p)}),xs=pts.map(function(p){return p[0]}),ys=pts.map(function(p){return p[1]});
+          lab.push({n:f[0],i:ri,z:f[1],lz:f[2],r:f[3],pts:pts,bb:[Math.min.apply(0,xs),Math.min.apply(0,ys),Math.max.apply(0,xs),Math.max.apply(0,ys)]})})});
+      /* the basins: drawn only for the river being pointed at. A ring that winds the wrong way would cover the rest of the sphere, so each
+         polygon is checked and turned round if its area comes out larger than half the globe */
+      var BS=(src.b||[]).map(function(b){var polys=b[1].map(function(p){var rings=p.map(dec);if(d3.geoArea({type:'Polygon',coordinates:rings})>2*Math.PI)rings.forEach(function(r){r.reverse()});return rings}),
+        geo={type:'MultiPolygon',coordinates:polys},P=new Path2D();d3.geoPath(BASE,P)(geo);return {n:b[0],geo:geo,p:P,km2:d3.geoArea(geo)*6371*6371,seen:null}});
+      src.l.forEach(function(f){d3.geoPath(BASE,bucket(L,f[1],0).p)({type:'MultiPolygon',coordinates:f[3].map(function(p){return p.map(dec)})})});
+      function vals(o){return Object.keys(o).map(function(k){return o[k]}).sort(function(a,b){return a.z-b.z})}
+      lab.sort(function(a,b){return a.r-b.r||a.lz-b.lz});
+      WAT={r:vals(R),l:vals(L),lab:lab,rv:RV,b:BS};if(live)drawA();
+    }
+    var hrv=-1;   /* the river pointed at (or tapped): it and the other rivers of its basin are drawn stronger, over the basin, faintly filled */
+    function waterA(u){ /* inside drawA's transform: base units */
+      if(!WAT||!layers.w)return;var z=zw(),hr=hrv>=0?WAT.rv[hrv]:null,hb=hr&&hr.b>=0?WAT.b[hr.b]:null;
+      if(hb){x.save();x.clip(PB.land);x.fillStyle=col.water;x.globalAlpha=.1;x.fill(hb.p);
+        x.globalAlpha=.6;x.strokeStyle=col.water;x.lineWidth=1.1*u;x.setLineDash([4*u,3*u]);x.stroke(hb.p);x.setLineDash([]);x.restore()}
+      x.strokeStyle=col.water;
+      WAT.r.forEach(function(b){var a=sm(b.z-.05,b.z+.45,z);if(a<=0)return;x.globalAlpha=.7*a;x.lineWidth=b.w*(z>5.5?1.2:1)*u;x.stroke(b.p)});
+      WAT.l.forEach(function(b){var a=sm(b.z-.05,b.z+.45,z);if(a<=0)return;x.globalAlpha=a;x.fillStyle=col.sea;x.fill(b.p);x.globalAlpha=.45*a;x.lineWidth=.6*u;x.stroke(b.p)});
+      if(hr){WAT.rv.forEach(function(r,i){if(i!==hrv&&(hr.b<0||r.b!==hr.b))return;var a=i===hrv?1:sm(r.z-.05,r.z+.45,z);if(a<=0)return;
+        x.globalAlpha=(i===hrv?1:.85)*a;x.lineWidth=(r.w+(i===hrv?.9:.3))*u;x.stroke(r.p)})}
+      x.globalAlpha=1;
+    }
+    /* the named river under the pointer, among those drawn at this zoom: its index, or -1 */
+    function pickRiver(mx,my,rad){
+      if(!WAT||!layers.w)return -1;var z=zw(),k=T.k*s0,ox=T.x+T.k*off[0],oy=T.y+T.k*off[1],best=-1,bd=rad;
+      WAT.lab.forEach(function(f){if(f.z-.05>z)return;var b=f.bb;if(mx<ox+k*b[0]-rad||mx>ox+k*b[2]+rad||my<oy+k*b[1]-rad||my>oy+k*b[3]+rad)return;
+        for(var j=1;j<f.pts.length;j++){var ax=ox+k*f.pts[j-1][0],ay=oy+k*f.pts[j-1][1],bx=ox+k*f.pts[j][0],by=oy+k*f.pts[j][1],dx=bx-ax,dy=by-ay,l=dx*dx+dy*dy,
+          t=l?Math.max(0,Math.min(1,((mx-ax)*dx+(my-ay)*dy)/l)):0,d=Math.hypot(mx-ax-t*dx,my-ay-t*dy);if(d<bd){bd=d;best=f.i}}});
+      return best;
+    }
+    function riverTip(i){
+      var r=WAT.rv[i],b=r.b>=0?WAT.b[r.b]:null;if(!b)return r.n+'<small>river</small>';
+      if(b.seen===null)b.seen=PLACES.filter(function(p){return p.k!=='p'&&d3.geoContains(b.geo,[p.x,p.y])}).length;
+      var a=b.km2>=1e6?(b.km2/1e6).toFixed(1)+' million km²':Math.round(b.km2/1e3).toLocaleString('en-US')+',000 km²';
+      return r.n+'<small>'+b.n+' basin · '+a+(b.seen?' · '+b.seen+(b.seen>1?' places':' place')+' I have been to':'')+'</small>';
+    }
+    /* river names: italic, in the water's colour, letter by letter along a gently bending stretch of the river (a straight one is
+       rare for a river at this scale); they give way to every place name and stay clear of the buttons over the map */
+    function riverNames(placed,now){
+      if(!WAT||!layers.w)return;var z=zw()-ZB+ZL,n=0,done={},k=T.k*s0;
+      x.save();x.font='italic 11.5px '+MAPF;x.textBaseline='middle';x.textAlign='center';x.lineJoin='round';
+      for(var i=0;i<WAT.lab.length&&n<14;i++){var f=WAT.lab[i];if(f.lz>z||done[f.n]||f.z>zw()+.1)continue;
+        var b0=f.bb,sx0=T.x+T.k*off[0];if(sx0+k*b0[2]<0||sx0+k*b0[0]>W||T.y+T.k*off[1]+k*b0[3]<0||T.y+T.k*off[1]+k*b0[1]>H)continue;   /* off screen */
+        var ws=f.n.split('').map(function(ch){return x.measureText(ch).width+.6}),tw=ws.reduce(function(a,b){return a+b},0),P=stretch(f.pts,tw+16,k);if(!P)continue;
+        var g=glyphs(P,ws,-6),bx=[1e9,1e9,-1e9,-1e9];g.forEach(function(q){bx[0]=Math.min(bx[0],q[0]-7);bx[1]=Math.min(bx[1],q[1]-7);bx[2]=Math.max(bx[2],q[0]+7);bx[3]=Math.max(bx[3],q[1]+7)});
+        if(bx[0]<6||bx[1]<52||bx[2]>W-6||bx[3]>H-28||placed.some(function(q){return bx[0]<q[2]&&bx[2]>q[0]&&bx[1]<q[3]&&bx[3]>q[1]}))continue;
+        x.globalAlpha=now?fadeA('r:'+f.n,now):1;
+        [0,1].forEach(function(pass){g.forEach(function(q,c){x.save();x.translate(q[0],q[1]);x.rotate(q[2]);
+          if(pass){x.fillStyle=col.water;x.fillText(f.n[c],0,0)}else{x.lineWidth=3;x.strokeStyle=col.sheet;x.strokeText(f.n[c],0,0)}x.restore()})});
+        x.globalAlpha=1;placed.push(bx);done[f.n]=1;n++}
+      x.restore();
+    }
+    /* the on-screen run of a line, len px long, nearest the middle of what is in view, that bends only gently: its points, smoothed,
+       left to right. A river wiggles at every scale, so the run is resampled and smoothed before its bends are judged */
+    function stretch(pts,len,k){
+      var q=pts.map(function(p){return [T.x+k*p[0]+T.k*off[0],T.y+k*p[1]+T.k*off[1]]}),vis=[],wins=[];
+      for(var i=0;i<q.length;i++)if(q[i][0]>10&&q[i][0]<W-10&&q[i][1]>56&&q[i][1]<H-30)vis.push(i);if(vis.length<2)return null;
+      var mid=vis[vis.length>>1];
+      vis.forEach(function(i){var j=i,L=0;while(j<q.length-1&&L<len){var d=Math.hypot(q[j+1][0]-q[j][0],q[j+1][1]-q[j][1]);if(d>len*.5)return;L+=d;j++}
+        if(L<len)return;var A=q[i],B=q[j];if(Math.hypot(B[0]-A[0],B[1]-A[1])<len*.7)return;wins.push([Math.abs(i-mid),i,j])});
+      wins.sort(function(a,b){return a[0]-b[0]});
+      for(var w=0;w<wins.length&&w<30;w++){var P=smooth(q.slice(wins[w][1],wins[w][2]+1)),ok=true,tot=0;
+        for(var m=5;m<P.length-5&&ok;m+=5){var a1=Math.atan2(P[m][1]-P[m-5][1],P[m][0]-P[m-5][0]),a2=Math.atan2(P[m+5][1]-P[m][1],P[m+5][0]-P[m][0]),da=Math.abs(((a2-a1)+3*Math.PI)%(2*Math.PI)-Math.PI);
+          tot+=da;if(da>.6)ok=false}   /* no bend sharper than about 35° over 10 px, and not much more than a right angle in all */
+        if(!ok||tot>1.8)continue;
+        if(P[P.length-1][0]<P[0][0])P.reverse();   /* read left to right */
+        return P}
+      return null;
+    }
+    function smooth(P){ /* every 2 px along the line, then averaged over about 12 px, three times */
+      var R=[P[0]],acc=0;for(var i=1;i<P.length;i++){var a=P[i-1],b=P[i],d=Math.hypot(b[0]-a[0],b[1]-a[1]),t=2-acc;
+        while(t<=d){R.push([a[0]+(b[0]-a[0])*t/d,a[1]+(b[1]-a[1])*t/d]);t+=2}acc=d-(t-2)}
+      R.push(P[P.length-1]);
+      for(var pass=0;pass<3;pass++)R=R.map(function(p,i){if(i<3||i>R.length-4)return p;var sx=0,sy=0;for(var j=-3;j<=3;j++){sx+=R[i+j][0];sy+=R[i+j][1]}return [sx/7,sy/7]});
+      return R;
+    }
+    /* where each letter goes along P, centred on it and lifted by dy: [x, y, angle] */
+    function glyphs(P,ws,dy){
+      var S=[0];for(var i=1;i<P.length;i++)S.push(S[i-1]+Math.hypot(P[i][0]-P[i-1][0],P[i][1]-P[i-1][1]));
+      function at(s){s=Math.max(0,Math.min(S[S.length-1],s));var j=1;while(j<S.length-1&&S[j]<s)j++;var t=(s-S[j-1])/((S[j]-S[j-1])||1);return [P[j-1][0]+(P[j][0]-P[j-1][0])*t,P[j-1][1]+(P[j][1]-P[j-1][1])*t]}
+      var tw=ws.reduce(function(a,b){return a+b},0),s=(S[S.length-1]-tw)/2,out=[];
+      ws.forEach(function(w){var m=s+w/2,a=at(m-6),b=at(m+6),an=Math.atan2(b[1]-a[1],b[0]-a[0]),p=at(m);out.push([p[0]-Math.sin(an)*dy,p[1]+Math.cos(an)*dy,an]);s+=w});
+      return out;
+    }
 
     /* ----- A: one map; the closer you get, the more it says ----- */
     function ppd(){return T.k*s0*PPD0}
@@ -1289,33 +1395,34 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
       x.fillStyle=col.sheet;x.fill(PB.sphere);
       x.strokeStyle=col.grid;x.lineWidth=.6*u;x.stroke(PB.grat);
       x.fillStyle=col.land;x.fill(PB.land);x.strokeStyle=col.ink;x.lineWidth=.8*u;x.stroke(PB.land);
+      waterA(u);
       x.strokeStyle=col.pencil;x.globalAlpha=.65;x.lineWidth=.55*u;x.stroke(PB.world);x.lineWidth=.7*u;x.stroke(PB.cn);x.stroke(PB.dash);x.globalAlpha=1;
       if(lit>0){x.save();x.clip(DIM);x.globalAlpha=.62*lit;x.fillStyle=col.sheet;x.fill(PB.land);x.globalAlpha=.55*lit;x.strokeStyle=col.pencil;x.lineWidth=.6*u;x.stroke(PB.land);x.restore();x.globalAlpha=1}
       x.strokeStyle=col.ink;x.lineWidth=u;x.stroke(PB.sphere);
       if(layers.b&&TRIPS.length){
         if(!pastP)pastP=TRIPS.map(function(t){return tripPath(bpt,t.s,60)});
-        TRIPS.forEach(function(t,k){var on=sg&&sg.tr&&sg.tr.indexOf(k)>=0;x.strokeStyle=on?col.ink:col.pencil;x.globalAlpha=on?.85:sg?.06:d<16?.22:.32;x.lineWidth=(on?1.5:.7)*u;x.stroke(pastP[k])});x.globalAlpha=1;
+        TRIPS.forEach(function(t,k){var on=sg&&sg.tr&&sg.tr.indexOf(k)>=0;x.strokeStyle=on?col.ink:col.pencil;x.globalAlpha=on?.85:sg?.06:(QUIET&&d>=9?.2:d<16?.22:.32);x.lineWidth=(on?1.5:.7)*u;x.stroke(pastP[k])});x.globalAlpha=1;
       }
       if(layers.p){ /* the road ahead: one long dashed line from where I am, round the rest of the world and home */
-        if(!planP)planP=planLine(BASE);x.setLineDash([9*u,7*u]);x.strokeStyle=col.ink;x.globalAlpha=.5;x.lineWidth=1.8*u;x.stroke(planP);x.setLineDash([]);x.globalAlpha=1}
+        if(!planP)planP=planLine(BASE);x.setLineDash([9*u,7*u]);x.strokeStyle=col.ink;x.globalAlpha=QUIET&&d>=9?.32:.5;x.lineWidth=1.8*u;x.stroke(planP);x.setLineDash([]);x.globalAlpha=1}
       if(layers.t){
         if(!routeP){var on=sg&&sg.a!==undefined&&sg.a<=last,se=on?Math.min(sg.e,last):0;
           routeP=[arcPath(bpt,0,last,60,0),arcPath(bpt,0,last,60,1),on?arcPath(bpt,sg.a,se,60,0):null,on?arcPath(bpt,sg.a,se,60,1):null]}
-        x.strokeStyle=col.amber;x.globalAlpha=sg?.14:d<16?.3:.42;x.lineWidth=.95*u;x.stroke(routeP[0]);
-        x.setLineDash([5*u,4*u]);x.strokeStyle=col.pencil;x.globalAlpha=sg?.25:.65;x.lineWidth=.9*u;x.stroke(routeP[1]);   /* flown over, not travelled through */
+        x.strokeStyle=col.amber;x.globalAlpha=sg?.14:QUIET&&d>=9?.3:d<16?.3:.42;x.lineWidth=.95*u;x.stroke(routeP[0]);
+        x.setLineDash([5*u,4*u]);x.strokeStyle=col.pencil;x.globalAlpha=sg?.25:QUIET&&d>=9?.4:.65;x.lineWidth=.9*u;x.stroke(routeP[1]);   /* flown over, not travelled through */
         if(routeP[3]){x.strokeStyle=col.amber;x.globalAlpha=.9;x.lineWidth=1.2*u;x.stroke(routeP[3])}x.setLineDash([]);
         if(routeP[2]){x.strokeStyle=col.amber;x.globalAlpha=.95;x.lineWidth=1.6*u;x.stroke(routeP[2])}x.globalAlpha=1;
       }
       x.restore();
+      var items=[];PLACES.forEach(function(p,i){if(!shown(i))return;var q=scr(p);if(q[0]<-30||q[1]<-30||q[0]>W+30||q[1]>H+30)return;items.push({i:i,k:p.k,x:q[0],y:q[1],dim:!!sg&&!sg.ids[i],quiet:QUIET&&!sg&&d>=9})});
       if(layers.p){ /* its stops, named */
         x.save();x.font='11px '+MAPF;x.textBaseline='middle';x.lineJoin='round';
         PLAN.forEach(function(pt,j){if(!j)return;var b=BASE([pt[0],pt[1]]);if(!b)return;var q=scr({bx:b[0],by:b[1]});if(q[0]<-40||q[0]>W+40||q[1]<-20||q[1]>H+20)return;
           x.beginPath();x.arc(q[0],q[1],3,0,6.2832);x.fillStyle=col.sheet;x.fill();x.strokeStyle=col.pencil;x.lineWidth=1.2;x.stroke();
           if(j===PLAN.length-1)return;var left=pt[3]==='l';x.textAlign=left?'right':'left';x.lineWidth=3;x.strokeStyle=col.sea;x.strokeText(pt[2],q[0]+(left?-7:7),q[1]);x.fillStyle=col.pencil;x.fillText(pt[2],q[0]+(left?-7:7),q[1])});
         x.restore()}
-      var items=[];PLACES.forEach(function(p,i){if(!shown(i))return;var q=scr(p);if(q[0]<-30||q[1]<-30||q[0]>W+30||q[1]>H+30)return;items.push({i:i,k:p.k,x:q[0],y:q[1],dim:!!sg&&!sg.ids[i]})});
-      var o={r0:Math.max(1.5,Math.min(3.6,1.2+d*.04)),groups:d<9?'continent':d<50?'country':null,cityMin:d<16?1e9:d<34?3:d<60?2:0,ends:endsOf(sg),force:sg&&sg.id&&sg.id.charAt(0)==='b'?sg.ids:null};   /* an earlier trip picked out: name all its places */
-      var m=marks(x,items,o,W,H,now);hits=m.hits;hot=m.hot;
+      var o={quiet:QUIET&&!sg&&d>=9,r0:Math.max(1.5,Math.min(3.6,1.2+d*.04)),groups:d<9?'continent':d<50&&!(QUIET&&sg&&!S.seg)?'country':null,cityMin:d<16?1e9:d<34?3:d<60?2:0,ends:endsOf(sg),force:sg&&sg.id&&sg.id.charAt(0)==='b'?sg.ids:null};   /* an earlier trip picked out: name all its places */
+      var m=marks(x,items,o,W,H,now);hits=m.hits;hot=m.hot;riverNames(m.placed.concat(m.hits.map(function(q){return [q.x-q.r-2,q.y-q.r-2,q.x+q.r+2,q.y+q.r+2]})),now);   /* river names keep off every place mark too */
       for(var fk in FADE)if(FADE[fk].seen!==now)delete FADE[fk];
       if(fadeMore&&!fadeRaf)fadeRaf=requestAnimationFrame(function(){fadeRaf=0;drawA()});
       if(layers.t&&upto<STAYS.length-1){var hq=scr(PLACES[STAYS[upto][0]]);x.beginPath();x.arc(hq[0],hq[1],8,0,6.2832);x.strokeStyle=col.ink;x.lineWidth=2;x.stroke()}
@@ -1340,7 +1447,7 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
       fitBox([[Math.max(-179.9,w-px),Math.max(-85,s-py)],[Math.min(179.9,e+px),Math.min(85,n+py)]],false,clear);   /* padding must not wrap past the date line */
     }
     var VIEWS={world:[[-128,4],[150,66]]};
-    function showTip(e,html){tip.innerHTML=html;tip.style.left=e.clientX+'px';tip.style.top=(e.clientY-10)+'px';tip.hidden=false}
+    function showTip(e,html){tip.innerHTML=html;tip.style.top=(e.clientY-10)+'px';tip.style.left='0px';tip.hidden=false;var w=tip.offsetWidth;tip.style.left=Math.max(8,Math.min(window.innerWidth-w-8,e.clientX-w/2))+'px'}   /* centred on the pointer but kept inside the window; placed by its left edge, so it keeps its width */
     function canOpen(v){return PLACES[v.q.i].k!=='b'}   /* places from earlier trips are marks on the map, not cards to open */
     function tipFor(q){return nameOf(q.i)+'<small>'+when(q.i)+'</small>'}
     function initA(){
@@ -1366,16 +1473,19 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
       c.addEventListener('pointermove',function(e){
         if(e.pointerType==='touch')return;var r=c.getBoundingClientRect(),mx=e.clientX-r.left,my=e.clientY-r.top,n=near(hits,mx,my,9).filter(canOpen),h=n.length?null:inHot(hot,mx,my);
         c.style.cursor=n.length||h?'pointer':'grab';var hv=n.length?n[0].q.i:-1;if(hv!==hov){hov=hv;drawA()}
-        if(n.length)showTip(e,tipFor(n[0].q));else if(h)showTip(e,h.name+'<small>'+h.ids.length+' places · click to zoom in</small>');else tip.hidden=true;
+        if(QUIET){var nb=near(hits.filter(function(q){return q.k==='t'}),mx,my,22),hs=nb.length?legOf(nb[0].q.i):'';if(hs!==hseg&&!(hs===''&&sel>=0)){hseg=hs;routeP=null;drawA()}}   /* quiet: the leg near the pointer lights up */
+        var rv=n.length||h?-1:pickRiver(mx,my,6);if(rv!==hrv){hrv=rv;drawA()}
+        if(n.length)showTip(e,tipFor(n[0].q));else if(h)showTip(e,h.name+'<small>'+h.ids.length+' places · click to zoom in</small>');else if(rv>=0)showTip(e,riverTip(rv));else tip.hidden=true;
       });
-      c.addEventListener('pointerleave',function(){tip.hidden=true;if(hov>=0){hov=-1;drawA()}});
+      c.addEventListener('pointerleave',function(){tip.hidden=true;if(hov>=0||hrv>=0){hov=hrv=-1;drawA()}});
       c.addEventListener('click',function(e){
         var r=c.getBoundingClientRect(),mx=e.clientX-r.left,my=e.clientY-r.top,n=near(hits,mx,my,11).filter(canOpen),h;
         if(n.length){
           if(n.length===1||T.k>=79||(n[0].d<=n[0].q.r+2&&n[1].d-n[0].d>7))select(n[0].q.i,false);
           else{if(n[0].d<=n[0].q.r+5)select(n[0].q.i,false);fitIds(n.map(function(v){return v.q.i}))}   /* in a crowd: open the nearest one, and zoom in on the rest (用户 11-13) */
         }else if((h=inHot(hot,mx,my)))fitIds(h.ids);
-        else if(PHONE.matches)closeCard();   /* a tap on nothing puts the card away */
+        else if(e.pointerType==='touch'&&(h=pickRiver(mx,my,12))>=0&&h!==hrv){hrv=h;showTip(e,riverTip(h));drawA()}   /* on a touch screen a tap on a river shows its basin */
+        else{if(hrv>=0&&e.pointerType==='touch'){hrv=-1;tip.hidden=true;drawA()}if(PHONE.matches)closeCard()}   /* a tap on nothing puts the card away */
       });
       if(window.ResizeObserver)new ResizeObserver(function(){if(live&&document.getElementById('mapbox')===box)sizeA()}).observe(box);
     }
@@ -1383,7 +1493,7 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
     /* ----- shared: selection, card, list, time ----- */
     function redraw(){routeP=segP=null;drawA()}
     function select(i,go){
-      sel=i;var p=PLACES[i];
+      sel=i;var p=PLACES[i];if(QUIET){hseg=legOf(i);routeP=null}
       if(go){var k=Math.max(T.k,Math.min(80,9/(s0*PPD0/3.9))),q=[off[0]+s0*p.bx,off[1]+s0*p.by];fly(d3.zoomIdentity.translate(W/2-k*q[0],H*.45-k*q[1]).scale(k))}
       else if(W>760){var sp=scr(p),lim=W-380;if(sp[0]>lim)fly(d3.zoomIdentity.translate(T.x-(sp[0]-lim),T.y).scale(T.k))}  /* slide the place out from under its own card */
       var st=STAYSOF[i]||[],prev=st.length&&st[0]>0?STAYS[st[0]-1][0]:-1,next=st.length&&st[st.length-1]<STAYS.length-1?STAYS[st[st.length-1]+1][0]:-1;
@@ -1421,6 +1531,7 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
     function scrub(v){upto=v;var s=STAYS[v];document.getElementById('scrublbl').textContent=day(s[1])+' · '+nameOf(s[0]);redraw()}
     function setMode(){sizeA();if(!T.k||T===d3.zoomIdentity)fitBox(VIEWS.world,true)}
     function detail(){ /* the 1:50m coastline comes in a moment later, and only for this page */
+      if(!WAT&&!wload){wload=1;if(window.WATER)waterIn();else{var sw=document.createElement('script');sw.src='assets/water.js?v=1pwaazp';sw.onload=waterIn;document.head.appendChild(sw)}}
       if(GEOD||window.DETAIL){if(!GEOD&&window.DETAIL){GEOD=geoOf(window.DETAIL);PB=paths(BASE,GEOD,15)}return}
       var sc=document.createElement('script');sc.src='assets/detail.js?v=oyrzq5';sc.onload=function(){GEOD=geoOf(window.DETAIL);PB=paths(BASE,GEOD,15);if(live)drawA()};document.head.appendChild(sc);
     }
@@ -1486,7 +1597,7 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
       return {scale:BASE.scale()*a,tx:r.left+T.x+T.k*(off[0]+s0*tb[0]),ty:r.top+T.y+T.k*(off[1]+s0*tb[1]),rect:[r.left,r.top,r.width,r.height],el:box};
     }
     return {init:init,target:target,detail:detail,segment:segment,select:function(i){select(i,true)},close:function(){sel=-1;card.hidden=true;redraw()},scrub:scrub,setMode:setMode,reveal:reveal,toggleRoutes:toggleRoutes,cont:pickCont,
-      layer:function(k,on){layers[k]=on;redraw()},view:function(){cont='';Array.prototype.forEach.call(document.querySelectorAll('[data-cont]'),function(b){b.setAttribute('aria-pressed','false')});fitBox(VIEWS.world,false,true)},
+      layer:function(k,on){layers[k]=on;if(k==='all'){QUIET=!on;hseg=''}redraw()},view:function(){cont='';Array.prototype.forEach.call(document.querySelectorAll('[data-cont]'),function(b){b.setAttribute('aria-pressed','false')});fitBox(VIEWS.world,false,true)},
       zoomBy:function(f){var s=d3.select(c);(reduced?s:s.transition().duration(250)).call(zoom.scaleBy,f)},
       preload:function(){if(!window.DETAIL){var l=document.createElement('link');l.rel='prefetch';l.href='assets/detail.js?v=oyrzq5';document.head.appendChild(l)}}};
   })();
@@ -1699,7 +1810,9 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
           '<div class="legend">'+
             '<label><input type="checkbox" id="lay-t" data-layer="t" checked><span class="key t"></span><span>This trip</span></label>'+
             '<label><input type="checkbox" id="lay-b" data-layer="b" checked><span class="key b"></span><span>Earlier trips</span></label>'+
-            '<label><input type="checkbox" id="lay-p" data-layer="p" checked><span class="key p"></span><span>Planned</span></label></div>'+
+            '<label><input type="checkbox" id="lay-p" data-layer="p" checked><span class="key p"></span><span>Planned</span></label>'+
+            '<label><input type="checkbox" id="lay-w" data-layer="w" checked><span class="key w"></span><span>Rivers &amp; lakes</span></label>'+
+            '<label><input type="checkbox" id="lay-all" data-layer="all"><span class="key all"></span><span>All places</span></label></div>'+
         '</div>'+
         '<div id="mapA"><div class="marksrow">'+CONTS.map(function(c){var n=NCONT[c[0]]||0;
           return n?'<button type="button" data-cont="'+c[0]+'" aria-pressed="false"><span class="lamp"></span>'+c[1]+'<i>'+n+'</i></button>'
@@ -1709,7 +1822,7 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
           '<div class="maphint" id="maphint" hidden>Hold Ctrl or ⌘ and scroll to zoom the map</div>'+
           '<section class="routes" id="routes" aria-label="Routes"></section>'+
           '<aside class="placecard" id="placecard" hidden></aside></div></div>'+
-        '<div class="scrub">'+mk(12)+'<input type="range" id="scrub" min="0" max="150" value="150" aria-label="Time along the route"><span id="scrublbl"></span></div>'+
+        '<div class="scrub">'+mk(12)+'<input type="range" id="scrub" min="0" max="150" value="150" aria-label="Time along the route"><span id="scrublbl"></span><span class="credit">Rivers and lakes: Natural Earth · Basins: <a href="https://datacatalog.worldbank.org/search/dataset/0041426" target="_blank" rel="noopener"><i>Major River Basins of the World</i></a>, World Bank (CC BY 4.0)</span></div>'+
       '</div>'+
       '<div class="travhead"><p class="lead">I’m a slow doer. From the start, before my master’s even began, I knew I had something for earth science, and I knew I was going to prepare myself, in knowledge and beyond. So I’m currently on a trip I’ve been planning for three years. At 25, I’m trying to travel around the world, across as many basins as possible.</p>'+
       '</div>'+
