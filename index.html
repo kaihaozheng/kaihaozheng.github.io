@@ -415,6 +415,17 @@ body.noting .mk{display:grid}
 .placecard .enl{display:block;width:100%;padding:0;border:0;background:none;cursor:zoom-in;text-align:left;font:inherit;color:inherit}
 .placecard .one .enl{display:inline}
 .placecard .enl:hover img{filter:brightness(1.05)}.placecard .one .enl:hover{color:var(--amber)}
+/* where I am now, if I had not been there before: a card not yet written, with a postmark of the day I came (用户 11-21) */
+.placecard .here{position:relative;margin:0 0 12px;padding:.85rem .9rem .8rem;background:var(--paper);border-top:2px solid var(--amber);overflow:hidden}
+.placecard .here .hk{display:flex;align-items:center;gap:.5rem;font:.66rem/1.4 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--amber);margin:0 0 .55rem}
+.placecard .here .hk i{position:relative;width:.5rem;height:.5rem;border-radius:50%;background:var(--amber);flex:none}
+.placecard .here .hk i::after{content:"";position:absolute;inset:-.3rem;border-radius:50%;border:1px solid var(--amber);animation:herep 2.4s ease-out infinite}
+@keyframes herep{from{transform:scale(.4);opacity:.9}to{transform:scale(1.6);opacity:0}}
+.placecard .here p{font:var(--f-text)/1.45 var(--serif);margin:0 4.6rem .5rem 0}
+.placecard .here a{font:.72rem/1.5 var(--mono);color:var(--ink);text-decoration:underline;text-decoration-color:var(--amber);text-underline-offset:3px}
+.placecard .here a:hover{color:var(--amber)}
+.placecard .here .pm{position:absolute;right:.6rem;top:1.7rem;width:3.9rem;height:3.9rem;border-radius:50%;border:1.5px solid var(--stamp);display:grid;place-items:center;text-align:center;font:600 .52rem/1.25 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--stamp);opacity:.62;transform:rotate(-12deg);pointer-events:none}
+.placecard .here .pm::before{content:"";position:absolute;inset:3px;border-radius:50%;border:1px dashed var(--stamp)}
 #lightbox{position:fixed;inset:0;z-index:80;background:rgba(27,42,65,.92);display:grid;place-items:center;
   padding:max(3.5rem,env(safe-area-inset-top,0px)) max(1.5rem,env(safe-area-inset-right,0px)) max(1.5rem,env(safe-area-inset-bottom,0px)) max(1.5rem,env(safe-area-inset-left,0px))}
 body.lbopen{overflow:hidden}
@@ -1501,6 +1512,18 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
       /* no tags on the card (用户 11-13); under the photo, the one line from the 游记 (web.md summary:), then the longer notes once written */
       var one=(CORE.sum&&CORE.sum[i])||'',ns=(CORE.notes&&CORE.notes[i])||[],pic=(ns.filter(function(n){return n.img})[0]||{}).img||(CORE.cover&&CORE.cover[i])||'';
       function esc(t){return String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;')}
+      /* where I am now, and not a place I had been to before: no empty photo, no "To be updated.", but a word that I am here (用户 11-21) */
+      var here=i===NOWI&&!LAST[2]&&st.length===1;
+      if(here){var hd=LAST[1].split('-'),dn=Math.floor((Date.now()-Date.parse(LAST[1]))/864e5)+1;
+        card.innerHTML='<button type="button" class="x" data-card-close aria-label="Close">×</button>'+
+          '<h4>'+nameOf(i)+'</h4><p class="when">'+(p.c?p.c+' · ':'')+when(i)+'</p>'+
+          '<div class="here"><p class="hk"><i aria-hidden="true"></i>Here now · day '+dn+'</p>'+
+          '<span class="pm" aria-hidden="true">'+esc(nameOf(i)).slice(0,10)+'<br>'+(+hd[2])+' '+MON[+hd[1]-1]+'</span>'+
+          '<p>I’m in '+esc(nameOf(i))+' right now. I’ll write it up when I leave :)</p>'+
+          '<a href="mailto:'+MAIL2+'">Or reach out to hear what’s going on here →</a></div>'+
+          '<div class="walk">'+(prev>=0?'<button type="button" data-place="'+prev+'">← '+nameOf(prev)+'</button>':'')+'</div>';
+        LB.set({src:'',name:nameOf(i),when:(p.c?p.c+' · ':'')+when(i),one:'',notes:''});
+      }else{
       card.innerHTML='<button type="button" class="x" data-card-close aria-label="Close">×</button>'+
         '<h4>'+nameOf(i)+'</h4><p class="when">'+(p.c?p.c+' · ':'')+when(i)+'</p>'+
         (pic?'<button type="button" class="enl" data-enlarge aria-label="Show the photo larger"><img class="img" src="'+pic+'" alt="'+esc(nameOf(i))+'"></button>':'<div class="img">a photo'+BLANK+'</div>')+
@@ -1508,6 +1531,7 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
         (ns.length?ns.map(function(n){return (n.t?'<h5>'+esc(n.t)+'</h5>':'')+(n.d&&ns.length>1?'<p class="nd">'+day(n.d)+'</p>':'')+n.x.map(function(t){return '<p>'+esc(t)+'</p>'}).join('')}).join(''):(one?'':'<p class="todo">'+FILL+' '+FILL+BLANK+'</p>'))+
         '<div class="walk">'+(prev>=0?'<button type="button" data-place="'+prev+'">← '+nameOf(prev)+'</button>':'')+(next>=0?'<button type="button" data-place="'+next+'">'+nameOf(next)+' →</button>':'')+'</div>';
       LB.set({src:pic,name:nameOf(i),when:(p.c?p.c+' · ':'')+when(i),one:one,notes:ns.map(function(n){return (n.t?'<h5>'+esc(n.t)+'</h5>':'')+n.x.map(function(t){return '<p>'+esc(t)+'</p>'}).join('')}).join('')});
+      }
       card.hidden=true;void card.offsetWidth;card.hidden=false;card.scrollTop=0;
       Array.prototype.forEach.call(document.querySelectorAll('.plist button'),function(b){b.classList.toggle('on',+b.dataset.place===i)});
       redraw();
