@@ -443,11 +443,21 @@ body.lbopen{overflow:hidden}
 #lightbox .lbcap p{margin:0 0 .6em;font-size:var(--f-text);line-height:1.5}
 #lightbox .lbcap h5{font:400 1.06rem/1.25 var(--serif);margin:.8em 0 .3em}
 #lightbox.nophoto .lbcap{position:static;transform:none;width:min(34rem,100%);max-height:80vh}
+/* walk the route inside the lightbox: the stop before and after that has a photo (用户 11-22) */
+#lightbox .lbw{position:fixed;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;align-items:center;gap:.35rem;border:0;background:none;color:var(--sheet);cursor:pointer;padding:.5rem;max-width:7rem}
+#lightbox .lbw[hidden]{display:none}
+#lightbox .lbw i{display:grid;place-items:center;width:2.75rem;height:2.75rem;border-radius:50%;background:var(--sheet);color:var(--ink);font:400 1.3rem/1 var(--serif);font-style:normal}
+#lightbox .lbw small{font:var(--f-meta)/1.3 var(--mono);text-align:center;opacity:.85}
+#lightbox .lbw:hover i,#lightbox .lbw:focus-visible i{background:var(--amber);color:var(--sheet)}
+#lightbox .lbprev{left:max(.5rem,env(safe-area-inset-left,0px))}
+#lightbox .lbnext{right:max(.5rem,env(safe-area-inset-right,0px))}
 @media (max-width:759px){
   #lightbox{display:flex;flex-direction:column;justify-content:center;gap:1rem}
   #lightbox .lbfig{height:auto;flex:0 1 auto}
   #lightbox img{max-height:52vh}
   #lightbox .lbcap{position:static;transform:none;width:100%;max-height:34vh}
+  #lightbox .lbw{top:auto;bottom:max(.5rem,env(safe-area-inset-bottom,0px));transform:none}
+  #lightbox .lbw small{display:none}
 }
 .placecard .walk{display:flex;gap:6px;border-top:1px solid var(--grid-strong);padding-top:10px}
 .placecard .walk button{flex:1 1 0;background:none;border:1px solid var(--grid-strong);border-radius:3px;min-height:38px;padding:4px 6px;cursor:pointer;font:.72rem/1.3 var(--mono);text-align:left;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -780,7 +790,7 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
   if(window.parent!==window){try{var b=window.parent.document.getElementById('back');if(b){b.click();return}}catch(_){}}
   var k=document.createElement('div');k.style.cssText='position:fixed;inset:0;z-index:2147483647;background:#000;opacity:0;transition:opacity .17s ease-in';document.body.appendChild(k);void k.offsetWidth;k.style.opacity='1';
   try{sessionStorage.setItem('toCV','1')}catch(_){}setTimeout(function(){location.href='cv.html'},180)});</script>
-<script src="assets/core.js?v=t26bps"></script>
+<script src="assets/core.js?v=14y5uew"></script>
 <script>
 (function(){
   'use strict';
@@ -1142,21 +1152,26 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
      the words never sit straight on the photo: the card is solid paper, and a long text scrolls inside it */
   var LB=(function(){
     var el=document.createElement('div'),cur=null,back=null;el.id='lightbox';el.hidden=true;el.setAttribute('role','dialog');el.setAttribute('aria-modal','true');el.setAttribute('aria-label','The place, larger');
-    el.innerHTML='<button type="button" class="lbx" aria-label="Close">×</button><figure class="lbfig"><img alt=""></figure><div class="lbcap"><span class="tape"></span><h4></h4><p class="when"></p><div class="lbtext"></div></div>';
+    el.innerHTML='<button type="button" class="lbx" aria-label="Close">×</button><button type="button" class="lbw lbprev" data-lbw="-1" hidden><i aria-hidden="true">←</i><small></small></button><button type="button" class="lbw lbnext" data-lbw="1" hidden><i aria-hidden="true">→</i><small></small></button><figure class="lbfig"><img alt=""></figure><div class="lbcap"><span class="tape"></span><h4></h4><p class="when"></p><div class="lbtext"></div></div>';
     document.body.appendChild(el);
     var img=el.querySelector('img'),cap=el.querySelector('.lbcap');
+    var walk=null;   /* set by the map: peek(dir) → the next stop with a photo along the route, or -1; go(dir) opens it */
+    function arrows(){[-1,1].forEach(function(d){var b=el.querySelector('[data-lbw="'+d+'"]'),j=walk&&cur&&cur.src?walk.peek(d):-1;b.hidden=j<0;if(j>=0){b.querySelector('small').textContent=walk.name(j);b.setAttribute('aria-label',(d<0?'Previous stop: ':'Next stop: ')+walk.name(j))}})}
+    function step(d){if(!walk||el.hidden||!cur||!cur.src||walk.peek(d)<0)return;walk.go(d);open()}
     function close(){if(el.hidden)return;el.hidden=true;document.body.classList.remove('lbopen');if(back&&back.focus)back.focus({preventScroll:true})}
     function open(){
-      if(!cur)return;back=document.activeElement;
+      if(!cur)return;if(el.hidden)back=document.activeElement;
       el.classList.toggle('nophoto',!cur.src);if(cur.src){img.src=cur.src;img.alt=cur.name}else img.removeAttribute('src');
       cap.querySelector('h4').textContent=cur.name;cap.querySelector('.when').textContent=cur.when;
       cap.querySelector('.lbtext').innerHTML=(cur.one?'<p class="one">'+cur.one.replace(/&/g,'&amp;').replace(/</g,'&lt;')+'</p>':'')+(cur.notes||'');
-      cap.scrollTop=0;el.hidden=false;document.body.classList.add('lbopen');el.querySelector('.lbx').focus({preventScroll:true});
+      cap.scrollTop=0;var was=el.hidden;el.hidden=false;document.body.classList.add('lbopen');arrows();if(was)el.querySelector('.lbx').focus({preventScroll:true});
     }
-    el.addEventListener('click',function(e){if(e.target===el||e.target.closest('.lbx')||e.target.classList.contains('lbfig'))close()});
-    document.addEventListener('keydown',function(e){if(e.key==='Escape'&&!el.hidden){e.stopPropagation();close()}},true);
+    el.addEventListener('click',function(e){var w=e.target.closest('[data-lbw]');if(w){step(+w.dataset.lbw);return}if(e.target===el||e.target.closest('.lbx')||e.target.classList.contains('lbfig'))close()});
+    document.addEventListener('keydown',function(e){if(el.hidden)return;if(e.key==='Escape'){e.stopPropagation();close()}else if(e.key==='ArrowLeft'||e.key==='ArrowRight'){e.preventDefault();e.stopPropagation();step(e.key==='ArrowLeft'?-1:1)}},true);
+    var tx=null;el.addEventListener('touchstart',function(e){tx=e.touches.length===1?[e.touches[0].clientX,e.touches[0].clientY]:null},{passive:true});
+    el.addEventListener('touchend',function(e){if(!tx)return;var t=e.changedTouches[0],dx=t.clientX-tx[0],dy=t.clientY-tx[1];tx=null;if(Math.abs(dx)>50&&Math.abs(dx)>Math.abs(dy)*1.5)step(dx<0?1:-1)},{passive:true});   /* swipe on a phone */
     document.addEventListener('click',function(e){if(e.target.closest('[data-enlarge]')){e.preventDefault();open()}});
-    return {set:function(v){cur=v},open:open,close:close};
+    return {set:function(v){cur=v},open:open,close:close,walk:function(w){walk=w}};
   })();
 
   /* ---------- the trip ---------- */
@@ -1503,6 +1518,11 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
 
     /* ----- shared: selection, card, list, time ----- */
     function redraw(){routeP=segP=null;drawA()}
+    function picOf(i){var ns=(CORE.notes&&CORE.notes[i])||[];return (ns.filter(function(n){return n.img})[0]||{}).img||(CORE.cover&&CORE.cover[i])||''}
+    /* the lightbox walks this trip in the order of the route, each place once (where it was first), skipping places without a photo (用户 11-22: “按我的路线到下一站”) */
+    var ORDER=(function(){var o=[],seen={};STAYS.forEach(function(s){if(PLACES[s[0]]&&!seen[s[0]]){seen[s[0]]=1;o.push(s[0])}});return o})();
+    function photoStep(d){var k=ORDER.indexOf(sel);if(k<0)return -1;for(var j=k+d;j>=0&&j<ORDER.length;j+=d)if(picOf(ORDER[j]))return ORDER[j];return -1}
+    LB.walk({peek:photoStep,name:function(j){return nameOf(j)},go:function(d){var j=photoStep(d);if(j>=0)select(j,true)}});
     function select(i,go){
       sel=i;var p=PLACES[i];if(QUIET){hseg=legOf(i);routeP=null}
       if(go){var k=Math.max(T.k,Math.min(80,9/(s0*PPD0/3.9))),q=[off[0]+s0*p.bx,off[1]+s0*p.by];fly(d3.zoomIdentity.translate(W/2-k*q[0],H*.45-k*q[1]).scale(k))}
@@ -1510,7 +1530,7 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
       var st=STAYSOF[i]||[],prev=st.length&&st[0]>0?STAYS[st[0]-1][0]:-1,next=st.length&&st[st.length-1]<STAYS.length-1?STAYS[st[st.length-1]+1][0]:-1;
       /* what the card says comes from the notes file of this stop and the photo folder of this place */
       /* no tags on the card (用户 11-13); under the photo, the one line from the 游记 (web.md summary:), then the longer notes once written */
-      var one=(CORE.sum&&CORE.sum[i])||'',ns=(CORE.notes&&CORE.notes[i])||[],pic=(ns.filter(function(n){return n.img})[0]||{}).img||(CORE.cover&&CORE.cover[i])||'';
+      var one=(CORE.sum&&CORE.sum[i])||'',ns=(CORE.notes&&CORE.notes[i])||[],pic=picOf(i);
       function esc(t){return String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;')}
       /* where I am now, and not a place I had been to before: no empty photo, no "To be updated.", but a word that I am here (用户 11-21) */
       var here=i===NOWI&&!LAST[2]&&st.length===1;
