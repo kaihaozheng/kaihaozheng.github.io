@@ -1,1 +1,1 @@
-window.NOW={"n":"Montreal","x":-73.6,"y":45.55,"since":"2026-11-22","built":"2026-11-22"};
+window.NOW={"n":"Montreal","x":-73.6,"y":45.55,"since":"2026-11-22","built":"2026-11-23"};
