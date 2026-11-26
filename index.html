@@ -1527,7 +1527,7 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
       sel=i;var p=PLACES[i];if(QUIET){hseg=legOf(i);routeP=null}
       if(go){var k=Math.max(T.k,Math.min(80,9/(s0*PPD0/3.9))),q=[off[0]+s0*p.bx,off[1]+s0*p.by];fly(d3.zoomIdentity.translate(W/2-k*q[0],H*.45-k*q[1]).scale(k))}
       else if(W>760){var sp=scr(p),lim=W-380;if(sp[0]>lim)fly(d3.zoomIdentity.translate(T.x-(sp[0]-lim),T.y).scale(T.k))}  /* slide the place out from under its own card */
-      var st=STAYSOF[i]||[],prev=st.length&&st[0]>0?STAYS[st[0]-1][0]:-1,next=st.length&&st[st.length-1]<STAYS.length-1?STAYS[st[st.length-1]+1][0]:-1;
+      var st=STAYSOF[i]||[],ok=ORDER.indexOf(i),prev=ok>0?ORDER[ok-1]:-1,next=ok>=0&&ok<ORDER.length-1?ORDER[ok+1]:-1;  /* ← → walk ORDER like the lightbox: each place where it first comes, so a place visited twice does not cut the way back (用户 11-26) */
       /* what the card says comes from the notes file of this stop and the photo folder of this place */
       /* no tags on the card (用户 11-13); under the photo, the one line from the 游记 (web.md summary:), then the longer notes once written */
       var one=(CORE.sum&&CORE.sum[i])||'',ns=(CORE.notes&&CORE.notes[i])||[],pic=picOf(i);
