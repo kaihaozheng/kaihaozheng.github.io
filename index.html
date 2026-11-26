@@ -790,7 +790,7 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
   if(window.parent!==window){try{var b=window.parent.document.getElementById('back');if(b){b.click();return}}catch(_){}}
   var k=document.createElement('div');k.style.cssText='position:fixed;inset:0;z-index:2147483647;background:#000;opacity:0;transition:opacity .17s ease-in';document.body.appendChild(k);void k.offsetWidth;k.style.opacity='1';
   try{sessionStorage.setItem('toCV','1')}catch(_){}setTimeout(function(){location.href='cv.html'},180)});</script>
-<script src="assets/core.js?v=sl18l6"></script>
+<script src="assets/core.js?v=42646"></script>
 <script>
 (function(){
   'use strict';
@@ -1188,7 +1188,7 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
     var PB=paths(BASE,GEO,15);
     var box,c,x,W=0,H=0,dpr=1,s0=1,off=[0,0],T=d3.zoomIdentity,zoom,layers={t:true,b:true,p:true,w:true},upto=1e9,sel=-1,hov=-1,live=false,card,hits=[],hot=[],routeP=null,segP=null,planP=null,pastP=null,FADE={},fadeMore=false,fadeRaf=0,lit=0,cont='';
     var CONT={EU:'Europe',AS:'Asia',NA:'North America',SA:'South America',AF:'Africa',OC:'Oceania'};
-    var CTRY={DE:'Germany',ES:'Spain',ME:'Montenegro',AL:'Albania',MK:'North Macedonia',BG:'Bulgaria',PL:'Poland',RO:'Romania',HU:'Hungary',SK:'Slovakia',EE:'Estonia',FR:'France',IT:'Italy',CH:'Switzerland',NL:'Netherlands',AT:'Austria',SI:'Slovenia',HR:'Croatia',DK:'Denmark',SE:'Sweden',CZ:'Czechia',BE:'Belgium',BA:'Bosnia & Herzegovina',US:'United States',CN:'China',JP:'Japan',PT:'Portugal',TR:'Türkiye',LT:'Lithuania',LV:'Latvia',FI:'Finland',RU:'Russia',VN:'Vietnam',TH:'Thailand',RS:'Serbia',MX:'Mexico',LA:'Laos',SG:'Singapore',MY:'Malaysia',AE:'UAE',XK:'Kosovo',VA:'Vatican',SM:'San Marino',MC:'Monaco',LU:'Luxembourg',AD:'Andorra',KR:'Korea'};
+    var CTRY={DE:'Germany',ES:'Spain',ME:'Montenegro',AL:'Albania',MK:'North Macedonia',BG:'Bulgaria',PL:'Poland',RO:'Romania',HU:'Hungary',SK:'Slovakia',EE:'Estonia',FR:'France',IT:'Italy',CH:'Switzerland',NL:'Netherlands',AT:'Austria',SI:'Slovenia',HR:'Croatia',DK:'Denmark',SE:'Sweden',CZ:'Czechia',BE:'Belgium',BA:'Bosnia & Herzegovina',US:'United States',CN:'China',JP:'Japan',PT:'Portugal',TR:'Türkiye',LT:'Lithuania',LV:'Latvia',FI:'Finland',RU:'Russia',VN:'Vietnam',TH:'Thailand',RS:'Serbia',MX:'Mexico',LA:'Laos',SG:'Singapore',MY:'Malaysia',AE:'UAE',XK:'Kosovo',VA:'Vatican',SM:'San Marino',MC:'Monaco',LU:'Luxembourg',AD:'Andorra',KR:'Korea',CA:'Canada'};
     function ctryOf(p){return p.c==='TW'||p.c==='HK'||p.c==='MO'?'CN':p.c}
     /* which names win the room for a label: places come back to more often, and the places lived in */
     function weight(i){var p=PLACES[i];return (STAYSOF[i]||[]).length+(PREV[i]||[]).length+(p.h?2:0)+(CORE.notes&&CORE.notes[i]?.5:0)}
